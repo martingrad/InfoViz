@@ -7,7 +7,7 @@ function map(){
     var mapDiv = $("#map");
 
     var margin = {top: 20, right: 20, bottom: 20, left: 20},
-        width = mapDiv.width() - margin.right - margin.left,
+        width  = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
 
     //initialize color scale
@@ -23,14 +23,45 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var projection = d3.geo.mercator()
+    /*var projection = d3.geo.mercator()
         .center([20, 60])
-        .scale(2500);
+        .scale(2500);*/
+
+    /*var projection = d3.geo.satellite()
+        .distance(1.1)
+        .scale(5500)
+        .rotate([0, 0, 0])
+        .tilt(25)
+        .center([20, 60])
+        //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
+        .precision(.1);*/
+
+    var projection = d3.geo.satellite()
+        .distance(1.1)
+        .scale(3000)
+        .rotate([165.00, -125.0, 180.0])
+        .center([100, 40])
+        .tilt(15)
+        //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
+        .precision(.1);
+
+    /*var graticule = d3.geo.graticule()
+    .extent([[80, 90], [-20, 50]])
+    .step([3, 3]);
+    */
+    var path = d3.geo.path()
+        .projection(projection);
 
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
         .attr("height", height)
         .call(zoom);
+
+    /*svg.append("path")
+        .datum(graticule)
+        .attr("class", "graticule")
+        .attr("d", path);
+        */
 
     var path = d3.geo.path()
         .projection(projection);
