@@ -1,0 +1,19 @@
+.buttonSmaller
+{
+
+}
+
+#buttonScatterPlotForYAxis
+{
+	/*-webkit-transform: rotate(-90deg);	 Safari and Chrome */
+    /*-moz-transform: rotate(-90deg);		 Firefox */
+    /*-o-transform: rotate(-90deg);		 Opera */
+    /*-ms-transform: rotate(-90deg);		 IE 9 */
+    /*transform: rotate(-90deg); */
+    
+}
+
+.buttonScatterPlotForXAxis
+{
+	
+}
