@@ -57,13 +57,43 @@
 
                 <div class="row">
                     <div class="col-xs-6">
-                        <button type="button" onclick="chooseYAxis()" class="btn buttonScatterPlotForYAxis">Välj</button>
+                        <!-- dropdown knapp för y axeln på scatterplotten -->
+                        <div class="btn-group">
+                            <button type="button" data-toggle="dropdown" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+
+                        <!--  -->
+                        <!-- <button type="button" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas</button> -->
                         <div id="sp" style="height: 45vh;"></div>
-                        <button type="button" onclick="chooseXAxis()" style="float: right;" class="btn buttonScatterPlotForXAxis">Välj</button>
+
+                        <!-- dropdown knapp för x axeln på scatterplotten -->
+                        <div class="btn-group" style="float: right">
+                            <button type="button" data-toggle="dropdown" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- <button type="button" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas</button> --> 
                     </div>
 
                     <div class="col-xs-6">
-                        <div id="map" style="height: 45vh;" transform="skew(90deg)">
+                        <ul class="nav nav-tabs btn-xs">
+                            <li role="presentation" class="active"><a href="#">2002</a></li>
+                            <li role="presentation"><a href="#">2006</a></li>
+                            <li role="presentation"><a href="#">2010</a></li>
+                            <li role="presentation"><a href="#">2014</a></li>
+                        </ul>
+                        <div id="map" class="map-border" style="height: 45vh;">
                         </div>
                     </div>
 
@@ -71,7 +101,7 @@
 
                 <div class="row">
                     <br><br><br>
-                    <div class="col-xs-12">
+                    <div class="col-xs-12 black-border">
                         <div id="pc" style="height: 30vh"></div>
                     </div>
                 </div>
@@ -80,6 +110,19 @@
         </div>
 
         <div id="footer">
+            <!-- Om vi vill lägga in adress -->
+            <!-- <address>
+                <strong>Twitter, Inc.</strong><br>
+                        795 Folsom Ave, Suite 600<br>
+                        San Francisco, CA 94107<br>
+                <abbr title="Phone">P:</abbr> (123) 456-7890
+            </address>
+
+            <address>
+                <strong>Full Name</strong><br>
+                <a href="mailto:#">first.last@example.com</a>
+            </address> -->
+            
             <div class="container">
             </div>
         </div>

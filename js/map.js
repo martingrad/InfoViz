@@ -6,7 +6,7 @@ function map(){
 
     var mapDiv = $("#map");
 
-    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = mapDiv.width() - margin.right - margin.left,
         height = mapDiv.height() - margin.top - margin.bottom;
 
@@ -28,8 +28,11 @@ function map(){
         .scale(2500);
 
     var svg = d3.select("#map").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
 
     var path = d3.geo.path()
@@ -43,7 +46,7 @@ function map(){
     // load data and draw the map
     d3.json("data/swe-topo.json",function(error, sweden) {
         //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
-        console.log(topojson.feature(sweden,sweden.objects.swe_mun).features);
+        //console.log(topojson.feature(sweden,sweden.objects.swe_mun).features);
         
         var counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
@@ -66,8 +69,8 @@ function map(){
         var cc = {Country: country, Color: color};
         //console.log(cc.Color);
     
-
-        country.enter().insert("path")
+        g.selectAll(".country").data(countries)
+            .enter().insert("path")
             .attr("class", "country")
             .attr("d", path)
             .attr("id", function(d) { return d.id; })

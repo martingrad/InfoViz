@@ -55,6 +55,32 @@ function sp(){
             .attr("class", "tooltip")
             .style("opacity", 0);
 
+    var valResultat1 = this;
+    var valResultat2 = this;
+    var valResultat3 = this;
+    var alternativ;
+    // Ladda in valresultatdata
+    d3.csv("data/Elections/Swedish_Election_2002.csv", function(error,data) 
+    {
+        valResultat1.data = data;
+        x.domain(alternativ = d3.keys(data[0]).filter(function(d) {
+            return d;
+        }));
+
+        //Ladda in nästa set
+        d3.csv("data/Elections/Swedish_Election_2006.csv", function(error,data) {
+            valResultat2.data = data;
+
+            d3.csv("data/Elections/Swedish_Election_2006.csv", function(error,data) {
+                valResultat3.data = data;          
+            });
+        });
+    });
+    
+
+
+
+
     //Load data
     d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
         self.data = data;
@@ -113,8 +139,9 @@ function sp(){
             .attr("y", height/2)
             .attr("x", 0)
             .attr("text-anchor", "middle")
-            // .attr("transform", "rotate(-90)")
             .attr("dy", ".71em");
+
+
             
             
         // Add the scatter dots.
@@ -133,35 +160,35 @@ function sp(){
             .style("fill", function(d, i){ return countryColorScale(d["Country"]);})
             // tooltip
             .on("mousemove", function(d, i) {
-                tooltip.transition()
-               .duration(200)
-               .style("opacity", .9);
-                    tooltip.html(d["Country"] + "<br/> (" + entry1[i]
-                    + ", " + entry2[i] + ")")
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");  
+               //  tooltip.transition()
+               // .duration(200)
+               // .style("opacity", .9);
+               //      tooltip.html(d["Country"] + "<br/> (" + entry1[i]
+               //      + ", " + entry2[i] + ")")
+               // .style("left", (d3.event.pageX + 5) + "px")
+               // .style("top", (d3.event.pageY - 28) + "px");  
             })
             .on("mouseout", function(d) {
-                tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
+                // tooltip.transition()
+                // .duration(500)
+                // .style("opacity", 0);
             })
             .on("click",  function(d) {
-                selFeature(d);
+                // selFeature(d);
             });
 
     }
 
     //method for selecting the dot from other components
-    this.selectDot = function(value){           // value = land
-        d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["Country"] != value) return 0.1;});
-        d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["Country"] == value) return "#ff1111"; else return countryColorScale(d["Country"]);});
-    };
+    // this.selectDot = function(value){           // value = land
+    //     d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["Country"] != value) return 0.1;});
+    //     d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["Country"] == value) return "#ff1111"; else return countryColorScale(d["Country"]);});
+    // };
 
-    this.deselectDot = function(){
-        d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
-        d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["Country"]);});
-    }
+    // this.deselectDot = function(){
+    //     d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
+    //     d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["Country"]);});
+    // }
 
     this.getData = function(){
         return self.data;
@@ -169,10 +196,25 @@ function sp(){
     
     //method for selecting features of other components
     function selFeature(value){
-        sp1.selectDot(value.Country);
-        pc1.selectLine(value.Country);
-        map.selectCountry(value.Country);
+        // sp1.selectDot(value.Country);
+        // pc1.selectLine(value.Country);
+        // map.selectCountry(value.Country);
     }
+
+    //method to select what should be displayed on the Y-axis
+    this.selectYAxis = function()
+    {
+        console.log("Väljer vad som ska visas på y axeln");
+        //console.log(document.getElementById("buttonXAxis").value="chosenVariableOnXAxis");
+    };
+
+    //method to select what should be displayed on the Y-axis
+    this.selectXAxis = function()
+    {
+        console.log("Väljer vad som ska visas på x axeln");
+    };
+
+
 
 }
 

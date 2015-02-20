@@ -3,17 +3,33 @@
 
 }
 
-#buttonScatterPlotForYAxis
+.buttonScatterPlotForYAxis
 {
-	/*-webkit-transform: rotate(-90deg);	 Safari and Chrome */
-    /*-moz-transform: rotate(-90deg);		 Firefox */
-    /*-o-transform: rotate(-90deg);		 Opera */
-    /*-ms-transform: rotate(-90deg);		 IE 9 */
-    /*transform: rotate(-90deg); */
+	float: left !important;
+	margin-bottom: 5px;
+	/* -webkit-transform: rotate(-90deg);	 /* Safari and Chrome */
+    /* -moz-transform: rotate(-90deg);	 	 /* Firefox */
+    /* -o-transform: rotate(-90deg);		 /* Opera */
+    /* -ms-transform: rotate(-90deg);		 /* IE 9 */
+    /* transform: rotate(-90deg); */
     
 }
 
 .buttonScatterPlotForXAxis
 {
-	
+	float: right !important;
+	margin-top: 5px;
+}
+
+.map-border
+{
+	border-bottom: 1px solid #dddddd;
+	border-right: 1px solid #dddddd;
+	border-left: 1px solid #dddddd;
+}
+
+.black-border
+{
+	border-style: solid;
+	border-color: black;
 }
