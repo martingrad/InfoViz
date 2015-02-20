@@ -1,7 +1,7 @@
 function map(){
 
     var zoom = d3.behavior.zoom()
-        .scaleExtent([1, 8])
+        .scaleExtent([0.25, 10])
         .on("zoom", move);
 
     var mapDiv = $("#map");
@@ -24,8 +24,8 @@ function map(){
         .style("opacity", 0);
 
     var projection = d3.geo.mercator()
-        .center([50, 60 ])
-        .scale(250);
+        .center([20, 60])
+        .scale(2500);
 
     var svg = d3.select("#map").append("svg")
         .attr("width", width)
