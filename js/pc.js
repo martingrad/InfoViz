@@ -33,50 +33,51 @@ function pc(){
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
 
-    //Load data
-    // d3.csv("data/OECD-better-life-index-hi.csv", function(data) {
+
+    // //Load data
+    // d3.csv("data/Elections/Swedish_Election_2002.csv", function(data) {
 
     //     self.data = data;
         
-    //     // Extract the list of dimensions and create a scale for each.
-    //     // För att läsa endast en liten pluttig rad. Kan detta göras på något annat sätt annars bojkottar vi javascript i framtiden.
-    //     // var headers = [];
-    //     // var BreakException= {};
-    //     // try {
-    //     //     data.forEach(function(row) {
-    //     //         headers = Object.keys(row);
-    //     //         if(true) throw BreakException;
-    //     //     });
-    //     // }
-    //     // catch(e) {
-    //     //     if (e!==BreakException) throw e;
-    //     // }
-    //     // //console.log(headers);
+    // //     // Extract the list of dimensions and create a scale for each.
+    // //     // För att läsa endast en liten pluttig rad. Kan detta göras på något annat sätt annars bojkottar vi javascript i framtiden.
+    // //     // var headers = [];
+    // //     // var BreakException= {};
+    // //     // try {
+    // //     //     data.forEach(function(row) {
+    // //     //         headers = Object.keys(row);
+    // //     //         if(true) throw BreakException;
+    // //     //     });
+    // //     // }
+    // //     // catch(e) {
+    // //     //     if (e!==BreakException) throw e;
+    // //     // }
+    // //     // //console.log(headers);
 
-    //     // console.log(self.data[0][headers[0]]);
+    // //     // console.log(self.data[0][headers[0]]);
 
-    //     // varje stapel är en variabel
-    //     // varje linje är ett land
+    // //     // varje stapel är en variabel
+    // //     // varje linje är ett land
         
-    //     // console.log(data[0]);
+    // //     // console.log(data[0]);
 
-    //     x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-    //         //console.log(d3.keys[4]);
-    //         return d != "Country" && (y[d] = d3.scale.linear()
-    //             .domain(d3.extent(data, function(p) { return +p[d]; }))
-    //             .range([height, 0]));
-    //     }));
+    // x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+    //     //console.log(d3.keys[4]);
+    // return d != "region" && (y[d] = d3.scale.linear()
+    // .domain(d3.extent(data, function(p) { return +p[d]; }))
+    //              .range([height, 0]));
+    //      }));
 
-    //     // // Extract the list of dimensions and create a scale for each.
-    //     // x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
-    //     //     return d != "name" && (y[d] = d3.scale.linear()
-    //     //     .domain(d3.extent(cars, function(p) { return +p[d]; }))
-    //     //     .range([height, 0]));
-    //     // }));
+    // //     // // Extract the list of dimensions and create a scale for each.
+    // //     // x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
+    // //     //     return d != "name" && (y[d] = d3.scale.linear()
+    // //     //     .domain(d3.extent(cars, function(p) { return +p[d]; }))
+    // //     //     .range([height, 0]));
+    // //     // }));
 
 
-    //     draw();
-    // });
+    //      draw();
+    //  });
 
     // function draw(){
     //     // Add grey background lines for context.
