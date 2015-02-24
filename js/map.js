@@ -100,7 +100,7 @@ function map(){
                     if(d.geometry.type == "MultiPolygon")
                         coordinateY = coordinateY[1];
                     // fulhack var det här! manuell normalisering... icke bra!
-                    var alpha = 1 - (coordinateY - 55) / 14;
+                    var alpha = 1 - (coordinateY - 55) / 20;
                     return "rgba(" + [50 , 50, 175, alpha] + ")";
                 })
             
@@ -146,14 +146,15 @@ function map(){
     this.selectCountry = function(value){
         //d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.3;});
         d3.select("#map").selectAll("path").style("fill", function(d){
+            var coordinateY = d.geometry.coordinates[0][0][1]
+            if(d.geometry.type == "MultiPolygon")
+                coordinateY = coordinateY[1];
+            // fulhack var det här! manuell normalisering... icke bra!
+            var alpha = 1 - (coordinateY - 55) / 20;
+
             if(d.properties.name == value)
-                return "#b3a";
+                return "rgba(" + [225, 20, 125, alpha] + ")";
             else
-                var coordinateY = d.geometry.coordinates[0][0][1]
-                if(d.geometry.type == "MultiPolygon")
-                    coordinateY = coordinateY[1];
-                // fulhack var det här! manuell normalisering... icke bra!
-                var alpha = 1 - (coordinateY - 55) / 14;
                 return "rgba(" + [50 , 50, 175, alpha] + ")";
             });
     };
