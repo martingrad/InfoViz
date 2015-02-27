@@ -54,7 +54,11 @@ function sp(){
         var tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
-
+    
+    d3.csv("data/databaosen.csv", function(error, data){
+        console.log(data);
+    });
+    
     //Load data
     d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
         self.data = data;

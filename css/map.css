@@ -1,4 +1,8 @@
-.country{ fill: rgb(0, 75, 151); }
+.country{ 
+    fill: rgb(0, 75, 151);
+    stroke: #fff;
+    stroke-width: 0.1px;
+}
 
 .country:hover{
     stroke: #fff;
@@ -21,6 +25,7 @@ div.tooltip {
     box-shadow: 0px 0px 2px 0px #a6a6a6;
     opacity: 0.9;
     position: absolute;
+    width: auto;
 }
 
 .grad1 {
