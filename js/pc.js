@@ -41,11 +41,10 @@ function pc(){
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
             return d != "region" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) {  
+                .domain(d3.extent(data, function(p) {
                     return +p[d]; 
                 }))
                 .range([height, 0])
-                
                 );
         }));
 
