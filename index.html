@@ -47,7 +47,7 @@
         <div id="wrap">
 
             <!-- Fixed navbar -->
-            <!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar navbar-static-top" role="navigation">
                 <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -55,25 +55,87 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Lab 1</a>
+                        <a class="navbar-brand" href="#">Valresultat i Sverige år </a>
                     </div>
+                        <!-- <div id="navbar" class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav" id="year">
+                                <li class="active" value="2002" ><a href="#2002">2002</a></li>
+                                <li value="2006"><a href="#2006">2006</a></li>
+                                <li value="2010"><a href="#2010">2010</a></li>
+                                <li value="2014"><a href="#2014">2014</a></li>
+                            
+                            </ul>
+                        </div><!-- /.nav-collapse --> 
+                    
                 </div>
-            </div> -->
+            </div>
 
             <!-- Begin page content -->
 
-
             <div class="container">
                 <!-- row of columns -->
-
+                <div class="btn-group">
+                    <select id="selectYear"  onchange="sp1.selectYear()">
+                        <option value="2014">2014</option>
+                        <option value="2010">2010</option>
+                        <option value="2006">2006</option>
+                        <option value="2002">2002</option>
+                    </select>
+                </div>
                 <br><br><br>
+                
 
                 <div class="row">
                     <div class="col-xs-6">
-                        <button type="button" onclick="chooseYAxis()" class="btn buttonScatterPlotForYAxis">Välj</button>
+                        <!-- dropdown knapp för y axeln på scatterplotten -->
+                        <div class="btn-group">
+                            <!-- <button type="button" data-toggle="dropdown" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas<span class="caret"></span></button>
+                            <ul class="dropdown-menu" id="scatterPlotDropDown1">
+                                <li><a href="#">Partier</a></li>
+                                <li><a href="#">Utbildning</a></li>
+                                <li><a href="#">Lön</a></li>
+                                <li><a href="#">Regioner</a></li>
+                                <li><a href="#">Kön</a></li> -->
+                                <!-- <li class="divider"></li> -->
+                                <!-- <li><a href="#">Lön</a></li> -->
+                            <!-- </ul> -->
+                            <select id="selectScatterPlotYAxis"  onchange="sp1.selectYAxis()">
+                              <option value="parti">Partier</option>
+                              <option value="region">Regioner</option>
+                              <option value="utbildning">Utbildning</option>
+                              <option value="lön">Lön</option>
+                              <option value="kön">Kön</option>
+                            </select>
+                        </div>
+
+                        <!--  -->
+                        <!-- <button type="button" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas</button> -->
                         <div id="sp" style="height: 45vh;"></div>
-                        <button type="button" onclick="chooseXAxis()" style="float: right;" class="btn buttonScatterPlotForXAxis">Välj</button>
+
+                        <!-- dropdown knapp för x axeln på scatterplotten -->
+                        <div class="btn-group" style="float: right">
+                            <!-- <button type="button" data-toggle="dropdown" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas<span class="caret"></span></button>
+                            <ul class="dropdown-menu" id="scatterPlotDropDown2">
+                                <li><a href="#">Partier</a></li>
+                                <li><a href="#">Utbildning</a></li>
+                                <li><a href="#">Lön</a></li>
+                                <li><a href="#">Regioner</a></li>
+                                <li><a href="#">Kön</a></li>
+                                <li class="divider"></li> 
+                                <li><a href="#">Region</a></li> 
+                            </ul> --> 
+                            <select id="selectScatterPlotXAxis"  onchange="sp1.selectXAxis()">
+                              <option value="parti">Partier</option>            <!--  Val dataset-->
+                              <option value="region">Regioner</option>          <!--  Val dataset-->
+                              <option value="utbildning">Utbildning</option>
+                              <option value="lön">Lön</option>  
+                              <option value="kön">Kön</option>
+                            </select>
+                        </div>
+
+                        <!-- <button type="button" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas</button> --> 
                     </div>
 
                     <div class="col-xs-6">
@@ -85,7 +147,7 @@
 
                 <div class="row">
                     <br><br><br>
-                    <div class="col-xs-12">
+                    <div class="col-xs-12 black-border">
                         <div id="pc" style="height: 30vh"></div>
                     </div>
                 </div>
@@ -94,6 +156,19 @@
         </div>
 
         <div id="footer">
+            <!-- Om vi vill lägga in adress -->
+            <!-- <address>
+                <strong>Twitter, Inc.</strong><br>
+                        795 Folsom Ave, Suite 600<br>
+                        San Francisco, CA 94107<br>
+                <abbr title="Phone">P:</abbr> (123) 456-7890
+            </address>
+
+            <address>
+                <strong>Full Name</strong><br>
+                <a href="mailto:#">first.last@example.com</a>
+            </address> -->
+            
             <div class="container">
             </div>
         </div>

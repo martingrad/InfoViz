@@ -12,6 +12,7 @@ function sp(){
     var countryColorScale = d3.scale.category20();
     
     //initialize tooltip
+
     //...
     // These variables are used to chose and store data for the plot
     // in which the headers, is the name of the different columns from the data set
@@ -26,6 +27,12 @@ function sp(){
         headers = d3.csv.parseRows(text)[0];
     });
 
+    var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+
+    // Scale, axis osv.
     var xScale;
     var yScale;
 
@@ -50,15 +57,23 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        // add the tooltip area to the webpage
-        var tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
+
+    ////////////// Lab 1 /////////
+    // These variables are used to chose and store data for the plot
+    // in which the headers, is the name of the different columns from the data set
+    var entry1 = [];
+    var entry2 = [];
+    var chosenVariableOnXAxis;
+    var chosenVariableOnYAxis;
     
-    /*d3.csv("data/databaosen.csv", function(error, data){
-        console.log(data);
-    });*/
+    ////////////// /Lab 1 /////////
     
+    /////// ------------  Välj år --------- /////
+    // Kolla vilka alternativ som valts för axlarna
+    var selectedObjectOnYAxis = $("#selectScatterPlotYAxis option:selected").val();
+    var selectedObjectOnXAxis = $("#selectScatterPlotXAxis option:selected").val();
+    var selectedYear = $("#selectYear option:selected").text();
+        
     //Load data
     d3.csv("data/databaosen.csv", function(error, data) {
         var chosenYear = "2002";
@@ -119,8 +134,7 @@ function sp(){
             .attr("y", height/2)
             .attr("x", 0)
             .attr("text-anchor", "middle")
-            //.attr("transform", "rotate(-90)")
-            .attr("dy", ".71em");  
+            .attr("dy", ".71em");
             
         // Add the scatter dots.
         svg.selectAll(".dot")
@@ -147,12 +161,12 @@ function sp(){
                .style("top", (d3.event.pageY - 28) + "px");  
             })
             .on("mouseout", function(d) {
-                tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
+                // tooltip.transition()
+                // .duration(500)
+                // .style("opacity", 0);
             })
             .on("click",  function(d) {
-                selFeature(d);
+                 selFeature(d);
             });
 
     }
@@ -174,13 +188,34 @@ function sp(){
     
     //method for selecting features of other components
     function selFeature(value){
-        sp1.selectDot(value.Country);
-        pc1.selectLine(value.Country);
-        map.selectCountry(value.Country);
+        // sp1.selectDot(value.Country);
+        // pc1.selectLine(value.Country);
+        // map.selectCountry(value.Country);
+        console.log(valResultat);
+        console.log(headers);
     }
 
+    //method to select what should be displayed on the Y-axis
+    this.selectYAxis = function()
+    {
+        //console.log("Väljer vad som ska visas på y axeln");
+        //var dropDown = document.getElementById("selectScatterPlotYAxis");
+        //var selectedOption = dropDown.options[dropDown.selectedIndex].text;
+        selectedObjectOnYAxis = $("selectedObjectOnYAxis option:selected").val();
+    };
+
+    //method to select what should be displayed on the Y-axis
+    this.selectXAxis = function()
+    {
+        selectedObjectOnXAxis = $("selectedObjectOnXAxis option:selected").val();
+    };
+
+    // method to select which year is choosen
+    this.selectYear = function()
+    {
+        selectedYear = $("#selectYear option:selected").text();
+        console.log("Väljer år " + $("#selectYear option:selected").text());
+    };
+
 }
-
-
-
 

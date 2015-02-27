@@ -6,7 +6,7 @@ function map(){
 
     var mapDiv = $("#map");
 
-    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
         width  = mapDiv.width(),
         height = mapDiv.height();
 
@@ -41,8 +41,11 @@ function map(){
         .projection(projection);
 
     var svg = d3.select("#map").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
 
     /*svg.append("path")
@@ -63,7 +66,6 @@ function map(){
     d3.json("data/map/SWE_adm2.json",function(error, sweden) {
         //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
         var counties = topojson.feature(sweden, sweden.objects.SWE_adm2).features;
-
         console.log(counties);
         //load summary data
         //...
