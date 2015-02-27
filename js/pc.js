@@ -24,7 +24,7 @@ function pc(){
         
 
     var line = d3.svg.line(),
-        axis = d3.svg.axis().orient("left"),
+        axis = d3.svg.axis().orient("left").tickFormat(d3.format("d")),
         background,
         foreground;
 
@@ -36,7 +36,7 @@ function pc(){
 
     // Ny parallell koordinat
     d3.csv("data/databaosen.csv", function(error, data) {
-
+        self.data = data;
 
         // Extract the list of dimensions and create a scale for each.
         x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
@@ -44,14 +44,20 @@ function pc(){
                 .domain(d3.extent(data, function(p) { 
                     return +p[d]; 
                 }))
-                .range([height, 0]));
+                .range([height, 0])
+                
+                );
         }));
 
+        draw();
+    });
+
+    function draw(){
         // Add grey background lines for context.
         background = svg.append("g")
             .attr("class", "background")
             .selectAll("path")
-            .data(data)
+            .data(self.data)
             .enter().append("path")
             .attr("d", path);
 
@@ -59,7 +65,7 @@ function pc(){
         foreground = svg.append("g")
             .attr("class", "foreground")
             .selectAll("path")
-            .data(data)
+            .data(self.data)
             .enter().append("path")
             .attr("d", path);
 
@@ -68,41 +74,40 @@ function pc(){
             .data(dimensions)
             .enter().append("g")
             .attr("class", "dimension")
-            .attr("transform", function(d) { 
+            .attr("transform", function(d) {
                 return "translate(" + x(d) + ")"; 
             })
             .call(d3.behavior.drag()
-            .origin(function(d) { 
-                return {x: x(d)}; 
-            })
-            .on("dragstart", function(d) {
-                dragging[d] = x(d);
-                background.attr("visibility", "hidden");
-            })
-            .on("drag", function(d) {
-                dragging[d] = Math.min(width, Math.max(0, d3.event.x));
-                foreground.attr("d", path);
-                dimensions.sort(function(a, b) { 
-                    return position(a) - position(b); 
-                });
-                x.domain(dimensions);
-                g.attr("transform", function(d) { 
-                    return "translate(" + position(d) + ")"; 
+                .origin(function(d) { 
+                    return {x: x(d)}; 
                 })
-                //.style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");
-                
-            })
-            .on("dragend", function(d) {
-                delete dragging[d];
-                transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
-                transition(foreground).attr("d", path);
-                background
-                    .attr("d", path)
-                    .transition()
-                    .delay(500)
-                    .duration(0)
-                    .attr("visibility", null);
-            }));
+                .on("dragstart", function(d) {
+                    dragging[d] = x(d);
+                    background.attr("visibility", "hidden");
+                })
+                .on("drag", function(d) {
+                    dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+                    foreground.attr("d", path);
+                    dimensions.sort(function(a, b) { 
+                        return position(a) - position(b); 
+                    });
+                    x.domain(dimensions);
+                    g.attr("transform", function(d) { 
+                        return "translate(" + position(d) + ")"; 
+                    }) 
+                })
+                .on("dragend", function(d) {
+                    delete dragging[d];
+                    transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+                    transition(foreground).attr("d", path);
+                    background
+                        .attr("d", path)
+                        .transition()
+                        .delay(500)
+                        .duration(0)
+                        .attr("visibility", null);
+                })
+            );
 
         // Add an axis and title.
         g.append("g")
@@ -116,9 +121,10 @@ function pc(){
             .text(function(d) { 
                 return d; 
             })
-            .style("cursor", "pointer")
-            .style("cursor","hand")
-            .style("cursor" ,"-webkit-grabbing");
+            .style("cursor", "pointer")                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
+            .style("cursor","hand")                     // hand, funkar för mac, Martin  kolla ifall funkar på windows.
+            .style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)
+            .style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows.
 
         // Add and store a brush for each axis.
         g.append("g")
@@ -129,40 +135,43 @@ function pc(){
             .selectAll("rect")
             .attr("x", -8)
             .attr("width", 16);
-        });
 
-        function position(d) {
-            var v = dragging[d];
-            return v == null ? x(d) : v;
-        }
+    };
 
-        function transition(g) {
-            return g.transition().duration(500);
-        }
+    function position(d) {
+        var v = dragging[d];
+        return v == null ? x(d) : v;
+    }
 
-        // Returns the path for a given data point.
-        function path(d) {
-            return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
-        }
+    function transition(g) {
+        return g.transition().duration(500);
+    }
 
-        function brushstart() {
-            d3.event.sourceEvent.stopPropagation();
-        }
+    // Returns the path for a given data point.
+    function path(d) {
+        return line(dimensions.map(function(p) { 
+            return [position(p), y[p](d[p])]; 
+        }));
+    }
 
-        // Handles a brush event, toggling the display of foreground lines.
-        function brush() {
-            var actives = dimensions.filter(function(p) { 
-                    return !y[p].brush.empty(); 
-                }),
-                extents = actives.map(function(p) { 
-                    return y[p].brush.extent(); 
-                });
-            foreground.style("display", function(d) {
-                return actives.every(function(p, i) {
-                    return extents[i][0] <= d[p] && d[p] <= extents[i][1];
-                }) ? null : "none";
+    function brushstart() {
+        d3.event.sourceEvent.stopPropagation();
+    }
+
+    // Handles a brush event, toggling the display of foreground lines.
+    function brush() {
+        var actives = dimensions.filter(function(p) { 
+                return !y[p].brush.empty(); 
+            }),
+            extents = actives.map(function(p) { 
+                return y[p].brush.extent(); 
             });
-        }
+        foreground.style("display", function(d) {
+            return actives.every(function(p, i) {
+                return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+            }) ? null : "none";
+        });
+    }
 
 
     
