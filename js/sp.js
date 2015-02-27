@@ -12,20 +12,11 @@ function sp(){
     var countryColorScale = d3.scale.category20();
     
     //initialize tooltip
-    //...
-    // These variables are used to chose and store data for the plot
-    // in which the headers, is the name of the different columns from the data set
-    var entry1 = [];
-    var entry2 = [];
-    var chosenVariableOnXAxis;
-    var chosenVariableOnYAxis;
-    var headers = [];
+    var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
-    // Extract the name of the columns
-    d3.text("data/OECD-better-life-index-hi.csv", function(text) {
-        headers = d3.csv.parseRows(text)[0];
-    });
-
+    // Scale, axis osv.
     var xScale;
     var yScale;
 
@@ -50,38 +41,77 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        // add the tooltip area to the webpage
-        var tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
 
-    var valResultat1 = this;
-    var valResultat2 = this;
-    var valResultat3 = this;
-    var alternativ;
-    // Ladda in valresultatdata
-    d3.csv("data/Elections/Swedish_Election_2002.csv", function(error,data) 
-    {
-        valResultat1.data = data;
-        x.domain(alternativ = d3.keys(data[0]).filter(function(d) {
-            return d;
-        }));
+    ////////////// Lab 1 /////////
+    // These variables are used to chose and store data for the plot
+    // in which the headers, is the name of the different columns from the data set
+    var entry1 = [];
+    var entry2 = [];
+    var chosenVariableOnXAxis;
+    var chosenVariableOnYAxis;
+    var headers = [];
 
-        //Ladda in nästa set
-        d3.csv("data/Elections/Swedish_Election_2006.csv", function(error,data) {
-            valResultat2.data = data;
-
-            d3.csv("data/Elections/Swedish_Election_2006.csv", function(error,data) {
-                valResultat3.data = data;          
-            });
-        });
+    // Extract the name of the columns
+    d3.text("data/OECD-better-life-index-hi.csv", function(text) {
+        headers = d3.csv.parseRows(text)[0];
     });
+
+
+    ////////////// /Lab 1 /////////
     
+    var valResultat = [];
+    var headers;
+
+
+    
+    /////// ------------  Välj år --------- /////
+    // Kolla vilka alternativ som valts för axlarna
+    var selectedObjectOnYAxis = $("#selectScatterPlotYAxis option:selected").val();
+    var selectedObjectOnXAxis = $("#selectScatterPlotXAxis option:selected").val();
+    var selectedYear = $("#selectYear option:selected").text();
+    
+    
+    
+    console.log(selectedYear);
+
+    // Ladda in valresultatdata
+    d3.csv("data/Elections/Swedish_Election_" + selectedYear + ".csv", function(error,data) 
+    {
+        valResultat.data = data;
+        x.domain(headers = d3.keys(data[0]).filter(function(d) {
+             return d;
+        }));
+        console.log(headers);
+        console.log(selectedObjectOnYAxis);
+        console.log(selectedObjectOnXAxis);
+        console.log(valResultat.data);
+        for(var i = 0; i < valResultat.data.length; i++)
+        {
+            entry1.push(valResultat.data[i][selectedObjectOnXAxis]);
+            entry2.push(valResultat.data[i][selectedObjectOnYAxis]);
+        }
+        
+        // var padding = 0;
+        // xScale = d3.scale.linear()                                      // scale entry1
+        //               .domain([d3.min(entry1), d3.max(entry1)])
+        //               .range([padding, width - padding]);
+
+        // yScale = d3.scale.linear()                                      // scale entry2
+        //               .domain([d3.min(entry2), d3.max(entry2)])
+        //               .range([height  - padding, padding]);
+
+        // xAxis= d3.svg.axis().scale(xScale).orient("bottom");
+        // yAxis= d3.svg.axis().scale(yScale).orient("left");
+        //draw();
+
+    });
+ 
+   
 
 
 
 
-    //Load data
+    // //Load data
     d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
         self.data = data;
           
@@ -174,7 +204,7 @@ function sp(){
                 // .style("opacity", 0);
             })
             .on("click",  function(d) {
-                // selFeature(d);
+                 selFeature(d);
             });
 
     }
@@ -199,19 +229,30 @@ function sp(){
         // sp1.selectDot(value.Country);
         // pc1.selectLine(value.Country);
         // map.selectCountry(value.Country);
+        console.log(valResultat);
+        console.log(headers);
     }
 
     //method to select what should be displayed on the Y-axis
     this.selectYAxis = function()
     {
-        console.log("Väljer vad som ska visas på y axeln");
-        //console.log(document.getElementById("buttonXAxis").value="chosenVariableOnXAxis");
+        //console.log("Väljer vad som ska visas på y axeln");
+        //var dropDown = document.getElementById("selectScatterPlotYAxis");
+        //var selectedOption = dropDown.options[dropDown.selectedIndex].text;
+        selectedObjectOnYAxis = $("selectedObjectOnYAxis option:selected").val();
     };
 
     //method to select what should be displayed on the Y-axis
     this.selectXAxis = function()
     {
-        console.log("Väljer vad som ska visas på x axeln");
+        selectedObjectOnXAxis = $("selectedObjectOnXAxis option:selected").val();
+    };
+
+    // method to select which year is choosen
+    this.selectYear = function()
+    {
+        selectedYear = $("#selectYear option:selected").text();
+        console.log("Väljer år " + $("#selectYear option:selected").text());
     };
 
 

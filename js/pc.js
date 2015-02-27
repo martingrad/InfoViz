@@ -34,6 +34,29 @@ function pc(){
 
 
 
+    var selectedObjectOnYAxis = $("#selectScatterPlotYAxis option:selected").val();
+    var selectedObjectOnXAxis = $("#selectScatterPlotXAxis option:selected").val();
+    var selectedYear = $("#selectYear option:selected").text();
+    
+    var valResultat;
+    var headers;
+    
+    console.log(selectedYear);
+
+    // Ladda in valresultatdata
+    d3.csv("data/Elections/Swedish_Election_" + selectedYear + ".csv", function(error,data) 
+    {
+        valResultat.data = data;
+        x.domain(headers = d3.keys(data[0]).filter(function(d) {
+             return d;
+        }));
+        console.log(headers);
+        console.log(selectedObjectOnYAxis);
+        console.log(selectedObjectOnXAxis);
+        console.log(valResultat.data);
+
+    });
+
     // //Load data
     // d3.csv("data/Elections/Swedish_Election_2002.csv", function(data) {
 
