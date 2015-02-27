@@ -6,7 +6,7 @@ function map(){
 
     var mapDiv = $("#map");
 
-    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
         width  = mapDiv.width(),
         height = mapDiv.height();
 
@@ -63,49 +63,57 @@ function map(){
     //     console.log(topojson.feature(world,world.objects.countries));
     // });
     // load data and draw the map
-    d3.json("data/swe-topo.json",function(error, sweden) {
+    d3.json("data/map/SWE_adm2.json",function(error, sweden) {
         //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
-
-        var counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
-
-        //console.log(countries.path);
+        var counties = topojson.feature(sweden, sweden.objects.SWE_adm2).features;
+        console.log(counties);
         //load summary data
         //...
+
         draw(counties, sp1.getData());
         
     });
 
     function draw(countries, data)
     {
-        //console.log(countries);
+
+        var colorMappingVariable = "inkomst";
+        var chosenYear = "2002";
+        var colorMappingValues = [];
+
+        for(var i = 0; i < data.length; ++i){
+            colorMappingValues.push(data[i][colorMappingVariable]);
+        }
 
         var country = g.selectAll(".country").data(countries);
         var id = g.selectAll(".country").data(countries);
         
         //initialize a color country object
-        //console.log(id);
+        var colorScale = d3.scale.linear()
+          .domain([d3.min(colorMappingValues), d3.max(colorMappingValues)])
+          .range(["blue", "red"]);
 
         var color = "#800026";
         var cc = {Country: country, Color: color};
-        //console.log(cc.Color);
-        //var alpha;
-        //var coordinateY;
     
-        //var languageScale = d3.scale.category10();
         country.enter().insert("path")
             .attr("class", "country")
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
             //country color
-            .style("fill", function(d)
+            .style("fill", function(d, i)
                 {
+                    /*
                     var coordinateY = d.geometry.coordinates[0][0][1]
                     if(d.geometry.type == "MultiPolygon")
                         coordinateY = coordinateY[1];
                     // fulhack var det här! manuell normalisering... icke bra!
                     var alpha = 1 - (coordinateY - 55) / 20;
                     return "rgba(" + [50 , 50, 175, alpha] + ")";
+                    */
+
+                    return colorScale(data[i][colorMappingVariable]);
                 })
             
             //...

@@ -12,9 +12,25 @@ function sp(){
     var countryColorScale = d3.scale.category20();
     
     //initialize tooltip
+
+    //...
+    // These variables are used to chose and store data for the plot
+    // in which the headers, is the name of the different columns from the data set
+    var entry1 = [];
+    var entry2 = [];
+    var chosenVariableOnXAxis;
+    var chosenVariableOnYAxis;
+    var headers = [];
+
+    // Extract the name of the columns
+    d3.text("data/databaosen.csv", function(text) {
+        headers = d3.csv.parseRows(text)[0];
+    });
+
     var tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
+
 
     // Scale, axis osv.
     var xScale;
@@ -50,87 +66,29 @@ function sp(){
     var chosenVariableOnXAxis;
     var chosenVariableOnYAxis;
     
-
-    // Extract the name of the columns
-    d3.text("data/OECD-better-life-index-hi.csv", function(text) {
-        headers = d3.csv.parseRows(text)[0];
-    });
-
-
     ////////////// /Lab 1 /////////
-    
-    var valResultat = [];
-    var headers1;
-
-
     
     /////// ------------  Välj år --------- /////
     // Kolla vilka alternativ som valts för axlarna
     var selectedObjectOnYAxis = $("#selectScatterPlotYAxis option:selected").val();
     var selectedObjectOnXAxis = $("#selectScatterPlotXAxis option:selected").val();
     var selectedYear = $("#selectYear option:selected").text();
-    
-    
-    
-    console.log(selectedYear);
-
-    // Ladda in valresultatdata
-    d3.csv("data/Elections/Swedish_Election_" + selectedYear + ".csv", function(error,data) 
-    {
-        valResultat.data = data;
-        x.domain(headers1 = d3.keys(data[0]).filter(function(d) {
-             return d;
-        }));
-        console.log(headers1);
-        console.log(selectedObjectOnYAxis);
-        console.log(selectedObjectOnXAxis);
-        console.log(valResultat.data);
-        for(var i = 0; i < valResultat.data.length; i++)
-        {
-            entry1.push(valResultat.data[i][selectedObjectOnXAxis]);
-            entry2.push(valResultat.data[i][selectedObjectOnYAxis]);
-        }
         
-        // var padding = 0;
-        // xScale = d3.scale.linear()                                      // scale entry1
-        //               .domain([d3.min(entry1), d3.max(entry1)])
-        //               .range([padding, width - padding]);
-
-        // yScale = d3.scale.linear()                                      // scale entry2
-        //               .domain([d3.min(entry2), d3.max(entry2)])
-        //               .range([height  - padding, padding]);
-
-        // xAxis= d3.svg.axis().scale(xScale).orient("bottom");
-        // yAxis= d3.svg.axis().scale(yScale).orient("left");
-        //draw();
-
-    });
- 
-   
-
-
-
-
-    // //Load data
-
-    var headers = [];
-    d3.csv("data/databaosen.csv", function(error, data){
-        console.log(data);
-    });
-    
     //Load data
-    d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
-        self.data = data;
+    d3.csv("data/databaosen.csv", function(error, data) {
+        var chosenYear = "2002";
+        var i = 0;
+        self.data = [];
+        while(data[i]["år"] == chosenYear){
+            self.data.push(data[i]);
+            ++i;
+        }
           
         // Here the different data are chosen for the plot  
-        chosenVariableOnXAxis = headers[1];
-        chosenVariableOnYAxis = headers[2];
-        //console.log(chosenVariableOnXAxis);
-        
-        //define the domain of the scatter plot axes
-        //Create scale functions
-        
-        for(var i = 0; i < self.data.length; i++){
+        chosenVariableOnXAxis = headers[2];
+        chosenVariableOnYAxis = headers[3];
+
+        for(var i = 0; i < self.data.length; ++i){
             entry1.push(self.data[i][chosenVariableOnXAxis]);       // data for the x axis
             entry2.push(self.data[i][chosenVariableOnYAxis]);       // data for the y axis
         }
@@ -177,9 +135,6 @@ function sp(){
             .attr("x", 0)
             .attr("text-anchor", "middle")
             .attr("dy", ".71em");
-
-
-            
             
         // Add the scatter dots.
         svg.selectAll(".dot")
@@ -187,23 +142,23 @@ function sp(){
             .enter().append("circle")               // create circles
             .attr("class", "dot")
             // Define the x and y coordinate data values for the dots
-            .attr("cx", function(d, i) {  
+            .attr("cx", function(d, i) {
                 return xScale(entry1[i]);           // plot scaled position for x-axis
             })
             .attr("cy", function(d, i) {
                 return yScale(entry2[i]);           // plot scaled position for y-axis
             })
             .attr("r", 5)
-            .style("fill", function(d, i){ return countryColorScale(d["Country"]);})
+            .style("fill", function(d, i){ return countryColorScale(d["region"]);})
             // tooltip
             .on("mousemove", function(d, i) {
-               //  tooltip.transition()
-               // .duration(200)
-               // .style("opacity", .9);
-               //      tooltip.html(d["Country"] + "<br/> (" + entry1[i]
-               //      + ", " + entry2[i] + ")")
-               // .style("left", (d3.event.pageX + 5) + "px")
-               // .style("top", (d3.event.pageY - 28) + "px");  
+                tooltip.transition()
+               .duration(200)
+               .style("opacity", .9);
+                    tooltip.html(d["region"] + "<br/> (" + entry1[i]
+                    + ", " + entry2[i] + ")")
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");  
             })
             .on("mouseout", function(d) {
                 // tooltip.transition()
@@ -217,15 +172,15 @@ function sp(){
     }
 
     //method for selecting the dot from other components
-    // this.selectDot = function(value){           // value = land
-    //     d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["Country"] != value) return 0.1;});
-    //     d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["Country"] == value) return "#ff1111"; else return countryColorScale(d["Country"]);});
-    // };
+    this.selectDot = function(value){           // value = land
+        d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
+        d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return countryColorScale(d["region"]);});
+    };
 
-    // this.deselectDot = function(){
-    //     d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
-    //     d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["Country"]);});
-    // }
+    this.deselectDot = function(){
+        d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
+        d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["region"]);});
+    }
 
     this.getData = function(){
         return self.data;
@@ -262,10 +217,5 @@ function sp(){
         console.log("Väljer år " + $("#selectYear option:selected").text());
     };
 
-
-
 }
-
-
-
 
