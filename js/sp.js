@@ -22,7 +22,7 @@ function sp(){
     var headers = [];
 
     // Extract the name of the columns
-    d3.text("data/OECD-better-life-index-hi.csv", function(text) {
+    d3.text("data/databaosen.csv", function(text) {
         headers = d3.csv.parseRows(text)[0];
     });
 
@@ -55,23 +55,25 @@ function sp(){
             .attr("class", "tooltip")
             .style("opacity", 0);
     
-    d3.csv("data/databaosen.csv", function(error, data){
+    /*d3.csv("data/databaosen.csv", function(error, data){
         console.log(data);
-    });
+    });*/
     
     //Load data
-    d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
-        self.data = data;
+    d3.csv("data/databaosen.csv", function(error, data) {
+        var chosenYear = "2002";
+        var i = 0;
+        self.data = [];
+        while(data[i]["år"] == chosenYear){
+            self.data.push(data[i]);
+            ++i;
+        }
           
         // Here the different data are chosen for the plot  
-        chosenVariableOnXAxis = headers[1];
-        chosenVariableOnYAxis = headers[2];
-        //console.log(chosenVariableOnXAxis);
-        
-        //define the domain of the scatter plot axes
-        //Create scale functions
-        
-        for(var i = 0; i < self.data.length; i++){
+        chosenVariableOnXAxis = headers[2];
+        chosenVariableOnYAxis = headers[3];
+
+        for(var i = 0; i < self.data.length; ++i){
             entry1.push(self.data[i][chosenVariableOnXAxis]);       // data for the x axis
             entry2.push(self.data[i][chosenVariableOnYAxis]);       // data for the y axis
         }
@@ -117,9 +119,8 @@ function sp(){
             .attr("y", height/2)
             .attr("x", 0)
             .attr("text-anchor", "middle")
-            // .attr("transform", "rotate(-90)")
-            .attr("dy", ".71em");
-            
+            //.attr("transform", "rotate(-90)")
+            .attr("dy", ".71em");  
             
         // Add the scatter dots.
         svg.selectAll(".dot")
@@ -127,20 +128,20 @@ function sp(){
             .enter().append("circle")               // create circles
             .attr("class", "dot")
             // Define the x and y coordinate data values for the dots
-            .attr("cx", function(d, i) {  
+            .attr("cx", function(d, i) {
                 return xScale(entry1[i]);           // plot scaled position for x-axis
             })
             .attr("cy", function(d, i) {
                 return yScale(entry2[i]);           // plot scaled position for y-axis
             })
             .attr("r", 5)
-            .style("fill", function(d, i){ return countryColorScale(d["Country"]);})
+            .style("fill", function(d, i){ return countryColorScale(d["region"]);})
             // tooltip
             .on("mousemove", function(d, i) {
                 tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-                    tooltip.html(d["Country"] + "<br/> (" + entry1[i]
+                    tooltip.html(d["region"] + "<br/> (" + entry1[i]
                     + ", " + entry2[i] + ")")
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");  
@@ -158,13 +159,13 @@ function sp(){
 
     //method for selecting the dot from other components
     this.selectDot = function(value){           // value = land
-        d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["Country"] != value) return 0.1;});
-        d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["Country"] == value) return "#ff1111"; else return countryColorScale(d["Country"]);});
+        d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
+        d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return countryColorScale(d["region"]);});
     };
 
     this.deselectDot = function(){
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
-        d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["Country"]);});
+        d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["region"]);});
     }
 
     this.getData = function(){
