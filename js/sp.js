@@ -93,13 +93,15 @@ function sp(){
             entry2.push(self.data[i][chosenVariableOnYAxis]);       // data for the y axis
         }
 
+        console.log(entry2);
+
         var padding = 0;
         xScale = d3.scale.linear()                                      // scale entry1
                       .domain([d3.min(entry1), d3.max(entry1)])
                       .range([padding, width - padding]);
 
         yScale = d3.scale.linear()                                      // scale entry2
-                      .domain([d3.min(entry2), d3.max(entry2)])
+                      .domain([0, 14000])
                       .range([height  - padding, padding]);
 
         xAxis= d3.svg.axis().scale(xScale).orient("bottom");
