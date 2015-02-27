@@ -49,7 +49,7 @@ function sp(){
     var entry2 = [];
     var chosenVariableOnXAxis;
     var chosenVariableOnYAxis;
-    var headers = [];
+    
 
     // Extract the name of the columns
     d3.text("data/OECD-better-life-index-hi.csv", function(text) {
@@ -60,7 +60,7 @@ function sp(){
     ////////////// /Lab 1 /////////
     
     var valResultat = [];
-    var headers;
+    var headers1;
 
 
     
@@ -78,10 +78,10 @@ function sp(){
     d3.csv("data/Elections/Swedish_Election_" + selectedYear + ".csv", function(error,data) 
     {
         valResultat.data = data;
-        x.domain(headers = d3.keys(data[0]).filter(function(d) {
+        x.domain(headers1 = d3.keys(data[0]).filter(function(d) {
              return d;
         }));
-        console.log(headers);
+        console.log(headers1);
         console.log(selectedObjectOnYAxis);
         console.log(selectedObjectOnXAxis);
         console.log(valResultat.data);
@@ -112,6 +112,13 @@ function sp(){
 
 
     // //Load data
+
+    var headers = [];
+    d3.csv("data/databaosen.csv", function(error, data){
+        console.log(data);
+    });
+    
+    //Load data
     d3.csv("data/OECD-better-life-index-hi.csv", function(error, data) {
         self.data = data;
           

@@ -4,6 +4,20 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
+
+        <style>
+            .graticule {
+              fill: none;
+              stroke: #777;
+            }
+
+            .boundary {
+              fill: #ccc;
+              fill-opacity: .8;
+              stroke: #000;
+            }
+        </style>
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
@@ -125,9 +139,8 @@
                     </div>
 
                     <div class="col-xs-6">
-                        
-                        <div id="map" class="map-border" style="height: 45vh;">
-                        </div>
+                        <div id="map" style="height: 45vh; border-style: solid; border-color: black; z-index: -1;"></div>
+                        <!-- <div class="grad1" style="position: absolute; top: 0px; left 0px; z-index: 1;"></div> -->
                     </div>
 
                 </div>
@@ -169,13 +182,13 @@
         <script src="js/vendor/topojson.v1.min.js"></script>
         <script src="js/vendor/underscore-min.js"></script>
         <script src="js/vendor/colorbrewer.js"></script>
+        <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
 
         <!--modules js-->
         <script src="js/pc.js"></script>
         <script src="js/sp.js"></script>
         <script src="js/map.js"></script>
         <script src="js/main.js"></script>
-        <script src="js/val.js"></script>
 
     </body>
 </html>

@@ -46,14 +46,14 @@ function pc(){
     // Ladda in valresultatdata
     d3.csv("data/Elections/Swedish_Election_" + selectedYear + ".csv", function(error,data) 
     {
-        valResultat.data = data;
-        x.domain(headers = d3.keys(data[0]).filter(function(d) {
-             return d;
-        }));
-        console.log(headers);
-        console.log(selectedObjectOnYAxis);
-        console.log(selectedObjectOnXAxis);
-        console.log(valResultat.data);
+        // valResultat.data = data;
+        // x.domain(headers = d3.keys(data[0]).filter(function(d) {
+        //      return d;
+        // }));
+        // console.log(headers);
+        // console.log(selectedObjectOnYAxis);
+        // console.log(selectedObjectOnXAxis);
+        // console.log(valResultat.data);
 
     });
 
