@@ -64,7 +64,7 @@ function pc(){
             .on("mouseout", function(){})
             .on("click", function(d){
                 //selFeature(d);
-            })
+            });
 
         // Add blue foreground lines for focus.
         foreground = svg.append("svg:g")
@@ -146,6 +146,12 @@ function pc(){
             .style("text-anchor", "middle")
             .attr("y", -9)
             .text(function(d) { 
+                if(d == "inkomst")
+                    return "Inkomst (tkr/år)";
+                if(d == "år")
+                    return "År";
+                if(d == "arbetslösa")
+                    return "Arbetslösa"
                 return d; 
             })
             .style("cursor", "pointer")                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
