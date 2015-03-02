@@ -62,20 +62,22 @@ function map(){
     // d3.json("data/world-topo.json",function(error, world){
     //     console.log(topojson.feature(world,world.objects.countries));
     // });
-    // load data and draw the map
-    d3.json("data/map/SWE_adm2.json",function(error, sweden) {
-        //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
-        var counties = topojson.feature(sweden, sweden.objects.SWE_adm2).features;
-        console.log(counties);
-        //load summary data
-        //...
+    //load data and draw the map
+    // d3.json("data/map/sweden.json",function(error, sweden) {
+    //     //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
+    //     var counties = topojson.feature(sweden, sweden.objects.blubb).features;
+    //     console.log(counties);
+    //     //load summary data
+    //     //...
 
-        draw(counties, sp1.getData());
+    //     draw(counties, sp1.getData());
         
-    });
+    // });
 
     function draw(countries, data)
     {
+
+        console.log(countries);
 
         var colorMappingVariable = "inkomst";
         var chosenYear = "2002";
@@ -104,14 +106,14 @@ function map(){
             //country color
             .style("fill", function(d, i)
                 {
-                    /*
+                    
                     var coordinateY = d.geometry.coordinates[0][0][1]
                     if(d.geometry.type == "MultiPolygon")
                         coordinateY = coordinateY[1];
                     // fulhack var det här! manuell normalisering... icke bra!
                     var alpha = 1 - (coordinateY - 55) / 20;
                     return "rgba(" + [50 , 50, 175, alpha] + ")";
-                    */
+                    
 
                     return colorScale(data[i][colorMappingVariable]);
                 })

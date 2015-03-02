@@ -36,6 +36,7 @@ function pc(){
 
     var valdata;
     d3.csv("data/Elections/valen.csv", function(error,data1){
+
         self.data = data1;
         x.domain(dimensions = d3.keys(data1[0]).filter(function(d) {
             return d != "region" && (y[d] = d3.scale.linear()
@@ -166,7 +167,8 @@ function pc(){
                 if(d == "år")
                     return "År";
                 if(d == "arbetslöshet")
-                    return "Arbetslöshet (%)"
+                    return "Arbetslöshet (%)";
+                console.log(d);
                 return d; 
             })
             .style("cursor", "pointer")                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
