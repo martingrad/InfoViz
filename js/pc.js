@@ -34,22 +34,36 @@ function pc(){
         .append("svg:g")
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
-    // Ny parallell koordinat
-    d3.csv("data/databaosen.csv", function(error, data) {
-        self.data = data;
-
-        // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+    var valdata;
+    d3.csv("data/Elections/valen.csv", function(error,data1){
+        self.data = data1;
+        x.domain(dimensions = d3.keys(data1[0]).filter(function(d) {
             return d != "region" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) {
-                    return +p[d]; 
+                .domain(d3.extent(data1, function(p) {
+                    return +p[d];     
                 }))
                 .range([height, 0])
                 );
         }));
-
         draw();
-    });
+
+    })
+    // Ny parallell koordinat
+    // d3.csv("data/databaosen.csv", function(error, data) {
+    //     self.data = data;
+
+    //     // Extract the list of dimensions and create a scale for each.
+    //     x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+    //         return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
+    //             .domain(d3.extent(data, function(p) {
+    //                 return +p[d];     
+    //             }))
+    //             .range([height, 0])
+    //             );
+    //     }));
+
+    //     draw();
+    // });
 
     function draw(){
         // Add grey background lines for context.
@@ -101,6 +115,7 @@ function pc(){
             .enter().append("svg:g")
             .attr("class", "dimension")
             .attr("transform", function(d) {
+                //console.log(x(d));
                 return "translate(" + x(d) + ")"; 
             })
             .call(d3.behavior.drag()
@@ -140,7 +155,7 @@ function pc(){
         g.append("svg:g")
             .attr("class", "axis")
             .each(function(d) { 
-                d3.select(this).call(axis.scale(y[d])); 
+                d3.select(this).call(axis.scale(y[d]));     // utritning av axeln
             })
             .append("svg:text")
             .style("text-anchor", "middle")
@@ -150,14 +165,13 @@ function pc(){
                     return "Inkomst (tkr/år)";
                 if(d == "år")
                     return "År";
-                if(d == "arbetslösa")
-                    return "Arbetslösa"
+                if(d == "arbetslöshet")
+                    return "Arbetslöshet (%)"
                 return d; 
             })
             .style("cursor", "pointer")                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
-            .style("cursor","hand")                     // hand, funkar för mac, Martin  kolla ifall funkar på windows.
-            .style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)
-            .style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows.
+            //.style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)
+            //.style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows.
 
         // Add and store a brush for each axis.
         g.append("svg:g")
