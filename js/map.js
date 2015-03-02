@@ -1,7 +1,7 @@
 function map(){
 
     var zoom = d3.behavior.zoom()
-        .scaleExtent([0.25, 10])
+        .scaleExtent([0.3, 10])
         .on("zoom", move);
 
     var mapDiv = $("#map");
@@ -23,22 +23,14 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    // var projection = d3.geo.mercator()
-    //     .center([50, 60 ])
-    //     .scale(250);
     var projection = d3.geo.satellite()
         .distance(1.1)
-        .scale(3200)
+        .scale(8000)
         .rotate([165.00, -125.0, 180.0])
-        .center([80, 40])
+        .center([150, 20])
         .tilt(15)
         //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
         .precision(.1);
-
-    /*var graticule = d3.geo.graticule()
-                    .extent([[80, 90], [-20, 50]])
-                    .step([3, 3]);
-    */
 
     var path = d3.geo.path()
         .projection(projection);
@@ -51,43 +43,27 @@ function map(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
 
-    /*svg.append("path")
-        .datum(graticule)
-        .attr("class", "graticule")
-        .attr("d", path);
-        */
-
-    var path = d3.geo.path()
-        .projection(projection);
-
     g = svg.append("g");
 
     // d3.json("data/world-topo.json",function(error, world){
     //     console.log(topojson.feature(world,world.objects.countries));
     // });
     //load data and draw the map
-    d3.json("data/map/sweden.json",function(error, sweden) {
-        //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
-        var counties = topojson.feature(sweden, sweden.objects.valgeografi_kommun).features;
-        console.log(counties);
-        //load summary data
-        //...
-
-        draw(counties, sp1.getData());
-        
+    d3.json("data/map/swe-topo.json",function(error, sweden) {
+        var counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
+        draw(counties, sp1.getData());       
     });
 
     function draw(countries, data)
     {
-
-        console.log(countries);
-
         var colorMappingVariable = "inkomst";
         var chosenYear = "2002";
         var colorMappingValues = [];
 
+        var incomeMap = {};
         for(var i = 0; i < data.length; ++i){
             colorMappingValues.push(data[i][colorMappingVariable]);
+            incomeMap[data[i]["region"]] = data[i][colorMappingVariable];
         }
 
         var country = g.selectAll(".country").data(countries);
@@ -96,7 +72,7 @@ function map(){
         //initialize a color country object
         var colorScale = d3.scale.linear()
           .domain([d3.min(colorMappingValues), d3.max(colorMappingValues)])
-          .range(["blue", "red"]);
+          .range(["steelblue", "deeppink"]);
 
         var color = "#800026";
         var cc = {Country: country, Color: color};
@@ -109,16 +85,16 @@ function map(){
             //country color
             .style("fill", function(d, i)
                 {
-                    
+                    /*
                     var coordinateY = d.geometry.coordinates[0][0][1]
                     if(d.geometry.type == "MultiPolygon")
                         coordinateY = coordinateY[1];
                     // fulhack var det här! manuell normalisering... icke bra!
                     var alpha = 1 - (coordinateY - 55) / 20;
                     return "rgba(" + [50 , 50, 175, alpha] + ")";
-                    
+                    */
 
-                    return colorScale(data[i][colorMappingVariable]);
+                    return colorScale(incomeMap[d.properties.name]);
                 })
             
             //...
@@ -169,10 +145,13 @@ function map(){
             // fulhack var det här! manuell normalisering... icke bra!
             var alpha = 1 - (coordinateY - 55) / 20;
 
-            if(d.properties.name == value)
+            if(d.properties.name == value){
                 return "rgba(" + [225, 20, 125, alpha] + ")";
-            else
+            }
+            else{
                 return "rgba(" + [50 , 50, 175, alpha] + ")";
+            }
+                
             });
     };
 
