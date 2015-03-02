@@ -63,16 +63,16 @@ function map(){
     //     console.log(topojson.feature(world,world.objects.countries));
     // });
     //load data and draw the map
-    // d3.json("data/map/sweden.json",function(error, sweden) {
-    //     //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
-    //     var counties = topojson.feature(sweden, sweden.objects.blubb).features;
-    //     console.log(counties);
-    //     //load summary data
-    //     //...
+    d3.json("data/map/sweden.json",function(error, sweden) {
+        //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
+        var counties = topojson.feature(sweden, sweden.objects.blubb).features;
+        console.log(counties);
+        //load summary data
+        //...
 
-    //     draw(counties, sp1.getData());
+        draw(counties, sp1.getData());
         
-    // });
+    });
 
     function draw(countries, data)
     {
