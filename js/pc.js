@@ -171,7 +171,7 @@ function pc(){
                 console.log(d);
                 return d; 
             })
-            .style("cursor", "pointer")                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
+            .style("cursor", "pointer");                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
             //.style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)
             //.style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows.
 

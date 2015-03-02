@@ -23,6 +23,9 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
+    // var projection = d3.geo.mercator()
+    //     .center([50, 60 ])
+    //     .scale(250);
     var projection = d3.geo.satellite()
         .distance(1.1)
         .scale(3200)
@@ -65,7 +68,7 @@ function map(){
     //load data and draw the map
     d3.json("data/map/sweden.json",function(error, sweden) {
         //myconfig = JSON.parse(data.toString('utf8').replace(/^\uFEFF/, ''));
-        var counties = topojson.feature(sweden, sweden.objects.blubb).features;
+        var counties = topojson.feature(sweden, sweden.objects.valgeografi_kommun).features;
         console.log(counties);
         //load summary data
         //...
