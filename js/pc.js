@@ -256,7 +256,7 @@ function pc(){
     function selFeature(value){
         pc1.selectLine(value.region);
         //     sp1.selectDot(value.Country);
-        //     map.selectCountry(value.Country);
+        map.selectCountry(value.region);
     };
 
     function clearSelection(){
