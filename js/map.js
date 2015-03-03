@@ -23,7 +23,7 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var projection = d3.geo.satellite()
+    var projection = d3.geo.satellite()             //obs kontrollera att du är ansluten till internet, då geo.satellite är kopplad till en webadress
         .distance(1.1)
         .scale(8000)
         .rotate([165.00, -125.0, 180.0])
