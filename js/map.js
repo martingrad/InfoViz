@@ -131,7 +131,7 @@ function map(){
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
     }
     
-    // function to lower opacity of all objects that were not clicked
+    // function to select region from other components
     this.selectCountry = function(value){
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
         /*
@@ -156,8 +156,8 @@ function map(){
 
     this.deselectCountry = function() {
         console.log("deselectCountry");
-        d3.select("#map").selectAll("path").style("opacity", function(d){ return 0.9;});
-        d3.select("#map").selectAll("path").style("fill", function(d){ return countryColorScale(d.properties.name);});//
+        d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
+        d3.select("#map").selectAll("path").style("fill", function(d){ return colorScale(incomeMap[d.properties.name]);});
     }
 
     //method for selecting features of other components

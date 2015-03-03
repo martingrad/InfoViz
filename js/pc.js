@@ -262,5 +262,6 @@ function pc(){
     function clearSelection(){
         d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
         d3.select("#pc").selectAll("path").style("stroke", function(d){ return "steelblue";});
+        map.deselectCountry();
     };
 }
