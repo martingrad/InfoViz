@@ -86,7 +86,7 @@ function sp(){
           
         // Here the different data are chosen for the plot  
         chosenVariableOnXAxis = headers[2];
-        chosenVariableOnYAxis = headers[3];
+        chosenVariableOnYAxis = headers[5];
 
         for(var i = 0; i < self.data.length; ++i){
             entry1.push(self.data[i][chosenVariableOnXAxis]);       // data for the x axis
@@ -100,8 +100,9 @@ function sp(){
                       .domain([d3.min(entry1), d3.max(entry1)])
                       .range([padding, width - padding]);
 
+        //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
         yScale = d3.scale.linear()                                      // scale entry2
-                      .domain([0, 14000])
+                      .domain([0, 5])
                       .range([height  - padding, padding]);
 
         xAxis= d3.svg.axis().scale(xScale).orient("bottom");

@@ -54,13 +54,15 @@ function map(){
         draw(counties, sp1.getData());       
     });
 
+    var colorScale;
+    var incomeMap = {};
+
     function draw(countries, data)
     {
         var colorMappingVariable = "inkomst";
         var chosenYear = "2002";
         var colorMappingValues = [];
-
-        var incomeMap = {};
+        
         for(var i = 0; i < data.length; ++i){
             colorMappingValues.push(data[i][colorMappingVariable]);
             incomeMap[data[i]["region"]] = data[i][colorMappingVariable];
@@ -69,13 +71,10 @@ function map(){
         var country = g.selectAll(".country").data(countries);
         var id = g.selectAll(".country").data(countries);
         
-        //initialize a color country object
-        var colorScale = d3.scale.linear()
+        //initialize color scale
+        colorScale = d3.scale.linear()
           .domain([d3.min(colorMappingValues), d3.max(colorMappingValues)])
           .range(["steelblue", "deeppink"]);
-
-        var color = "#800026";
-        var cc = {Country: country, Color: color};
     
         country.enter().insert("path")
             .attr("class", "country")
@@ -137,8 +136,8 @@ function map(){
     
     // detta är vår funktion, fanns ej med i orginal koden
     this.selectCountry = function(value){
-        //d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.3;});
-        d3.select("#map").selectAll("path").style("fill", function(d){
+        d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
+        /*d3.select("#map").selectAll("path").style("fill", function(d){
             var coordinateY = d.geometry.coordinates[0][0][1]
             if(d.geometry.type == "MultiPolygon")
                 coordinateY = coordinateY[1];
@@ -146,13 +145,14 @@ function map(){
             var alpha = 1 - (coordinateY - 55) / 20;
 
             if(d.properties.name == value){
-                return "rgba(" + [225, 20, 125, alpha] + ")";
+                //return "rgba(" + [225, 20, 125, alpha] + ")";
+                return "rgb(" + [225, 20, 125] + ")";
             }
             else{
-                return "rgba(" + [50 , 50, 175, alpha] + ")";
+                return colorScale(incomeMap[d.properties.name]);
             }
                 
-            });
+        });*/
     };
 
     // this.deselectCountry = function(){
