@@ -163,7 +163,6 @@ function map(){
 
     //method for selecting features of other components
     function selFeature(value){
-        spinner.spin(target);
         console.log("Should be spinning now!");
         console.log("Time for an exquisite selection!");
         map.selectCountry(value.properties.name);
