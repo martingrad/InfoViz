@@ -16,6 +16,11 @@
               fill-opacity: .8;
               stroke: #000;
             }
+
+            .arc path {
+                stroke: #fff;
+            }
+
         </style>
 
         <meta charset="utf-8">
@@ -112,8 +117,8 @@
 
                         <!--  -->
                         <!-- <button type="button" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas</button> -->
-                        <div id="sp" style="height: 45vh;"></div>
-
+                        <!-- <div id="sp" style="height: 45vh;"></div> -->
+                        <div id="donut" style="height: 45vh; "></div>
                         <!-- dropdown knapp för x axeln på scatterplotten -->
                         <div class="btn-group" style="float: right">
                             <!-- <button type="button" data-toggle="dropdown" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas<span class="caret"></span></button>
@@ -170,7 +175,32 @@
             </address> -->
             
             <div class="container">
+                <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+          Launch demo modal
+        </button>
             </div>
+        </div>
+
+        
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+              </div>
+              <div class="modal-body">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -188,7 +218,9 @@
         <script src="js/pc.js"></script>
         <script src="js/sp.js"></script>
         <script src="js/map.js"></script>
+        <script src="js/donut.js"></script>
         <script src="js/main.js"></script>
+        
 
     </body>
 </html>

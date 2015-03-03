@@ -3,6 +3,7 @@ function sp(){
     var self = this; // for internal d3 functions
 
     var spDiv = $("#sp");
+    console.log(spDiv);
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = spDiv.width() - margin.right - margin.left,

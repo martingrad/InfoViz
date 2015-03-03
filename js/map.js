@@ -92,7 +92,6 @@ function map(){
                     var alpha = 1 - (coordinateY - 55) / 20;
                     return "rgba(" + [50 , 50, 175, alpha] + ")";
                     */
-
                     return colorScale(incomeMap[d.properties.name]);
                 })
             

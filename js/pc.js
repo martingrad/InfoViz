@@ -34,37 +34,36 @@ function pc(){
         .append("svg:g")
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
-    var valdata;
-    d3.csv("data/Elections/valen.csv", function(error,data1){
+    // var valdata;
+    // d3.csv("data/Elections/valen.csv", function(error,data1){
 
-        self.data = data1;
-        x.domain(dimensions = d3.keys(data1[0]).filter(function(d) {
-            return d != "region" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(data1, function(p) {
-                    return +p[d];     
-                }))
-                .range([height, 0])
-                );
-        }));
-        draw();
-
-    })
-    // Ny parallell koordinat
-    // d3.csv("data/databaosen.csv", function(error, data) {
-    //     self.data = data;
-
-    //     // Extract the list of dimensions and create a scale for each.
-    //     x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-    //         return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
-    //             .domain(d3.extent(data, function(p) {
+    //     self.data = data1;
+    //     x.domain(dimensions = d3.keys(data1[0]).filter(function(d) {
+    //         return d != "region" && (y[d] = d3.scale.linear()
+    //             .domain(d3.extent(data1, function(p) {
     //                 return +p[d];     
     //             }))
     //             .range([height, 0])
     //             );
     //     }));
 
-    //     draw();
-    // });
+    // })
+   // Ny parallell koordinat
+    d3.csv("data/databaosen.csv", function(error, data) {
+        self.data = data;
+
+        // Extract the list of dimensions and create a scale for each.
+        x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+            return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
+                .domain(d3.extent(data, function(p) {
+                    return +p[d];     
+                }))
+                .range([height, 0])
+                );
+        }));
+
+        draw();
+    });
 
     function draw(){
         // Add grey background lines for context.
