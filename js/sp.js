@@ -1,10 +1,7 @@
 function sp(){
 
     var self = this; // for internal d3 functions
-
     var spDiv = $("#sp");
-    console.log(spDiv);
-
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
@@ -93,8 +90,6 @@ function sp(){
             entry1.push(self.data[i][chosenVariableOnXAxis]);       // data for the x axis
             entry2.push(self.data[i][chosenVariableOnYAxis]);       // data for the y axis
         }
-
-        console.log(entry2);
 
         var padding = 0;
         xScale = d3.scale.linear()                                      // scale entry1

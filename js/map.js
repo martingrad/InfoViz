@@ -110,7 +110,7 @@ function map(){
                     .style("opacity", 0);
             })
             //selection
-            .on("click",  function(d) {
+            .on("click", function(d) {
                 if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
                     selectedObject = d;
                     selFeature(d);
@@ -118,8 +118,9 @@ function map(){
                 else{                               // if it is -> deselect it
                     selectedObject = null;
                     clearSelection();
-                }    
+                }
             });
+        hideLoadingScreen();
     }
     
     //zoom and panning method
@@ -162,6 +163,8 @@ function map(){
 
     //method for selecting features of other components
     function selFeature(value){
+        spinner.spin(target);
+        console.log("Should be spinning now!");
         console.log("Time for an exquisite selection!");
         map.selectCountry(value.properties.name);
         sp1.selectDot(value.properties.name);

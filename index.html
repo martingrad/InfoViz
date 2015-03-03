@@ -50,7 +50,6 @@
 
         <!-- Wrap all page content here -->
         <div id="wrap">
-
             <!-- Fixed navbar -->
             <div class="navbar navbar-static-top" role="navigation">
                 <div class="container">
@@ -78,7 +77,7 @@
             </div>
 
             <!-- Begin page content -->
-
+            <div id="spinner-box"></div>
             <div class="container">
                 <!-- row of columns -->
                 <div class="btn-group">
@@ -118,7 +117,7 @@
                         <!--  -->
                         <!-- <button type="button" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas</button> -->
                         <!-- <div id="sp" style="height: 45vh;"></div> -->
-                        <div id="donut" style="height: 45vh; "></div>
+                        <div id="donut" style="height: 45vh; border-style: solid; border-color: black;"></div>
                         <!-- dropdown knapp för x axeln på scatterplotten -->
                         <div class="btn-group" style="float: right">
                             <!-- <button type="button" data-toggle="dropdown" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas<span class="caret"></span></button>
@@ -219,8 +218,8 @@
         <script src="js/sp.js"></script>
         <script src="js/map.js"></script>
         <script src="js/donut.js"></script>
+        <script src="js/vendor/spin.js"></script> 
         <script src="js/main.js"></script>
         
-
     </body>
 </html>
