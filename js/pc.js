@@ -1,6 +1,5 @@
 function pc(){
 
-    //
     var self = this; // for internal d3 functions
 
     var pcDiv = $("#pc");
@@ -18,7 +17,7 @@ function pc(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var x = d3.scale.ordinal().rangePoints([0, width], 1),      //range between 0 and width, with padding 1
+    var x = d3.scale.ordinal().rangePoints([0, width], 1),                  // range between 0 and width, with padding 1
         y = {}
         dragging = {};                  //ny
         
@@ -48,7 +47,7 @@ function pc(){
     //     }));
 
     // })
-   // Ny parallell koordinat
+    // Ny parallell koordinat
     d3.csv("data/databaosen.csv", function(error, data) {
         self.data = data;
 
@@ -65,6 +64,8 @@ function pc(){
         draw();
     });
 
+    var selectedObject;
+
     function draw(){
         // Add grey background lines for context.
         background = svg.append("svg:g")
@@ -77,7 +78,7 @@ function pc(){
             .on("mousemove", function(d){})
             .on("mouseout", function(){})
             .on("click", function(d){
-                //selFeature(d);
+                selFeature(d);
             });
 
         // Add blue foreground lines for focus.
@@ -87,15 +88,16 @@ function pc(){
             .data(self.data)
             .enter().append("path")
             .attr("d", path)
+            .style("opacity", 0.5)
             .style("stroke", function(d,i){
-                return "#aa0000";                       //color for the lines in the parallell coordinates
+                return "steelblue";                                 // color for the lines in the parallell coordinates
             })
             .on("mousemove", function(d,i){
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
     
-                tooltip.html(d["region"])                           //plotta i tooltip namnet på regionerna (OBS, postnummer är med)
+                tooltip.html(d["region"])                           // plotta i tooltip namnet på regionerna (OBS, postnummer är med)
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px"); 
             })
@@ -104,9 +106,16 @@ function pc(){
                     .duration(500)
                     .style("opacity", 0);
             })
-            .on("click", function(d){
-                //selFeature(d);
-            })
+            .on("click", function(d) {
+                if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                    selectedObject = d;
+                    selFeature(d);
+                }
+                else{                               // if it is -> deselect it
+                    selectedObject = null;
+                    clearSelection();
+                }
+            });
 
 
         // Add a group element for each dimension.
@@ -224,20 +233,34 @@ function pc(){
 
     //method for selecting the pololyne from other components    
     this.selectLine = function(value){          //skickar med value som är landet
-        //     d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["Country"] != value) return 0.1;});
-        //     d3.select("#pc").selectAll("path").style("stroke", function(d){ if(d["Country"] == value) return "#ff1111"; else return countryColorScale(d["Country"]);});//function(d){ if(d["Country"] == value) return "#ff1111";});
+        console.log("selectLine!");
+        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != value) return 0.05;});
+        d3.select("#pc").selectAll("path").style("stroke",  function(d){
+            if(d["region"] == value)
+            {
+                console.log(value);
+                return "deeppink";
+            }
+            else{
+                return "steelblue";//countryColorScale(d["region"]);
+            }
+        });//function(d){ if(d["Country"] == value) return "#ff1111";});
     };
 
     this.deselectLine = function(){
-        //     d3.select("#pc").selectAll("path").style("opacity", function(d){ return 0.9;});
-        //     d3.select("#pc").selectAll("path").style("stroke", function(d){ return countryColorScale(d["Country"]);});
+        console.log("deselectLine!");
+        clearSelection();
     }
     
     //method for selecting features of other components
     function selFeature(value){
-        //     pc1.selectLine(value.Country);
+        pc1.selectLine(value.region);
         //     sp1.selectDot(value.Country);
         //     map.selectCountry(value.Country);
     };
 
+    function clearSelection(){
+        d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
+        d3.select("#pc").selectAll("path").style("stroke", function(d){ return "steelblue";});
+    };
 }

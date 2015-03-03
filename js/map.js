@@ -56,6 +56,7 @@ function map(){
 
     var colorScale;
     var incomeMap = {};
+    var selectedObject;
 
     function draw(countries, data)
     {
@@ -82,11 +83,10 @@ function map(){
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
             //country color
-            .style("fill", function(d, i)
-                {
+            .style("fill", function(d, i) {
                     /*
-                    var coordinateY = d.geometry.coordinates[0][0][1]
-                    if(d.geometry.type == "MultiPolygon")
+                    var coordinateY = d.geometry.coordinates[0][0][1]           // arbitrarily chosen coordinate point with which to determine alpha value
+                    if(d.geometry.type == "MultiPolygon")                       // if the type is 'multipolygon', a point needs to be extracted in an additional step
                         coordinateY = coordinateY[1];
                     // fulhack var det här! manuell normalisering... icke bra!
                     var alpha = 1 - (coordinateY - 55) / 20;
@@ -94,8 +94,6 @@ function map(){
                     */
                     return colorScale(incomeMap[d.properties.name]);
                 })
-            
-            //...
             //tooltip
             .on("mousemove", function(d, i) {
                 tooltip.transition()
@@ -105,40 +103,42 @@ function map(){
                 tooltip.html(d.properties.name)
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
-
             })
             .on("mouseout", function(d) {
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
             })
-
             //selection
             .on("click",  function(d) {
-                selFeature(d);
+                if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                    selectedObject = d;
+                    selFeature(d);
+                }
+                else{                               // if it is -> deselect it
+                    selectedObject = null;
+                    clearSelection();
+                }    
             });
     }
-
-    
     
     //zoom and panning method
     function move() {
-
         var t = d3.event.translate;
-        var s = d3.event.scale;
-        
+        var s = d3.event.scale;    
 
         zoom.translate(t);
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
-
     }
     
-    // detta är vår funktion, fanns ej med i orginal koden
+    // function to lower opacity of all objects that were not clicked
     this.selectCountry = function(value){
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
-        /*d3.select("#map").selectAll("path").style("fill", function(d){
-            var coordinateY = d.geometry.coordinates[0][0][1]
-            if(d.geometry.type == "MultiPolygon")
+        /*
+        // Opacity gradient to help make map appear tilted into the screen
+        d3.select("#map").selectAll("path").style("fill", function(d){
+            var coordinateY = d.geometry.coordinates[0][0][1]           // arbitrarily chosen coordinate point with which to determine alpha value
+            if(d.geometry.type == "MultiPolygon")                       // if the type is 'multipolygon', a point needs to be extracted in an additional step
                 coordinateY = coordinateY[1];
             // fulhack var det här! manuell normalisering... icke bra!
             var alpha = 1 - (coordinateY - 55) / 20;
@@ -147,23 +147,30 @@ function map(){
                 //return "rgba(" + [225, 20, 125, alpha] + ")";
                 return "rgb(" + [225, 20, 125] + ")";
             }
-            else{
+            else{   //TODO apply alpha on colormapped value...
                 return colorScale(incomeMap[d.properties.name]);
             }
                 
         });*/
     };
 
-    // this.deselectCountry = function(){
-    //     d3.select("#map").selectAll("path").style("opacity", function(d){ return 0.9;});
-    //     d3.select("#map").selectAll("path").style("fill", function(d){ return countryColorScale(d.properties.name);});//
-    // }
+    this.deselectCountry = function() {
+        console.log("deselectCountry");
+        d3.select("#map").selectAll("path").style("opacity", function(d){ return 0.9;});
+        d3.select("#map").selectAll("path").style("fill", function(d){ return countryColorScale(d.properties.name);});//
+    }
 
     //method for selecting features of other components
     function selFeature(value){
+        console.log("Time for an exquisite selection!");
         map.selectCountry(value.properties.name);
-        // sp1.selectDot(value.properties.name);
-        // pc1.selectLine(value.properties.name);
+        sp1.selectDot(value.properties.name);
+        pc1.selectLine(value.properties.name);
+    }
+
+    function clearSelection() {
+        d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
+        d3.select("#map").selectAll("path").style("fill", function(d){ return colorScale(incomeMap[d.properties.name]);});
+        pc1.deselectLine();
     }
 }
-
