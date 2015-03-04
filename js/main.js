@@ -17,7 +17,7 @@ setTimeout(function(){
 	pc1 = new pc();
 	map = new map();
 	donut = new donut();
-}, 2000);
+}, 40);
 
 
 // var opts = {...} should be defined here and called in 'new Spinner(opts)...', but it doesn't seem to be working...

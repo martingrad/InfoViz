@@ -3,9 +3,10 @@ function donut(){
   var self = this; // for internal d3 functions
 
   var donutDiv = $("#donut");
-  var width  = 510,
-      height = 250,
-      radius = Math.min(width, height) * 0.6;
+  var margin = [0, 0, 0, 0],
+      width = donutDiv.width() - margin[1] - margin[3],
+      height = donutDiv.height() - margin[0] - margin[2]
+      radius = Math.min(width, height) * 0.55;
 
   // ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
   var color = d3.scale.ordinal()
@@ -16,7 +17,7 @@ function donut(){
       .sort(null);
 
   var arc = d3.svg.arc()
-      .innerRadius(radius - 100)
+      .innerRadius(radius -120)
       .outerRadius(radius - 50);
 
   var svg = d3.select("#donut").append("svg")
@@ -84,10 +85,50 @@ function donut(){
         //console.log(d);
         return d.value + "%";
         //return self.headers[i]; 
-      });
+      })
+      .style("fill",function(d){return "#ffffff"});       // vit text i en paj-bit
 
     var legendRectSize = 18;
     var legendSpacing = 4;
+
+    // Extra text i mitten av pajen
+    var extraText = svg.selectAll(".extraText")
+      .data(tempData)
+      .enter()
+      .append("g")
+      .attr("class","extraText")
+      .attr("transform", function(d)
+      {
+        // var height1 = legendRectSize + legendSpacing;
+        var height1 = 125;
+        var offset1 =  -height1; //* color.domain().length / 2;
+        var horz1 = -13 * legendRectSize;
+        var vert1 = -offset1;
+        return 'translate(' + horz1 + ',' + vert1 + ')';
+      })
+
+      svg.append("text")
+      .attr("dy", ".35em")
+      .style("text-anchor", "middle")
+      .style("font", "bold 12px Arial")
+      .attr("class", "inside")
+      .text(function(d) { return "Valresultat i " + self.region; });
+
+      svg.append("text")
+        .attr("dy", "2em")
+        .style("text-anchor", "middle")
+        .attr("class", "data")
+        .text(function(d,i) { return tempData[i]["år"]/*d["år"]*/; });
+        // .style("fill", function(d){return "gray"});
+
+    // extraText.append("text")
+    //   .attr("x", legendRectSize + legendSpacing)
+    //   .attr("y", legendRectSize - legendSpacing)
+    //   .text(function(d){ 
+    //     console.log(self.region);
+    //     return self.region;
+    //   })
+      // Här är jag!!!!!!!!!!!!
 
     // Adding a color legend for the parties
     var legend = svg.selectAll('.legend')
@@ -98,7 +139,7 @@ function donut(){
       .attr('transform', function(d, i) {
         var height = legendRectSize + legendSpacing;
         var offset =  height * color.domain().length / 2;
-        var horz = -13 * legendRectSize;
+        var horz = -19 * legendRectSize;
         var vert = i * height - offset;
       return 'translate(' + horz + ',' + vert + ')';
     });
