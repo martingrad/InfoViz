@@ -47,7 +47,6 @@ function donut(){
 
   /* ======== Private functions ======== */
   /* =================================== */
-
   function showInformation(region)
   {
     svg.selectAll('.arc').remove();
@@ -158,8 +157,8 @@ function donut(){
       .attr('class', 'legend')
       .attr('transform', function(d, i) {
         var height = legendRectSize + legendSpacing;
-        var offset =  height * color.domain().length / 2;
-        var horz = - radius * 0.08 * legendRectSize;
+        var offset =  height * color.domain().length / 2.0;
+        var horz = - radius * 0.075 * legendRectSize;
         var vert = i * height - offset;
       return 'translate(' + horz + ',' + vert + ')';
     });
