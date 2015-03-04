@@ -47,12 +47,10 @@ function donut(){
 
   /* ======== Private functions ======== */
   /* =================================== */
-
   function showInformation(region)
   {
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();
-    svg.selectAll(".extraText2").remove();
 
     self.region = region;
 
@@ -133,33 +131,21 @@ function donut(){
       .text(function(d) { return d["år"]; })
       .style("fill", function(d){return "gray"});
 
-    /* text i mitten */
-      // svg.append("text")
-      // .attr("class","extraText")
-      // .attr("dy", ".35em")
-      // .style("text-anchor", "middle")
-      // .style("font", "bold 12px Arial")
-      // .attr("class", "inside")
-      // .text(function(d) { return "Valresultat i " + self.region; });
+    extraText.append("text")
+      //.attr("dy", "4em")
+      .attr("transform", "translate(" + width / 3 + "," + height / 2.6 + ")")
+      .style("text-anchor", "middle")
+      .style("font", "bold 12px Arial")
+      .attr("class", "donutInkomst")
+      .text(function(d) {  return "Medelinkomst: " + d["inkomst"]; + "tkr/år" });
 
-      // svg.append("text")
-      //   .attr("class","extraText2")
-      //   .attr("dy", "2em")
-      //   .style("text-anchor", "middle")
-      //   .attr("class", "data")
-      //   .text(function(d,i) { return tempData[i]["år"]/*d["år"]*/; });
-      //   // .style("fill", function(d){return "gray"});
-
-    /* slut - text i mitten */
-
-    // extraText.append("text")
-    //   .attr("x", legendRectSize + legendSpacing)
-    //   .attr("y", legendRectSize - legendSpacing)
-    //   .text(function(d){ 
-    //     console.log(self.region);
-    //     return self.region;
-    //   })
-      // Här är jag!!!!!!!!!!!!
+    extraText.append("text")
+      //.attr("dy", "4em")
+      .attr("transform", "translate(" + width / 3 + "," + height / 3.0 + ")")
+      .style("text-anchor", "middle")
+      .style("font", "bold 12px Arial")
+      .attr("class", "donutInkomst")
+      .text(function(d) {  return "Arbetslöshet: " + Math.round(d["arbetslöshet"] * 100)/100 + "%"; });
 
     // Adding a color legend for the parties
     var legend = svg.selectAll('.legend')
@@ -169,8 +155,8 @@ function donut(){
       .attr('class', 'legend')
       .attr('transform', function(d, i) {
         var height = legendRectSize + legendSpacing;
-        var offset =  height * color.domain().length / 2;
-        var horz = - radius * 0.08 * legendRectSize;
+        var offset =  height * color.domain().length / 2.0;
+        var horz = - radius * 0.075 * legendRectSize;
         var vert = i * height - offset;
       return 'translate(' + horz + ',' + vert + ')';
     });
