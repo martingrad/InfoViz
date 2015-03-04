@@ -26,6 +26,7 @@ function donut(){
   //     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
   var pie = d3.layout.pie()
+      .value(function(d,i) { console.log(d); return d; })
       .sort(null);
 
   var arc = d3.svg.arc()
@@ -93,12 +94,7 @@ function donut(){
           self.data.push(data[i]);
         }
       }
-      // console.log(data[i]["år"]);
-      // while(data[i]["år"] == inputValue){
-      //     self.data.push(data[i]);
-      //     ++i;
-      // }
-      console.log(self.data);
+
       donut.showInformation("Stockholm");
 
     });
@@ -120,52 +116,63 @@ function donut(){
       console.log(tempData);
       console.log(parties);
 
+      // tempData.forEach(function(d) {
+      //     console.log(d);
+      //     //d.population = +d.population;
+      // });
 
-//
-    
-
-    var path = svg.selectAll("path")
+    // detta ger rätt cirkel, fast utan text
+    var g = svg.selectAll(".arc")
       .data(pie(parties))
-      .enter().append("path")
+      .enter().append("g")
+      .attr("class","arc");
+
+    g.append("path")                          // cirkelskivorna
       .attr("fill", function(d, i) { 
         return color(i); 
       })
       .attr("d", arc);
 
-    path.append("text")
+    g.append("text")                        // text
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
-      .text(function(d,i) { return self.headers[i]; });
-//
+      .text(function(d,i) { 
+        //return d[i];
+        console.log(self.headers[i]);
+        console.log(d);
+        return d.value + "%";
+        //return self.headers[i]; 
+      });
 
-      // data.forEach(function(d) {
-      //   d.inkomst = +d.inkomst;
-      // });
+      var legendRectSize = 18;
+      var legendSpacing = 4;
 
-    // var g = svg.selectAll(".arc")
-    //     .data(pie(parties))
-    //     .enter().append("g")
-    //     .attr("class", "arc");
+      // Adding a color legend for the parties
+      var legend = svg.selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+        .attr('class', 'legend')
+        .attr('transform', function(d, i) {
+          var height = legendRectSize + legendSpacing;
+          var offset =  height * color.domain().length / 2;
+          var horz = -13 * legendRectSize;
+          var vert = i * height - offset;
+        return 'translate(' + horz + ',' + vert + ')';
+      });
 
-    // Får fram svart cirkel
-    // var color = d3.scale.ordinal()
-    //   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#d0743c", "#ff8c00"]);
+      legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', color)
+        .style('stroke', color);
 
-    //  var g = svg.selectAll(".arc")
-    //    .data(pie(tempData))
-    //    .enter().append("g")
-    //      .attr("class", "arc");
-
-    //  g.append("path")
-    //      .attr("d", arc)
-    //      .style("fill", function(d,i) { return console.log(d.data[self.headers[i]]); color(d.data[self.headers[i]]); });        // ska stå .data för att det ska fungera
-
-    //  g.append("text")
-    //      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-    //      .attr("dy", ".35em")
-    //      .style("text-anchor", "middle")
-    //      .text(function(d) { return d.data[self.headers[i]]; });
+      legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d,i) { return self.headers[i]; });
+      // slut rätt cirkel utan text
 
     };
     
