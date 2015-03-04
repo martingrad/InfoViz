@@ -150,7 +150,7 @@ function pc(){
             .append("svg:text")
             .style("text-anchor", "middle")
             .attr("y", -9)
-            .text(function(d) { 
+            .text(function(d) {
                 if(d == "inkomst")
                     return "Inkomst (tkr/år)";
                 if(d == "år")
@@ -159,7 +159,7 @@ function pc(){
                     return "Arbetslöshet (%)";
                 if(d == "övriga partier")
                     return "Övriga partier (%)";
-                return d + "(%)"; 
+                return d + " (%)";
             })
             .style("cursor", "pointer");                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
             //.style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)

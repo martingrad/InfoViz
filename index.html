@@ -81,61 +81,29 @@
             <div class="container">
                 <!-- row of columns -->
                 <div class="btn-group">
-                    <select id="selectYear"  onchange="sp1.selectYear(), donut.selectYear(value)">
+                    <select id="selectYear" onchange="sp1.selectYear(), donut.selectYear(value)">
                         <option value="2010">2010</option>
                         <option value="2006">2006</option>
                         <option value="2002">2002</option>
                     </select>
                 </div>
-                <br><br><br>
-                
 
                 <div class="row">
                     <div class="col-xs-6">
-                        <!-- dropdown knapp för y axeln på scatterplotten -->
-                        <div class="btn-group">
-                            <!-- <button type="button" data-toggle="dropdown" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas<span class="caret"></span></button>
-                            <ul class="dropdown-menu" id="scatterPlotDropDown1">
-                                <li><a href="#">Partier</a></li>
-                                <li><a href="#">Utbildning</a></li>
-                                <li><a href="#">Lön</a></li>
-                                <li><a href="#">Regioner</a></li>
-                                <li><a href="#">Kön</a></li> -->
-                                <!-- <li class="divider"></li> -->
-                                <!-- <li><a href="#">Lön</a></li> -->
-                            <!-- </ul> -->
-                            <select id="selectScatterPlotYAxis"  onchange="sp1.selectYAxis()">
-                              <option value="parti">Partier</option>
-                              <option value="region">Regioner</option>
-                              <option value="utbildning">Utbildning</option>
-                              <option value="lön">Lön</option>
-                              <option value="kön">Kön</option>
-                            </select>
-                        </div>
+                        <div style="height: 45vh; border: solid; border-color:black">
+                            <!-- dropdown knapp för y axeln på scatterplotten -->
+                            <div class="btn-group" style="position:absolute">
+                                <select id="selectScatterPlotYAxis" onchange="sp1.selectYAxis()">
+                                  <option value="parti">Partier</option>
+                                  <option value="region">Regioner</option>
+                                  <option value="utbildning">Utbildning</option>
+                                  <option value="lön">Lön</option>
+                                </select>
+                            </div>
 
-                        <!--  -->
-                        <!-- <button type="button" class="btn btn-default btn-xs buttonScatterPlotForYAxis" onclick="sp1.selectYAxis()">Välj saker som ska visas</button> -->
-                        <!-- <div id="sp" style="height: 45vh;"></div> -->
-                        <div id="donut" style="height: 45vh; border-style: solid; border-color: black;"></div>
-                        <!-- dropdown knapp för x axeln på scatterplotten -->
-                        <div class="btn-group" style="float: right">
-                            <!-- <button type="button" data-toggle="dropdown" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas<span class="caret"></span></button>
-                            <ul class="dropdown-menu" id="scatterPlotDropDown2">
-                                <li><a href="#">Partier</a></li>
-                                <li><a href="#">Utbildning</a></li>
-                                <li><a href="#">Lön</a></li>
-                                <li><a href="#">Regioner</a></li>
-                                <li><a href="#">Kön</a></li>
-                                <li class="divider"></li> 
-                                <li><a href="#">Region</a></li> 
-                            </ul> --> 
-                            <select id="selectScatterPlotXAxis"  onchange="sp1.selectXAxis()">
-                              <option value="parti">Partier</option>            <!--  Val dataset-->
-                              <option value="region">Regioner</option>          <!--  Val dataset-->
-                              <option value="utbildning">Utbildning</option>
-                              <option value="lön">Lön</option>  
-                              <option value="kön">Kön</option>
-                            </select>
+                            <!-- <div id="sp" style="height: 45vh;"></div> -->
+                            <div id="donut" style="width: 100%; height: 100%"></div>
+                            <!-- dropdown knapp för x axeln på scatterplotten -->
                         </div>
 
                         <!-- <button type="button" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas</button> --> 
@@ -145,7 +113,6 @@
                         <div id="map" style="height: 45vh; border-style: solid; border-color: black; z-index: -1;"></div>
                         <!-- <div class="grad1" style="position: absolute; top: 0px; left 0px; z-index: 1;"></div> -->
                     </div>
-
                 </div>
 
                 <div class="row">

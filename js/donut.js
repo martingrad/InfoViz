@@ -3,8 +3,8 @@ function donut(){
   var self = this; // for internal d3 functions
 
   var donutDiv = $("#donut");
-  var width  = 510,
-      height = 250,
+  var width  = donutDiv.width(),
+      height = donutDiv.height(),
       radius = Math.min(width, height) * 0.6;
 
   // ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
@@ -16,7 +16,7 @@ function donut(){
       .sort(null);
 
   var arc = d3.svg.arc()
-      .innerRadius(radius - 100)
+      .innerRadius(radius * 0.4)
       .outerRadius(radius - 50);
 
   var svg = d3.select("#donut").append("svg")
@@ -26,8 +26,7 @@ function donut(){
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
   self.data = [];
-  self.headers = d3.keys(dataz[0]).filter(function(d)
-  {
+  self.headers = d3.keys(dataz[0]).filter(function(d){
     return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
   });
 
@@ -98,7 +97,7 @@ function donut(){
       .attr('transform', function(d, i) {
         var height = legendRectSize + legendSpacing;
         var offset =  height * color.domain().length / 2;
-        var horz = -13 * legendRectSize;
+        var horz = - radius * 0.09 * legendRectSize;
         var vert = i * height - offset;
       return 'translate(' + horz + ',' + vert + ')';
     });
