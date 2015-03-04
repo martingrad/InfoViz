@@ -86,7 +86,7 @@ function donut(){
           .duration(200)
           .style("opacity", .9);
 
-        tooltip.html(self.headers[i] + " " +d.value + " %")                           // plotta i tooltip namnet på regionerna
+        tooltip.html(self.headers[i] + " " + d.value + "%")                           // plotta i tooltip namnet på regionerna
           .style("left", (d3.event.pageX + 5) + "px")
           .style("top", (d3.event.pageY - 28) + "px"); 
       })
