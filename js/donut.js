@@ -102,7 +102,7 @@ function donut(){
     this.showInformation = function(region){
       var tempData = [];
       var parties = [];
-      console.log(self.headers);
+      console.log("HEEEJ!");
       
       for(var i = 0; i < self.data.length; i++){
         if(self.data[i]["region"] == region){
