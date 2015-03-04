@@ -3,6 +3,7 @@ function donut(){
   var self = this; // for internal d3 functions
 
   var donutDiv = $("#donut");
+  //var testDiv = $("creatingButtons");
 
   var width  = donutDiv.width(),
       height = donutDiv.height(),
@@ -41,12 +42,35 @@ function donut(){
       self.data.push(dataz[i]);
     }
   }
+
+  document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
   self.region = "Stockholm";          //default region
   showInformation(self.region);
 
 
+
   /* ======== Private functions ======== */
   /* =================================== */
+  function createButtons(data){
+    var html = "  ";
+    for(var i = 0; i < data.length; i++)
+    {
+      //console.log(data[i]["region"]);
+      // Här är jag!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        //html += "<option value="parti">Partier</option>"
+    }
+    // var buttonID = "button_1_"+idtmp;
+    //     html += "<div class='row-fluid'>";
+    //       html += "<div class='slideWrapper'>";
+    //         html += "<div class='btn btn-admin-delete' onclick=\"slideButton('" + buttonID +"');removeStaff('" + nametmp + "','" + idtmp +"')\" id='" + buttonID + "'>";
+    //           html += "<p>" + nametmp + "</p>";
+    //         html += "</div>"; // ! btn
+    //       html += "</div>"; // ! slideWrapper
+    //     html += "</div>"; // ! row-fluid
+    return html;
+  }
+
   function showInformation(region)
   {
     svg.selectAll('.arc').remove();
@@ -194,4 +218,12 @@ function donut(){
   {
     showInformation(value);
   };
+
+  this.selectPieFromSelect = function()
+  {
+    var selectedRegion = $("#selectScatterPlotYAxis option:selected").text();
+    showInformation(selectedRegion);
+    map.selectCountry(selectedRegion);
+    pc1.selectLine(selectedRegion);
+  }
 }

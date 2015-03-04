@@ -23,6 +23,29 @@ function initializeObjects()
 	pc1 = new pc();
 	map = new map();
 	donut = new donut();
+	populateSelect();
+}
+
+function populateSelect() {
+	var select = document.getElementById("selectScatterPlotYAxis");
+
+	var var1 = "region";
+	var options = [];
+	var i = 0;
+    while(dataz[i]["år"] == "2002"){
+        options.push(dataz[i][var1]);
+        ++i;
+    }
+
+    options.sort();
+
+	for (var i = 0; i < options.length; i++) {
+	  var opt = options[i];
+	  var el = document.createElement("option");
+	  el.textContent = opt;
+	  el.value = opt;
+	  select.appendChild(el);
+	}
 	//configureDBSCAN();
 }
 

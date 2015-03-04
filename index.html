@@ -97,12 +97,11 @@
                         <div style="height: 45vh; border: solid; border-color:black">
                             <!-- dropdown knapp för y axeln på scatterplotten -->
                             <div class="btn-group" style="position:absolute">
-                                <select id="selectScatterPlotYAxis" onchange="sp1.selectYAxis()">
-                                  <option value="parti">Partier</option>
-                                  <option value="region">Regioner</option>
-                                  <option value="utbildning">Utbildning</option>
-                                  <option value="lön">Lön</option>
+                                <select id="selectScatterPlotYAxis" onchange="donut.selectPieFromSelect()">
                                 </select>
+                            </div>
+                            <div class="btn-group" style:"position:absolute" id="creatingButtons">
+
                             </div>
 
                             <!-- <div id="sp" style="height: 45vh;"></div> -->
