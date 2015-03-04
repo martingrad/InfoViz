@@ -43,7 +43,7 @@ function donut(){
     }
   }
 
-  document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
+  //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
   self.region = "Stockholm";          //default region
   showInformation(self.region);
 

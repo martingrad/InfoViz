@@ -1,5 +1,7 @@
 function map(){
 
+    var counties;
+
     var zoom = d3.behavior.zoom()
         .scaleExtent([0.3, 10])
         .on("zoom", move);
@@ -47,7 +49,7 @@ function map(){
 
     //load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
-        var counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
+        counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
         draw(counties, sp1.getData());       
     });
 
@@ -123,6 +125,7 @@ function map(){
     // function to select region from other components
     this.selectCountry = function(value){
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
+        zoomToRegion(value);
         /*
         // Opacity gradient to help make map appear tilted into the screen
         d3.select("#map").selectAll("path").style("fill", function(d){
@@ -163,5 +166,36 @@ function map(){
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d){ return colorScale(incomeMap[d.properties.name]);});
         pc1.deselectLine();
+    }
+
+    active = d3.select(null);
+
+    function zoomToRegion(d) {
+        var region;
+        for(var i = 0; i < counties.length; ++i){
+            if(counties[i].properties.name == d){
+                region = counties[i];
+                break;
+            }
+        }
+        console.log("zoomToRegion", region);
+
+
+        //if (active.node() === this) return reset();
+        //active.classed("active", false);
+        //active = d3.select(this).classed("active", true);
+
+        var bounds = path.bounds(region),
+            dx = bounds[1][0] - bounds[0][0],
+            dy = bounds[1][1] - bounds[0][1],
+            x = (bounds[0][0] + bounds[1][0]) / 2,
+            y = (bounds[0][1] + bounds[1][1]) / 2,
+            scale = .1 / Math.max(dx / width, dy / height),
+            translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+        g.transition()
+            .duration(750)
+            .style("stroke-width", 1.5 / scale + "px")
+            .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
     }
 }
