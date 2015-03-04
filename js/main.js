@@ -1,13 +1,23 @@
 showLoadingScreen();
 
-var sp1 = new sp();
+var dataz;
+d3.csv("data/databaosen.csv", function(error, data) {
+    dataz = data;
+});
 
-var pc1 = new pc();
-
-var map = new map();
-
-var donut = new donut();
+var sp1;
+var pc1;
+var map;
+var donut;
 //var val = new val();
+
+setTimeout(function(){
+  	console.log(dataz);
+  	sp1 = new sp();
+	pc1 = new pc();
+	map = new map();
+	donut = new donut();
+}, 2000);
 
 
 // var opts = {...} should be defined here and called in 'new Spinner(opts)...', but it doesn't seem to be working...

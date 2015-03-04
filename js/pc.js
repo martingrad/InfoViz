@@ -48,13 +48,13 @@ function pc(){
 
     // })
     // Ny parallell koordinat
-    d3.csv("data/databaosen.csv", function(error, data) {
-        self.data = data;
+    //d3.csv("data/databaosen.csv", function(error, data) {
+        self.data = dataz;
 
         // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+        x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
             return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(data, function(p) {
+                .domain(d3.extent(self.data, function(p) {
                     return +p[d];     
                 }))
                 .range([height, 0])
@@ -62,7 +62,7 @@ function pc(){
         }));
 
         draw();
-    });
+    //});
 
     var selectedObject;
 
