@@ -26,9 +26,8 @@ function sp(){
     });
 
     var tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
     // Scale, axis osv.
     var xScale;
@@ -55,7 +54,6 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
     ////////////// Lab 1 /////////
     // These variables are used to chose and store data for the plot
     // in which the headers, is the name of the different columns from the data set
@@ -64,7 +62,7 @@ function sp(){
     var chosenVariableOnXAxis;
     var chosenVariableOnYAxis;
     
-    ////////////// /Lab 1 /////////
+    ////////////// Lab 1 /////////
     
     /////// ------------  Välj år --------- /////
     // Kolla vilka alternativ som valts för axlarna
@@ -73,12 +71,12 @@ function sp(){
     var selectedYear = $("#selectYear option:selected").text();
         
     //Load data
-    d3.csv("data/databaosen.csv", function(error, data) {
+    //d3.csv("data/databaosen.csv", function(error, data) {
         var chosenYear = "2002";
         var i = 0;
         self.data = [];
-        while(data[i]["år"] == chosenYear){
-            self.data.push(data[i]);
+        while(dataz[i]["år"] == chosenYear){
+            self.data.push(dataz[i]);
             ++i;
         }
           
@@ -106,7 +104,7 @@ function sp(){
 
         draw();
 
-    });
+    //});
 
     function draw()
     {

@@ -33,36 +33,19 @@ function pc(){
         .append("svg:g")
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
-    // var valdata;
-    // d3.csv("data/Elections/valen.csv", function(error,data1){
+    self.data = dataz;
 
-    //     self.data = data1;
-    //     x.domain(dimensions = d3.keys(data1[0]).filter(function(d) {
-    //         return d != "region" && (y[d] = d3.scale.linear()
-    //             .domain(d3.extent(data1, function(p) {
-    //                 return +p[d];     
-    //             }))
-    //             .range([height, 0])
-    //             );
-    //     }));
+    // Extract the list of dimensions and create a scale for each.
+    x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
+        return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
+            .domain(d3.extent(self.data, function(p) {
+                return +p[d];     
+            }))
+            .range([height, 0])
+            );
+    }));
 
-    // })
-    // Ny parallell koordinat
-    //d3.csv("data/databaosen.csv", function(error, data) {
-        self.data = dataz;
-
-        // Extract the list of dimensions and create a scale for each.
-        x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-            return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
-                .domain(d3.extent(self.data, function(p) {
-                    return +p[d];     
-                }))
-                .range([height, 0])
-                );
-        }));
-
-        draw();
-    //});
+    draw();
 
     var selectedObject;
 
@@ -97,7 +80,7 @@ function pc(){
                     .duration(200)
                     .style("opacity", .9);
     
-                tooltip.html(d["region"])                           // plotta i tooltip namnet på regionerna (OBS, postnummer är med)
+                tooltip.html(d["region"])                           // plotta i tooltip namnet på regionerna
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px"); 
             })
@@ -124,11 +107,10 @@ function pc(){
             .enter().append("svg:g")
             .attr("class", "dimension")
             .attr("transform", function(d) {
-                //console.log(x(d));
                 return "translate(" + x(d) + ")"; 
             })
             .call(d3.behavior.drag()
-                .origin(function(d) { 
+                .origin(function(d) {
                     return {x: x(d)}; 
                 })
                 .on("dragstart", function(d) {
@@ -159,7 +141,6 @@ function pc(){
                 })
             );
 
-
         // Add an axis and title.
         g.append("svg:g")
             .attr("class", "axis")
@@ -176,8 +157,9 @@ function pc(){
                     return "År";
                 if(d == "arbetslöshet")
                     return "Arbetslöshet (%)";
-                console.log(d);
-                return d; 
+                if(d == "övriga partier")
+                    return "Övriga partier (%)";
+                return d + "(%)"; 
             })
             .style("cursor", "pointer");                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
             //.style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)
@@ -230,7 +212,6 @@ function pc(){
         });
     }
 
-
     //method for selecting the pololyne from other components    
     this.selectLine = function(value){          //skickar med value som är landet
         console.log("selectLine!");
@@ -257,6 +238,7 @@ function pc(){
         pc1.selectLine(value.region);
         //     sp1.selectDot(value.Country);
         map.selectCountry(value.region);
+        donut.selectPie(value.region);
     };
 
     function clearSelection(){

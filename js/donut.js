@@ -3,16 +3,16 @@ function donut(){
   var self = this; // for internal d3 functions
 
   var donutDiv = $("#donut");
-  var width = 510,
+  var width  = 510,
       height = 250,
       radius = Math.min(width, height) * 0.6;
 
-  //var partier = ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
+  // ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
   var color = d3.scale.ordinal()
       .range(["#1B49DD", "#009933", "#6BB7EC", "#231977", "#83CF39", "#EE2020", "#AF0000", "#DDDD00", "gray"]);
 
   var pie = d3.layout.pie()
-      .value(function(d,i) { /*console.log(d);*/ return d; })
+      .value(function(d,i){return d;})
       .sort(null);
 
   var arc = d3.svg.arc()
@@ -25,85 +25,44 @@ function donut(){
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  self.region = "";    //default
-
-      //default 2010
-  d3.csv("data/databaosen.csv", function(error,data){
-      self.data = [];
-      
-      
-      self.headers = d3.keys(data[0]).filter(function(d) {
-        return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
-      });
-
-      for(var i = 0; i < data.length; i++){
-        if(data[i]["år"] == "2010"){
-          self.data.push(data[i]);
-        }
-      }
-    self.region = "Stockholm";          //default värde
-    donut.showInformation(self.region);
+  self.data = [];
+  self.headers = d3.keys(dataz[0]).filter(function(d)
+  {
+    return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
   });
 
-
-  this.selectYear = function(value){
-    console.log("Hej jag heter Emma");
-    var inputValue = value;
-    //console.log(value);
-    //console.log($("#selectYear option:checked").val);
-    // d3.text("data/databaosen.csv", function(text) {
-    //     self.headers = d3.csv.parseRows(text)[0];
-    // });
-
+  for(var i = 0; i < dataz.length; i++)
+  {
+    if(dataz[i]["år"] == "2010"){     //default year 2010
+      self.data.push(dataz[i]);
+    }
+  }
+  self.region = "Stockholm";          //default region
+  showInformation(self.region);
 
 
-    //d3.csv("data/Elections/Swedish_Election_" + value + ".csv",function(error,data){
-    d3.csv("data/databaosen.csv", function(error,data){
-      //console.log(inputValue);
-      self.data = [];
-      
-      
-      self.headers = d3.keys(data[0]).filter(function(d) {
-        return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
-      });
+  /* ======== Private functions ======== */
+  /* =================================== */
 
-      for(var i = 0; i < data.length; i++){
-        if(data[i]["år"] == inputValue){
-          self.data.push(data[i]);
+  function showInformation(region)
+  {
+    svg.selectAll('.arc').remove();
+
+    self.region = region;
+
+    var tempData = [];
+    var parties = [];
+    
+    for(var i = 0; i < self.data.length; i++){
+      if(self.data[i]["region"] == region){
+        tempData.push(self.data[i]);
+        for(var j = 0; j<self.headers.length; j++)
+        {
+          parties.push(self.data[i][self.headers[j]]);
         }
       }
-      console.log("This-region = " + self.region);
-      donut.showInformation(self.region);
+    }
 
-    });
-    
-  };
-
-    this.showInformation = function(region){
-      svg.selectAll('.arc').remove();
-
-      self.region = region;
-      console.log("Region = " + region);
-      console.log("This.region = " + self.region);
-
-      var tempData = [];
-      var parties = [];
-      //console.log(self.headers);
-      
-      for(var i = 0; i < self.data.length; i++){
-        if(self.data[i]["region"] == region){
-          tempData.push(self.data[i]);
-          for(var j = 0; j<self.headers.length; j++)
-          {
-            parties.push(self.data[i][self.headers[j]]);
-          }
-        }
-      }
-    
-    //console.log(tempData);
-    //console.log(parties);
-
-    // detta ger rätt cirkel, fast utan text
     var g = svg.selectAll(".arc")
       .data(pie(parties))
       .enter().append("g")
@@ -154,6 +113,27 @@ function donut(){
       .attr('x', legendRectSize + legendSpacing)
       .attr('y', legendRectSize - legendSpacing)
       .text(function(d,i) { return self.headers[i]; });
-    // slut rätt cirkel utan text
+  }
+
+  /* ======== Public functions ======== */
+  /* ================================== */
+  
+  this.selectYear = function(value)
+  {
+    var inputValue = value;
+    self.data = [];
+    
+    for(var i = 0; i < dataz.length; i++)
+    {
+      if(dataz[i]["år"] == inputValue){
+        self.data.push(dataz[i]);
+      }
+    }
+    showInformation(self.region);
+  };
+
+  this.selectPie = function(value)
+  {
+    showInformation(value);
   };
 }

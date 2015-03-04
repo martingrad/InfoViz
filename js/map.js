@@ -29,7 +29,7 @@ function map(){
         .rotate([165.00, -125.0, 180.0])
         .center([150, 20])
         .tilt(15)
-        //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
+        //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)             // dafuq is dis? 
         .precision(.1);
 
     var path = d3.geo.path()
@@ -45,9 +45,6 @@ function map(){
 
     g = svg.append("g");
 
-    // d3.json("data/world-topo.json",function(error, world){
-    //     console.log(topojson.feature(world,world.objects.countries));
-    // });
     //load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
         var counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
@@ -84,14 +81,6 @@ function map(){
             .attr("title", function(d) { return d.properties.name; })
             //country color
             .style("fill", function(d, i) {
-                    /*
-                    var coordinateY = d.geometry.coordinates[0][0][1]           // arbitrarily chosen coordinate point with which to determine alpha value
-                    if(d.geometry.type == "MultiPolygon")                       // if the type is 'multipolygon', a point needs to be extracted in an additional step
-                        coordinateY = coordinateY[1];
-                    // fulhack var det här! manuell normalisering... icke bra!
-                    var alpha = 1 - (coordinateY - 55) / 20;
-                    return "rgba(" + [50 , 50, 175, alpha] + ")";
-                    */
                     return colorScale(incomeMap[d.properties.name]);
                 })
             //tooltip
@@ -120,7 +109,7 @@ function map(){
                     clearSelection();
                 }
             });
-        hideLoadingScreen();
+        hideLoadingScreen();                        // stop spinner when map has been drawn (the map is the last element to draw)
     }
     
     //zoom and panning method
@@ -151,7 +140,7 @@ function map(){
             else{   //TODO apply alpha on colormapped value...
                 return colorScale(incomeMap[d.properties.name]);
             }
-                
+             
         });*/
     };
 
@@ -168,7 +157,7 @@ function map(){
         map.selectCountry(value.properties.name);
         sp1.selectDot(value.properties.name);
         pc1.selectLine(value.properties.name);
-        donut.showInformation(value.properties.name);
+        donut.selectPie(value.properties.name);
     }
 
     function clearSelection() {
