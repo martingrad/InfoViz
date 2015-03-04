@@ -3,10 +3,10 @@ function donut(){
   var self = this; // for internal d3 functions
 
   var donutDiv = $("#donut");
-  var margin = [0, 0, 0, 0],
-      width = donutDiv.width() - margin[1] - margin[3],
-      height = donutDiv.height() - margin[0] - margin[2]
-      radius = Math.min(width, height) * 0.55;
+
+  var width  = donutDiv.width(),
+      height = donutDiv.height(),
+      radius = Math.min(width, height) * 0.6;
 
   // ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
   var color = d3.scale.ordinal()
@@ -17,7 +17,7 @@ function donut(){
       .sort(null);
 
   var arc = d3.svg.arc()
-      .innerRadius(radius -120)
+      .innerRadius(radius * 0.4)
       .outerRadius(radius - 50);
 
   var svg = d3.select("#donut").append("svg")
@@ -27,8 +27,7 @@ function donut(){
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
   self.data = [];
-  self.headers = d3.keys(dataz[0]).filter(function(d)
-  {
+  self.headers = d3.keys(dataz[0]).filter(function(d){
     return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
   });
 
@@ -48,6 +47,9 @@ function donut(){
   function showInformation(region)
   {
     svg.selectAll('.arc').remove();
+    svg.selectAll(".extraText").remove();
+    svg.selectAll(".extraText2").remove();
+
 
     self.region = region;
 
@@ -80,11 +82,7 @@ function donut(){
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
       .text(function(d,i) { 
-        //return d[i];
-        //console.log(self.headers[i]);
-        //console.log(d);
         return d.value + "%";
-        //return self.headers[i]; 
       })
       .style("fill",function(d){return "#ffffff"});       // vit text i en paj-bit
 
@@ -92,34 +90,48 @@ function donut(){
     var legendSpacing = 4;
 
     // Extra text i mitten av pajen
+    console.log(width);
+    console.log(height);
+
     var extraText = svg.selectAll(".extraText")
       .data(tempData)
       .enter()
       .append("g")
-      .attr("class","extraText")
-      .attr("transform", function(d)
-      {
-        // var height1 = legendRectSize + legendSpacing;
-        var height1 = 125;
-        var offset1 =  -height1; //* color.domain().length / 2;
-        var horz1 = -13 * legendRectSize;
-        var vert1 = -offset1;
-        return 'translate(' + horz1 + ',' + vert1 + ')';
-      })
+      .attr("class","extraText");
 
-      svg.append("text")
+    extraText.append("text")
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
       .style("font", "bold 12px Arial")
       .attr("class", "inside")
       .text(function(d) { return "Valresultat i " + self.region; });
 
-      svg.append("text")
-        .attr("dy", "2em")
-        .style("text-anchor", "middle")
-        .attr("class", "data")
-        .text(function(d,i) { return tempData[i]["år"]/*d["år"]*/; });
-        // .style("fill", function(d){return "gray"});
+    extraText.append("text")
+      .attr("dy", "2em")
+      .style("text-anchor", "middle")
+      .style("font", "bold 10px Arial")
+      .attr("class", "data")
+      .text(function(d) { return d["år"]; })
+      .style("fill", function(d){return "gray"});
+
+    /* text i mitten */
+      // svg.append("text")
+      // .attr("class","extraText")
+      // .attr("dy", ".35em")
+      // .style("text-anchor", "middle")
+      // .style("font", "bold 12px Arial")
+      // .attr("class", "inside")
+      // .text(function(d) { return "Valresultat i " + self.region; });
+
+      // svg.append("text")
+      //   .attr("class","extraText2")
+      //   .attr("dy", "2em")
+      //   .style("text-anchor", "middle")
+      //   .attr("class", "data")
+      //   .text(function(d,i) { return tempData[i]["år"]/*d["år"]*/; });
+      //   // .style("fill", function(d){return "gray"});
+
+    /* slut - text i mitten */
 
     // extraText.append("text")
     //   .attr("x", legendRectSize + legendSpacing)
@@ -139,7 +151,7 @@ function donut(){
       .attr('transform', function(d, i) {
         var height = legendRectSize + legendSpacing;
         var offset =  height * color.domain().length / 2;
-        var horz = -19 * legendRectSize;
+        var horz = - radius * 0.08 * legendRectSize;
         var vert = i * height - offset;
       return 'translate(' + horz + ',' + vert + ')';
     });

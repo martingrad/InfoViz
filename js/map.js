@@ -109,7 +109,6 @@ function map(){
                     clearSelection();
                 }
             });
-        hideLoadingScreen();                        // stop spinner when map has been drawn (the map is the last element to draw)
     }
     
     //zoom and panning method
