@@ -5,7 +5,7 @@ function donut(){
   var donutDiv = $("#donut");
   var width = 510,
       height = 250,
-      radius = Math.min(width, height) / 2;
+      radius = Math.min(width, height) * 0.6;
 
   //var partier = ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
   var color = d3.scale.ordinal()
