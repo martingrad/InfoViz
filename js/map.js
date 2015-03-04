@@ -168,6 +168,7 @@ function map(){
         map.selectCountry(value.properties.name);
         sp1.selectDot(value.properties.name);
         pc1.selectLine(value.properties.name);
+        donut.showInformation(value.properties.name);
     }
 
     function clearSelection() {
