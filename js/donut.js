@@ -39,7 +39,21 @@ function donut(){
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+      //default 2010
+  d3.csv("data/databaosen.csv", function(error,data){
+      self.data = [];
+      
+      
+      self.headers = d3.keys(data[0]).filter(function(d) {
+        return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
+      });
 
+      for(var i = 0; i < data.length; i++){
+        if(data[i]["år"] == "2010"){
+          self.data.push(data[i]);
+        }
+      }
+  });
 
   // d3.csv("data/Elections/Swedish_Election_2002.csv", function(error, data) {
 
