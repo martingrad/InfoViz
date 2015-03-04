@@ -76,7 +76,6 @@ function donut(){
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();
 
-
     self.region = region;
 
     var tempData = [];
@@ -118,7 +117,6 @@ function donut(){
           .duration(500)
           .style("opacity", 0);
       });
-
 
     g.append("text")                        // text i pajbiten
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })

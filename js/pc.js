@@ -7,7 +7,6 @@ function pc(){
     var margin = [30, 10, 10, 10],
         width = pcDiv.width() - margin[1] - margin[3],
         height = pcDiv.height() - margin[0] - margin[2];
-
     
     //initialize color scale
     var countryColorScale = d3.scale.category20();
@@ -20,7 +19,6 @@ function pc(){
     var x = d3.scale.ordinal().rangePoints([0, width], 1),                  // range between 0 and width, with padding 1
         y = {}
         dragging = {};                  //ny
-        
 
     var line = d3.svg.line(),
         axis = d3.svg.axis().orient("left").tickFormat(d3.format("d")),
@@ -100,7 +98,6 @@ function pc(){
                 }
             });
 
-
         // Add a group element for each dimension.
         var g = svg.selectAll(".dimension")
             .data(dimensions)
@@ -174,7 +171,6 @@ function pc(){
             .selectAll("rect")
             .attr("x", -8)
             .attr("width", 16);
-
     };
 
     function position(d) {
