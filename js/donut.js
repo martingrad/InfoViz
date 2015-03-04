@@ -112,28 +112,28 @@ function donut(){
       donut.showInformation("Stockholm");
 
     });
+  }
 
-    this.showInformation = function(region){
-      var tempData = [];
-      var parties = [];
-      console.log("HEEEJ!");
-      
-      for(var i = 0; i < self.data.length; i++){
-        if(self.data[i]["region"] == region){
-          tempData.push(self.data[i]);
-          for(var j = 0; j<self.headers.length; j++)
-          {
-            parties.push(self.data[i][self.headers[j]]);
-          }
+  this.showInformation = function(region){
+    var tempData = [];
+    var parties = [];
+    
+    for(var i = 0; i < self.data.length; i++){
+      if(self.data[i]["region"] == region){
+        tempData.push(self.data[i]);
+        for(var j = 0; j<self.headers.length; j++)
+        {
+          parties.push(self.data[i][self.headers[j]]);
         }
       }
-      console.log(tempData);
-      console.log(parties);
+    }
+    console.log(tempData);
+    console.log(parties);
 
-      // tempData.forEach(function(d) {
-      //     console.log(d);
-      //     //d.population = +d.population;
-      // });
+    // tempData.forEach(function(d) {
+    //     console.log(d);
+    //     //d.population = +d.population;
+    // });
 
     // detta ger rätt cirkel, fast utan text
     var g = svg.selectAll(".arc")
@@ -159,36 +159,33 @@ function donut(){
         //return self.headers[i]; 
       });
 
-      var legendRectSize = 18;
-      var legendSpacing = 4;
+    var legendRectSize = 18;
+    var legendSpacing = 4;
 
-      // Adding a color legend for the parties
-      var legend = svg.selectAll('.legend')
-        .data(color.domain())
-        .enter()
-        .append('g')
-        .attr('class', 'legend')
-        .attr('transform', function(d, i) {
-          var height = legendRectSize + legendSpacing;
-          var offset =  height * color.domain().length / 2;
-          var horz = -13 * legendRectSize;
-          var vert = i * height - offset;
-        return 'translate(' + horz + ',' + vert + ')';
-      });
+    // Adding a color legend for the parties
+    var legend = svg.selectAll('.legend')
+      .data(color.domain())
+      .enter()
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', function(d, i) {
+        var height = legendRectSize + legendSpacing;
+        var offset =  height * color.domain().length / 2;
+        var horz = -13 * legendRectSize;
+        var vert = i * height - offset;
+      return 'translate(' + horz + ',' + vert + ')';
+    });
 
-      legend.append('rect')
-        .attr('width', legendRectSize)
-        .attr('height', legendRectSize)
-        .style('fill', color)
-        .style('stroke', color);
+    legend.append('rect')
+      .attr('width', legendRectSize)
+      .attr('height', legendRectSize)
+      .style('fill', color)
+      .style('stroke', color);
 
-      legend.append('text')
-        .attr('x', legendRectSize + legendSpacing)
-        .attr('y', legendRectSize - legendSpacing)
-        .text(function(d,i) { return self.headers[i]; });
-      // slut rätt cirkel utan text
-
-    };
-    
+    legend.append('text')
+      .attr('x', legendRectSize + legendSpacing)
+      .attr('y', legendRectSize - legendSpacing)
+      .text(function(d,i) { return self.headers[i]; });
+    // slut rätt cirkel utan text
   };
 }
