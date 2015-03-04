@@ -54,7 +54,6 @@ function donut(){
     svg.selectAll(".extraText").remove();
     svg.selectAll(".extraText2").remove();
 
-
     self.region = region;
 
     var tempData = [];
@@ -96,7 +95,6 @@ function donut(){
           .duration(500)
           .style("opacity", 0);
       });
-
 
     g.append("text")                        // text i pajbiten
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })

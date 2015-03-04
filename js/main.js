@@ -13,24 +13,25 @@ var map;
 var donut;
 var spinner;
 var target;
-//var val = new val();
+var dbscanner;
+var point_data = [];
+var point_assignment_result
 
-function initializeObjects(){
-	console.log(dataz);
+function initializeObjects()
+{
   	sp1 = new sp();
 	pc1 = new pc();
 	map = new map();
 	donut = new donut();
+	//configureDBSCAN();
 }
-
-// var opts = {...} should be defined here and called in 'new Spinner(opts)...', but it doesn't seem to be working...
-// Instead, the default values in spin.js has been changed...
 
 function showLoadingScreen()
 {
 	console.log("nu kör vi!");
-    //target = document.getElementById('spinner-box');
 
+	// var opts = {...} should be defined and called in 'new Spinner(opts)...', but it doesn't seem to be working...
+	// Instead, the default values in spin.js have been changed...
 	target = document.getElementById('spinner-box');
 	spinner = new Spinner().spin(target);
 }
@@ -39,4 +40,23 @@ function hideLoadingScreen()
 {
 	console.log("nu slutar vi!");
 	spinner.stop();
+}
+
+// Configure a DBSCAN instance.
+function configureDBSCAN(){
+	
+	var1 = "inkomst";
+    var2 = "Moderaterna";
+
+    for(var i = 0; i < dataz.length; ++i){
+        point_data.push(dataz[i][var1]);       // data for the x axis
+        point_data.push(dataz[i][var2]);       // data for the y axis
+    }
+    
+    //console.log('point_data', point_data);
+ 	
+ 	dbscanner = jDBSCAN().eps(0.075).minPts(1).distance('EUCLIDEAN').data(point_data);
+ 	point_assignment_result = dbscanner();
+    
+    //console.log('Resulting DBSCAN output', point_assignment_result);
 }
