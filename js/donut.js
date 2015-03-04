@@ -8,6 +8,10 @@ function donut(){
       height = donutDiv.height(),
       radius = Math.min(width, height) * 0.6;
 
+  var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
   // ["Moderaterna", "Centerpartiet", "Folkpartiet", "Kristdemokraterna", "Miljöpartiet", "Socialdemokraterna", "Vänsterpartiet", "Sverigedemokraterna", "övriga partier"];
   var color = d3.scale.ordinal()
       .range(["#1B49DD", "#009933", "#6BB7EC", "#231977", "#83CF39", "#EE2020", "#AF0000", "#DDDD00", "gray"]);
@@ -75,9 +79,26 @@ function donut(){
       .attr("fill", function(d, i) { 
         return color(i); 
       })
-      .attr("d", arc);
+      .attr("d", arc)
+      .on("mousemove", function(d,i)
+      {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
 
-    g.append("text")                        // text
+        tooltip.html(self.headers[i] + " " +d.value + " %")                           // plotta i tooltip namnet på regionerna
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top", (d3.event.pageY - 28) + "px"); 
+      })
+      .on("mouseout", function(d)
+      {
+        tooltip.transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
+
+
+    g.append("text")                        // text i pajbiten
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
