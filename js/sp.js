@@ -24,12 +24,12 @@ function sp(){
     // Något är galet
 
     var x = d3.scale.linear()
-        .domain([0,100])
+        //.domain([0,100])
         //.range([0, width]);
         .range([padding, width - padding]);
 
     var y = d3.scale.linear()
-        .domain([0,100])
+        //.domain([0,100])
         //.range([height, 0]);
         .range([height  - padding, padding]);
 
@@ -54,8 +54,9 @@ function sp(){
     });
 
     // // Here the different data are chosen for the plot  
-    self.selectedObjectOnXAxis = self.partier[2];
-    self.selectedObjectOnYAxis = self.partier[5];
+    self.selectedObjectOnXAxis = self.partier[2];           //default
+    self.selectedObjectOnYAxis = self.partier[5];           //default
+    self.selectedYear = "2002";
         // draw();
 
     //});
@@ -64,6 +65,7 @@ function sp(){
     {
         svg.selectAll(".axis").remove();
         svg.selectAll('.dot').remove();
+        svg.selectAll('.extraTextSP').remove();
         
 
         console.log(self.selectedObjectOnXAxis);
@@ -75,16 +77,21 @@ function sp(){
 
         
 
-        var chosenYear = "2002";
-        var i = 0;
         
-        // // Ta ut data för ett år
-        self.data = [];
-        while(dataz[i]["år"] == chosenYear){
-             self.data.push(dataz[i]);
-             ++i;
+        if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
+            self.data = dataz;
         }
-        console.log(self.data);
+        else{
+            var i = 0;
+            
+            // // Ta ut data för ett år
+            self.data = [];
+            while(dataz[i]["år"] == self.selectedYear){
+                 self.data.push(dataz[i]);
+                 ++i;
+            }
+        }
+        
 
             
         
@@ -100,8 +107,8 @@ function sp(){
         //     .domain([0, 100])
         //      //.domain([d3.min(entry1), d3.max(entry1)])
         //     .range([padding, width - padding]);
-        //x.domain(d3.extent(entry1, function(d) { return d; })).range();
-        //y.domain(d3.extent(entry2, function(d) { return d; })).range();
+        x.domain(d3.extent(entry1, function(d) { return d; })).range();
+        y.domain(d3.extent(entry2, function(d) { return d; })).range();
 
         // // // //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
         // yScale = d3.scale.linear()                                      // scale entry2
@@ -168,6 +175,21 @@ function sp(){
             .on("click",  function(d) {
                  selFeature(d);
             });
+
+        var tempData = "a";
+        var extraText = svg.selectAll(".extraTextSP")
+            .data(tempData)
+            .enter()
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 8 + ")")               // kan behövas flyttas
+            .attr("class","extraTextSP");
+
+        extraText.append("text")
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle")
+            .style("font", "bold 12px Arial")
+            .attr("class", "inside")
+            .text(function(d) { return self.selectedYear; });
 
     }
 
@@ -259,7 +281,7 @@ function sp(){
     // method to select which year is choosen
     this.selectYear = function()
     {
-        selectedYear = $("#selectYear option:selected").text();
+        self.selectedYear = $("#selectYear option:selected").text();
         console.log("Väljer år " + $("#selectYear option:selected").text());
     };
 
