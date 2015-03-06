@@ -1,9 +1,13 @@
 showLoadingScreen();
 
 var dataz;
+var dataz2 = [];
+var chosenYear;
+
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
     initializeObjects();
+    selectYear("2010");
     hideLoadingScreen();
 });
 
@@ -26,8 +30,14 @@ function initializeObjects()
 	extractHeaders();
 	populateSelect();
 	populateSelect2();
-    dbscanRes = dbscan(dataz, 15, 5);
-    console.log(dbscanRes);
+
+	for(var i = 0; i < dataz.length; ++i)
+	{
+		if(dataz[i]["år"] == chosenYear)
+		{
+			dataz2.push(dataz[i]);
+		}
+	}
 }
 
 function populateSelect2() {
@@ -116,3 +126,25 @@ function extractHeaders()
 	console.log(clusteringDims);
 }
 
+function selectYear(value)
+{
+	chosenYear = value;
+	dbscanRes = dbscan(dataz, 15, 5);
+    console.log(dbscanRes);
+}
+
+function findClusterByRegion(region)
+{
+	for(var i = 0; i < dbscanRes.length; ++i)
+	{
+		for(var j = 0; j < dbscanRes[i].length; ++j)
+		{
+			if(dbscanRes[i][j]["region"] == region)
+			{
+				console.log("de är lika, yo!");
+				return i;
+			}
+		}
+	}
+	return -1;
+}
