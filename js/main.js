@@ -26,7 +26,7 @@ function initializeObjects()
 	extractHeaders();
 	populateSelect();
 	populateSelect2();
-    dbscanRes = dbscan(dataz, 25, 5);
+    dbscanRes = dbscan(dataz, 15, 5);
     console.log(dbscanRes);
 }
 
@@ -111,8 +111,8 @@ function extractHeaders()
 	// store the data properties headers...
 	headers = d3.keys(dataz[0]);
 	// ... and extract and store the ones that are relevant
-	clusteringDims = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
-						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
+	clusteringDims = [ headers[6], headers[7], headers[8], headers[9],
+					   headers[10], headers[11], headers[12], headers[13], headers[14] ];
 	console.log(clusteringDims);
 }
 
