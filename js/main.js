@@ -24,7 +24,8 @@ function initializeObjects()
 	map = new map();
 	donut = new donut();
 	populateSelect();
-    var dbscanRes = dbscan(dataz, 1, 3);
+    var dbscanRes = dbscan(dataz, 20, 5);
+    console.log(dbscanRes);
 }
 
 function populateSelect() {

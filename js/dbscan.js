@@ -4,165 +4,159 @@
 * @param eps
 * @param minPts
 * @return {Object}
+*            ^ TODO: is that so...?
 */
-
-
-
 
 function dbscan(data, eps, minPts)
 {
 	console.log("dbscan(data, " + eps + ", " + minPts + ") results:");
 	
-	// initializing array of zeros, with the size of the data (zeros - not visited, ones - visited)
-	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
-	//console.log("visited points", pointsAreVisited);
+	// store the data properties headers...
+	var headers = d3.keys(data[0]);
+	// ... and extract and store the ones that are relevant
+	var clusteringDims = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
+						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
 
+	// initializing array of zeros, with the size of the data (zero = not visited, one = visited)
+	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
 	// copying the array of zeros
 	var pointsAreNoise = pointsAreVisited;
 	
+	// initializing the clusters variable that will be returned by the function (as an array of arrays of data items)
 	var clusters = [];
-	//clusters[0] = new Array();
-	//console.log("clusters", clusters);
 
-	var currentPoint;
-	var pointAlreadyVisited;
+	var currentPoint;			// holds each data point that is being examined
+	var pointAlreadyVisited;	// holds if this point has already been visited
 	var neighborPtsIndices;		// holds indices to neighboring data points (for one point at a time)
 	
-	// (C = 0)
 	var clusterIndex = -1;
 	// (for each unvisited point P in dataset D)
 	for(var i = 0; i < data.length; ++i)
 	{
+		// check if point is already visited
 		pointAlreadyVisited = pointsAreVisited[i];
+		// if it is not already visited...
 		if(!pointAlreadyVisited){
-			//console.log("Point " + i + " not already visited!");
+			// store current point...
 			currentPoint = data[i];
-			// (mark P as visited)
+			// ... and mark it as visited
 			pointsAreVisited[i] = 1;
+			// find neighbors to the current point
 			neighborPtsIndices = regionQuery(currentPoint, eps);
+			// if the number of neighbors is not sufficient
 			if(neighborPtsIndices.length < minPts){
-				// (mark P as NOISE)
-				console.log("noise!");
+				// mark current point as noise
 	    		pointsAreNoise[i] = 1;
+				console.log("noise!");
 	    	}
-		  	else{
-		  		// (C = next cluster)
+	    	// if the number of neighbors is sufficient
+		  	else
+		  	{
+		  		// increment cluster index
 				clusterIndex++;
+				// expand the current cluster with the current point
 		 		expandCluster(currentPoint, neighborPtsIndices, clusterIndex, eps, minPts);
 		 	}
 		}
-		else{
-			//console.log("Point " + i + " already visited!");
-		}
 	}
-
-	console.log(clusters);
-
 
 	// function that returns data indices for neigboring points
-	function regionQuery(_currentPoint, _eps){
-		//console.log("regionQuery()");
-		var neighbors = [];
-		var euclideanDist = 0;
-		var curNeigh;
-		for(var i = 0; i < data.length; ++i){
-			curNeigh = data[i];
-			euclideanDist = Math.abs(curNeigh["inkomst"] - _currentPoint["inkomst"]);
-			// skillnaden för a^2 + b^2 osv ... roten ur det. = det nya euklidiska distansen som ska beräknas.
-			if( curNeigh != _currentPoint && euclideanDist <= _eps && !pointIsPartOfAnyCluster(curNeigh) ){
-				//console.log("Jag hittade en granne!");
-				neighbors.push(i);
+	function regionQuery(_currentPoint, _eps)
+	{
+		var neighborIndices = [];
+		// set arbitrary starting value for euclidean distance... ugly, I know =)
+		var euclideanDistance = 66666666;
+		var currentNeighbor;
+		// for each data point
+		for(var i = 0; i < data.length; ++i)
+		{
+			// store current neighbor
+			currentNeighbor = data[i];
+			// if the current neighbor is not the point itself
+			if(currentNeighbor != _currentPoint)
+			{
+				var tempSum  = 0;
+				var tempDiff = 0;
+				// for each clustering dimension
+				for(var j = 0; j < clusteringDims.length; ++j)
+				{
+					// calculate difference for current dimension between the current point and the current neighbor
+					tempDiff = Math.abs( currentNeighbor[clusteringDims[j]] - _currentPoint[clusteringDims[j]] );
+					// add the square of this difference to the sum
+					tempSum += Number(tempDiff * tempDiff);
+				}
+				
+				// calculate euclidean distance as the square root of the sum when all terms have been added
+				euclideanDistance = Math.sqrt(tempSum);
+				
+				// if the euclidian distance is smaller enough and the current neighbor is not already port of a cluster...
+				if( euclideanDistance <= _eps && !pointIsPartOfAnyCluster(currentNeighbor) )
+				{
+					// ... add the data point index to the neighbor index array of the current point
+					neighborIndices.push(i);
+				}
 			}
 		}
-		return neighbors;
+		// return the array of data point indices
+		return neighborIndices;
 	}
 
-	function expandCluster(_currentPoint, _neighborPtsIndices, _clusterIndex, _eps, _minPts){
-		//console.log("expandCluster()");
+	// function to expand a cluster
+	function expandCluster(_currentPoint, _neighborPtsIndices, _clusterIndex, _eps, _minPts)
+	{
 		var currentNeighborPoint;
 		var currentNeighborPointIndex;
 		var newNeighborPtsIndices;
 
-		// (add P to cluster C)
+		// if a cluster corresponding to _clusterIndex has not yet been initialized...
 		if(!clusters[_clusterIndex]){
+			// ... initialize it
 			clusters[_clusterIndex] = new Array();
 		}
+		// add current point to current cluster
 		clusters[_clusterIndex].push(_currentPoint);
-		//console.log("clusters[" + _clusterIndex + "]:" + clusters[_clusterIndex]);
-
-		// (for each point P' in neighborPtsIndices)
+		// for each neighbor point index
 		for(var i = 0; i < _neighborPtsIndices.length; ++i){
 			// store the data index of the current neigbor point being examined.
 			currentNeighborPointIndex = _neighborPtsIndices[i];
-			// get the data point using the index
+			// gett the data point using the index
 			currentNeighborPoint = data[currentNeighborPointIndex];
-			// (if P' is not visited)
 			// if this point has not already been visited...
 			if(!pointsAreVisited[currentNeighborPointIndex]){
-				// (mark P' as visited)
+				// mark currentNeighbor as visited
 				pointsAreVisited[currentNeighborPointIndex] = 1;
 				newNeighborPtsIndices = regionQuery(currentNeighborPoint, _eps)
 				if(newNeighborPtsIndices >= _minPts){
-					// NeighborPts = NeighborPts joined with NeighborPts'
+					// Add new neighbors to already stored neighbors
 					_neighborPtsIndices.concat(newNeighborPtsIndices);
 				}
 			}
-			//if P' is not yet member of any cluster
-			// if( !ttest(currentNeighborPointIndex) ){
-			// 	// detta är ett test, touch it and you'll die ;)
-			// 	clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
-			// }
-
+			//if the current neighbor point is not already a member of any cluster...
 			if( !pointIsPartOfAnyCluster(currentNeighborPoint) ){
-				// add P' to cluster C
+				// ... add it to the current cluster
 				clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
 			}
 		}
 	}
 
-	function pointIsPartOfAnyCluster(_currentNeighborPoint){
+	// function to determine if a point is a member of any cluster
+	function pointIsPartOfAnyCluster(_currentNeighborPoint)
+	{
 		var isPart = false;
-		//console.log(_currentNeighborPointIndex);
-		for(var i = 0; i < clusters.length; ++i){
-			//console.log("Is _currentNeighborPointIndex = " + _currentNeighborPointIndex + " part of clusters[" + i + "]?");
-			//console.log(_currentNeighborPointIndex);
-			if( clusters[i].indexOf(_currentNeighborPoint) != -1 ){		//if it doesn't exist it returns -1
+		// for each cluster
+		for(var i = 0; i < clusters.length; ++i)
+		{
+			// if the index of the current neighbor object is not equal to -1...
+			if( clusters[i].indexOf(_currentNeighborPoint) != -1 )		// (indexOf() returns -1 when the object is not found)
+			{
+				// ... the neighbor is part of a cluster
 				isPart = true;
-				//console.log("hey man, this is already part!");
 				break;
-			}
-			else{
-				//console.log("No!");
 			}
 		}
 		return isPart;
 	}
 
-
-/*	pseudo-code
-	DBSCAN(D, eps, MinPts)
-	C = 0
-	for each unvisited point P in dataset D
-	  	mark P as visited
-	  	NeighborPts = regionQuery(P, eps)
-	  	if sizeof(NeighborPts) < MinPts
-	    	mark P as NOISE
-	  	else
-			C = next cluster
-	 		expandCluster(P, NeighborPts, C, eps, MinPts)
-          
-	expandCluster(P, NeighborPts, C, eps, MinPts)
-   		add P to cluster C
-   		for each point P' in NeighborPts 
-      		if P' is not visited
-     			mark P' as visited
-         		NeighborPts' = regionQuery(P', eps)
-         		if sizeof(NeighborPts') >= MinPts
-            		NeighborPts = NeighborPts joined with NeighborPts'
-      		if P' is not yet member of any cluster
-         		add P' to cluster C
-          
-	regionQuery(P, eps)
-   		return all points within P's eps-neighborhood (including P)
-*/
+	// dbscan return (end of class)
+	return clusters;
 }
