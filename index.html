@@ -90,17 +90,13 @@
                     <div class="col-xs-6">
                         <div style="height: 45vh; border: solid; border-color:black">
                             <!-- dropdown knapp för y axeln på scatterplotten -->
-                            <div class="btn-group" style="position:center">
+                            <div class="btn-group" style="position:center; position:absolute">
                                 <select id="selectYear" onchange="sp1.selectYear(), donut.selectYear(value)">
                                     <option value="2010">2010</option>
                                     <option value="2006">2006</option>
                                     <option value="2002">2002</option>
                                 </select>
-                            </div>
-
-                            <div class="btn-group" style="position:absolute">
-                                <select id="selectScatterPlotYAxis" onchange="donut.selectPieFromSelect()">
-                                </select>
+                                <select id="selectScatterPlotYAxis" onchange="donut.selectPieFromSelect()"></select>
                             </div>
 
                             <!-- <div id="sp" style="height: 45vh;"></div> -->
@@ -143,7 +139,7 @@
                         <!-- </address>  -->
                     </div>
                     <div class="col-xs-6">
-                        <div id="sp" style="height: 45vh;"></div>
+                        <!-- <div id="sp" style="height: 45vh;"></div> -->
                     </div>
                     
                 </div>
