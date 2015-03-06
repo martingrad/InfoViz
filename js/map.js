@@ -51,9 +51,10 @@ function map(){
     //load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
         counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
+
         // TODO här borde man först ha lagt till vilket kluster varje region hör till i en ny datavariabel och skicka med den istället,
-        // för att undvika att köra dubbelloopar på mouseover... xD
-        draw(counties, sp1.getData());     
+        // för att undvika att köra dubbelloopar på mouseover... xD  
+        draw(counties, dataz);       
     });
 
     var colorScale;

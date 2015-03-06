@@ -6,41 +6,32 @@ function sp(){
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
 
+    var padding = 10;
+
     //initialize color scale
     var countryColorScale = d3.scale.category20();
 
-    this.boolXAxis = false;
-    this.boolYAxis = false;
-    
     //initialize tooltip
-
-    //...
-    // These variables are used to chose and store data for the plot
-    // in which the headers, is the name of the different columns from the data set
-    var entry1 = [];
-    var entry2 = [];
-    var chosenVariableOnXAxis;
-    var chosenVariableOnYAxis;
-    var headers = [];
-
-    // Extract the name of the columns
-    d3.text("data/databaosen.csv", function(text) {
-        headers = d3.csv.parseRows(text)[0];
-    });
-
     var tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
+
+    self.boolXAxis = false;
+    self.boolYAxis = false;    
+
     // Scale, axis osv.
-    var xScale;
-    var yScale;
+    // Något är galet
 
     var x = d3.scale.linear()
-        .range([0, width]);
+        //.domain([0,100])
+        //.range([0, width]);
+        .range([padding, width - padding]);
 
     var y = d3.scale.linear()
-        .range([height, 0]);
+        //.domain([0,100])
+        //.range([height, 0]);
+        .range([height  - padding, padding]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -49,7 +40,7 @@ function sp(){
 
     var yAxis = d3.svg.axis()
         .scale(y)
-        .orient("left");
+        .orient("left"); 
 
     var svg = d3.select("#sp").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -57,91 +48,97 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    ////////////// Lab 1 /////////
-    // These variables are used to chose and store data for the plot
-    // in which the headers, is the name of the different columns from the data set
-    var entry1 = [];
-    var entry2 = [];
-    var chosenVariableOnXAxis;
-    var chosenVariableOnYAxis;
-    
-    ////////////// Lab 1 /////////
-    
-    /////// ------------  Välj år --------- /////
-    // Kolla vilka alternativ som valts för axlarna
-    var selectedObjectOnYAxis = $("#selectYAxis option:selected").val();
-    var selectedObjectOnXAxis = $("#selectXAxis option:selected").val();
-    var selectedYear = $("#selectYear option:selected").text();
-    
-    //console.log(selectedObjectOnYAxis);
-    //console.log(selectedObjectOnXAxis);
 
-    //Load data
-    //d3.csv("data/databaosen.csv", function(error, data) {
-        var chosenYear = "2002";
-        var i = 0;
-        self.data = [];
-        while(dataz[i]["år"] == chosenYear){
-            self.data.push(dataz[i]);
-            ++i;
-        }
-        
-        //kanske behöver den
-        self.partier = d3.keys(dataz[0]).filter(function(d){
-            return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
-        });
+    //  //kanske behöver den
+    self.partier = d3.keys(dataz[0]).filter(function(d){
+         return d != "region" && d!= "befolkning" && d!="arbetslösa";
+    });
 
-        // Here the different data are chosen for the plot  
-        chosenVariableOnXAxis = self.partier[2];
-        chosenVariableOnYAxis = self.partier[5];
 
-        
-        //console.log(chosenVariableOnYAxis);
-        //console.log(chosenVariableOnXAxis);
-
-        for(var i = 0; i < self.data.length; ++i){
-            entry1.push(self.data[i][chosenVariableOnXAxis]);       // data for the x axis
-            entry2.push(self.data[i][chosenVariableOnYAxis]);       // data for the y axis
-        }
-
-        var padding = 0;
-        xScale = d3.scale.linear()                                      // scale entry1
-                      .domain([d3.min(entry1), d3.max(entry1)])
-                      .range([padding, width - padding]);
-
-        //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
-        yScale = d3.scale.linear()                                      // scale entry2
-                      .domain([0, 5])
-                      .range([height  - padding, padding]);
-
-        xAxis= d3.svg.axis().scale(xScale).orient("bottom");
-        yAxis= d3.svg.axis().scale(yScale).orient("left");
-
+    // // Here the different data are chosen for the plot  
+    self.selectedObjectOnXAxis = self.partier[2];           //default
+    self.selectedObjectOnYAxis = self.partier[5];           //default
+    self.selectedYear = "2002";
         // draw();
 
     //});
 
     function draw()
     {
-        var padding = 10;
+        svg.selectAll(".axis").remove();
+        svg.selectAll('.dot').remove();
+        svg.selectAll('.extraTextSP').remove();
+        
+
+        console.log(self.selectedObjectOnXAxis);
+        console.log(self.selectedObjectOnYAxis);
+        var xScale;
+        var yScale;
+        var entry1 = [];
+        var entry2 = [];
+
+        
+
+        
+        if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
+            self.data = dataz;
+        }
+        else{
+            var i = 0;
+            
+            // // Ta ut data för ett år
+            self.data = [];
+            while(dataz[i]["år"] == self.selectedYear){
+                 self.data.push(dataz[i]);
+                 ++i;
+            }
+        }
+        
+
+            
+        
+
+        // // console.log(self.data[0][chosenVariableOnYAxis]);
+        for(var i = 0; i < self.data.length; ++i){
+             entry1.push(self.data[i][self.selectedObjectOnXAxis]);       // data for the x axis
+             entry2.push(self.data[i][self.selectedObjectOnYAxis]);       // data for the y axis
+         }
+
+        //Mysko att denna inte fungerar
+        // xScale = d3.scale.linear()                                      // scale entry1
+        //     .domain([0, 100])
+        //      //.domain([d3.min(entry1), d3.max(entry1)])
+        //     .range([padding, width - padding]);
+        x.domain(d3.extent(entry1, function(d) { return d; })).range();
+        y.domain(d3.extent(entry2, function(d) { return d; })).range();
+
+        // // // //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
+        // yScale = d3.scale.linear()                                      // scale entry2
+        // //     .domain([d3.min(entry2), d3.max(entry2)])
+        //      .domain([0, 100])
+        //      .range([height  - padding, padding]);
+
+
+    // Här började draw förut!!
+        
         // Add x axis and title.
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
             .append("text")
-            .text(chosenVariableOnXAxis)            // plot the name of the chosen dataset
+            .text(self.selectedObjectOnXAxis)            // plot the name of the chosen dataset
             .attr("class", "label")
             .attr("text-anchor", "middle")
             .attr("x", width/2)
             .attr("y", 30);
-            
+
         // Add y axis and title.
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
-            .text(chosenVariableOnYAxis)            // plot the name of the chosen dataset
+            .text(self.selectedObjectOnYAxis)            // plot the name of the chosen dataset
             .attr("class", "label")        
             .attr("y", height/2)
             .attr("x", 0)
@@ -155,13 +152,13 @@ function sp(){
             .attr("class", "dot")
             // Define the x and y coordinate data values for the dots
             .attr("cx", function(d, i) {
-                return xScale(entry1[i]);           // plot scaled position for x-axis
+                return  x(entry1[i]);           // plot scaled position for x-axis
             })
             .attr("cy", function(d, i) {
-                return yScale(entry2[i]);           // plot scaled position for y-axis
+                return y(entry2[i]);           // plot scaled position for y-axis
             })
             .attr("r", 5)
-            .style("fill", function(d, i){ return countryColorScale(d["region"]);})
+            .style("fill", function(d){ return countryColorScale(d["region"]);})
             // tooltip
             .on("mousemove", function(d, i) {
                 tooltip.transition()
@@ -180,6 +177,21 @@ function sp(){
             .on("click",  function(d) {
                  selFeature(d);
             });
+
+        var tempData = "a";
+        var extraText = svg.selectAll(".extraTextSP")
+            .data(tempData)
+            .enter()
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 8 + ")")               // kan behövas flyttas
+            .attr("class","extraTextSP");
+
+        extraText.append("text")
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle")
+            .style("font", "bold 12px Arial")
+            .attr("class", "inside")
+            .text(function(d) { return self.selectedYear; });
 
     }
 
@@ -203,8 +215,8 @@ function sp(){
         // sp1.selectDot(value.Country);
         // pc1.selectLine(value.Country);
         // map.selectCountry(value.Country);
-        console.log(valResultat);
-        console.log(headers);
+        //console.log(valResultat);
+        //console.log(headers);
     }
 
     function clearScatterPlot(){
@@ -216,16 +228,26 @@ function sp(){
     //method to select what should be displayed on the Y-axis
     this.selectYAxis = function()
     {
-        selectedObjectOnYAxis = $("#setYAxis option:selected").val();
-        this.boolYAxis = true;
-        if(selectedObjectOnYAxis == "Välj variabel"){
-            this.boolYAxis = false;
+        var selY = $("#setYAxis option:selected").val();
+        self.boolYAxis = true;
+        if(selY == "Välj variabel"){
+            self.boolYAxis = false;
             clearScatterPlot();
         }
+        else{
+            if(selY == "Arbetslöshet")
+                selY = "arbetslöshet";
+            if(selY == "Inkomst")
+                selY = "inkomst";
+            if(selY == "Övriga partier")
+                selY = "övriga partier";
+            if(selY == "År")
+                selY = "år";
+            self.selectedObjectOnYAxis = selY;
+        }
+        console.log(self.selectedObjectOnYAxis);
             
-            
-        console.log(selectedObjectOnYAxis);
-        if(this.boolYAxis && this.boolXAxis){
+        if(self.boolYAxis && self.boolXAxis){
             draw();
         }
     };
@@ -233,25 +255,35 @@ function sp(){
     //method to select what should be displayed on the Y-axis
     this.selectXAxis = function()
     {
-        selectedObjectOnXAxis = $("#setXAxis option:selected").val();
-        this.boolXAxis = true;
-        if(selectedObjectOnXAxis == "Välj variabel"){
-            this.boolXAxis = false;
+        var selX = $("#setXAxis option:selected").val();
+        self.boolXAxis = true;
+
+        if(selX == "Välj variabel"){
+            self.boolXAxis = false;
             clearScatterPlot();
         }
-            
-            
-
-        console.log(selectedObjectOnXAxis);
-        if(this.boolYAxis && this.boolXAxis){
+        else{
+            if(selX == "Arbetslöshet")
+                selX = "arbetslöshet";
+            if(selX == "Inkomst")
+                selX = "inkomst";
+            if(selX == "Övriga partier")
+                selX = "övriga partier";
+            if(selX == "År")
+                selX = "år";
+            self.selectedObjectOnXAxis = selX;
+        }
+        if(self.boolYAxis && self.boolXAxis){
+            console.log("Hej nu vill jag rita");
             draw();
         }
+
     };
 
     // method to select which year is choosen
     this.selectYear = function()
     {
-        selectedYear = $("#selectYear option:selected").text();
+        self.selectedYear = $("#selectYear option:selected").text();
         console.log("Väljer år " + $("#selectYear option:selected").text());
     };
 
