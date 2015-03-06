@@ -62,6 +62,9 @@ function map(){
 
     function draw(countries, data)
     {
+        svg.selectAll('path').remove();
+
+        console.log("drawing map!");
         var colorMappingVariable = "inkomst";
         var chosenYear = "2002";
         var colorMappingValues = [];
@@ -125,6 +128,7 @@ function map(){
                     clearSelection();
                 }
             });
+        console.log("har jag ritat om än?");
     }
     
     //zoom and panning method
@@ -164,17 +168,17 @@ function map(){
     this.deselectCountry = function() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                var clusterIndex;
-                for(var j = 0; j < dbscanRes.length; ++j)
+                var clusterIndex = findClusterByRegion(d.properties.name)
+                console.log(clusterIndex);
+                if(clusterIndex != -1)
                 {
-                    clusterIndex = dbscanRes[j].indexOf(dataz[i]);
-                    if(clusterIndex != -1)
-                    {
-                        return colorScale2(j);
-                    }
+                    return colorScale2(clusterIndex);
                 }
-                return "ff0000";
-            });
+                else
+                {
+                    return "ff0000";
+                }
+            })
         d3.select("#map").selectAll("path").style("stroke-width", function(d){return ".1px";});     // TODO: .1px är inte riktigt samma som från början
     }
 
@@ -227,5 +231,12 @@ function map(){
             .duration(750)
             .style("stroke-width", 1.5 / scale + "px")
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+    }
+
+    this.selectYear = function()
+    {
+        draw(counties, dataz2);
+        console.log(selectedObject);
+        map.selectCountry(selectedObject.properties.name);
     }
 }

@@ -73,8 +73,8 @@ function sp(){
     var selectedObjectOnXAxis = $("#selectXAxis option:selected").val();
     var selectedYear = $("#selectYear option:selected").text();
     
-    console.log(selectedObjectOnYAxis);
-    console.log(selectedObjectOnXAxis);
+    //console.log(selectedObjectOnYAxis);
+    //console.log(selectedObjectOnXAxis);
 
     //Load data
     //d3.csv("data/databaosen.csv", function(error, data) {
