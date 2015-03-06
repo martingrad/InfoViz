@@ -108,28 +108,25 @@ function dbscan(data, eps, minPts)
 				}
 			}
 			//if P' is not yet member of any cluster
-			if(test(currentNeighborPointIndex)){
-				// detta är ett test, touch it and you'll die ;)
-			}
+			// if( !ttest(currentNeighborPointIndex) ){
+			// 	// detta är ett test, touch it and you'll die ;)
+			// 	clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
+			// }
 
-			if( !pointIsPartOfAnyCluster(+currentNeighborPointIndex) ){
+			if( !pointIsPartOfAnyCluster(currentNeighborPoint) ){
 				// add P' to cluster C
 				clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
 			}
 		}
 	}
 
-	function test(value){
-
-	}
-
-	function pointIsPartOfAnyCluster(_currentNeighborPointIndex){
+	function pointIsPartOfAnyCluster(_currentNeighborPoint){
 		var isPart = false;
-		console.log(_currentNeighborPointIndex);
+		//console.log(_currentNeighborPointIndex);
 		for(var i = 0; i < clusters.length; ++i){
 			//console.log("Is _currentNeighborPointIndex = " + _currentNeighborPointIndex + " part of clusters[" + i + "]?");
 			//console.log(_currentNeighborPointIndex);
-			if( clusters[i].indexOf(data[_currentNeighborPointIndex]) != -1 ){		//if it doesn't exist it returns -1
+			if( clusters[i].indexOf(_currentNeighborPoint) != -1 ){		//if it doesn't exist it returns -1
 				isPart = true;
 				//console.log("hey man, this is already part!");
 				break;
