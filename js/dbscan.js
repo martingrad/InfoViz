@@ -12,7 +12,8 @@
 function dbscan(data, eps, minPts)
 {
 	console.log("dbscan(data, " + eps + ", " + minPts + ") results:");
-	// initializing array of zeros, with the size of the data
+	
+	// initializing array of zeros, with the size of the data (zeros - not visited, ones - visited)
 	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
 	//console.log("visited points", pointsAreVisited);
 
@@ -67,7 +68,8 @@ function dbscan(data, eps, minPts)
 		for(var i = 0; i < data.length; ++i){
 			curNeigh = data[i];
 			euclideanDist = Math.abs(curNeigh["inkomst"] - _currentPoint["inkomst"]);
-			if( euclideanDist <= _eps && !pointIsPartOfAnyCluster(curNeigh) ){
+			// skillnaden för a^2 + b^2 osv ... roten ur det. = det nya euklidiska distansen som ska beräknas.
+			if( curNeigh != _currentPoint && euclideanDist <= _eps && !pointIsPartOfAnyCluster(curNeigh) ){
 				//console.log("Jag hittade en granne!");
 				neighbors.push(i);
 			}
@@ -89,9 +91,9 @@ function dbscan(data, eps, minPts)
 		//console.log("clusters[" + _clusterIndex + "]:" + clusters[_clusterIndex]);
 
 		// (for each point P' in neighborPtsIndices)
-		for(var i = 0; i < neighborPtsIndices.length; ++i){
+		for(var i = 0; i < _neighborPtsIndices.length; ++i){
 			// store the data index of the current neigbor point being examined.
-			currentNeighborPointIndex = neighborPtsIndices[i];
+			currentNeighborPointIndex = _neighborPtsIndices[i];
 			// get the data point using the index
 			currentNeighborPoint = data[currentNeighborPointIndex];
 			// (if P' is not visited)
@@ -106,18 +108,28 @@ function dbscan(data, eps, minPts)
 				}
 			}
 			//if P' is not yet member of any cluster
-			if( !pointIsPartOfAnyCluster(currentNeighborPointIndex) ){
+			if(test(currentNeighborPointIndex)){
+				// detta är ett test, touch it and you'll die ;)
+			}
+
+			if( !pointIsPartOfAnyCluster(+currentNeighborPointIndex) ){
 				// add P' to cluster C
 				clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
 			}
 		}
 	}
 
+	function test(value){
+
+	}
+
 	function pointIsPartOfAnyCluster(_currentNeighborPointIndex){
 		var isPart = false;
+		console.log(_currentNeighborPointIndex);
 		for(var i = 0; i < clusters.length; ++i){
 			//console.log("Is _currentNeighborPointIndex = " + _currentNeighborPointIndex + " part of clusters[" + i + "]?");
-			if( clusters[i].indexOf(_currentNeighborPointIndex) != -1 ){
+			//console.log(_currentNeighborPointIndex);
+			if( clusters[i].indexOf(data[_currentNeighborPointIndex]) != -1 ){		//if it doesn't exist it returns -1
 				isPart = true;
 				//console.log("hey man, this is already part!");
 				break;
