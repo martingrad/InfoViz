@@ -11,6 +11,7 @@
 
 function dbscan(data, eps, minPts)
 {
+	console.log("dbscan(data, " + eps + ", " + minPts + ") results:");
 	// initializing array of zeros, with the size of the data
 	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
 	//console.log("visited points", pointsAreVisited);
@@ -59,14 +60,14 @@ function dbscan(data, eps, minPts)
 
 	// function that returns data indices for neigboring points
 	function regionQuery(_currentPoint, _eps){
-		console.log("regionQuery()");
+		//console.log("regionQuery()");
 		var neighbors = [];
 		var euclideanDist = 0;
 		var curNeigh;
 		for(var i = 0; i < data.length; ++i){
 			curNeigh = data[i];
 			euclideanDist = Math.abs(curNeigh["inkomst"] - _currentPoint["inkomst"]);
-			if( euclideanDist == 0 && !pointIsPartOfAnyCluster(curNeigh) ){
+			if( euclideanDist <= _eps && !pointIsPartOfAnyCluster(curNeigh) ){
 				//console.log("Jag hittade en granne!");
 				neighbors.push(i);
 			}
@@ -75,7 +76,7 @@ function dbscan(data, eps, minPts)
 	}
 
 	function expandCluster(_currentPoint, _neighborPtsIndices, _clusterIndex, _eps, _minPts){
-		console.log("expandCluster()");
+		//console.log("expandCluster()");
 		var currentNeighborPoint;
 		var currentNeighborPointIndex;
 		var newNeighborPtsIndices;
