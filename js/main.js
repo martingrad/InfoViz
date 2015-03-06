@@ -39,6 +39,7 @@ function populateSelect() {
     }
 
     options.sort();
+    options.unshift("Välj kommun");			// unshift pushes adds the argument in the beginning of the array
 
 	for (var i = 0; i < options.length; i++) {
 	  var opt = options[i];
