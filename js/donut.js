@@ -44,7 +44,7 @@ function donut(){
   }
 
   //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
-  self.region = "Stockholm";          //default region
+  self.region = "Ale";          //default region
   showInformation(self.region);
 
 
