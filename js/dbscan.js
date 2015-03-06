@@ -13,37 +13,34 @@ function dbscan(data, eps, minPts)
 {
 	// initializing array of zeros, with the size of the data
 	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
-	console.log("visited points", pointsAreVisited);
+	//console.log("visited points", pointsAreVisited);
 
 	// copying the array of zeros
 	var pointsAreNoise = pointsAreVisited;
 	
 	var clusters = [];
-	clusters[0] = new Array();
-	clusters[0].push(data[0]);
-	clusters[0].push(data[1]);
-	clusters[1] = new Array();
-	clusters[1].push(data[2]);
-	console.log("clusters", clusters);
+	//clusters[0] = new Array();
+	//console.log("clusters", clusters);
 
 	var currentPoint;
 	var pointAlreadyVisited;
 	var neighborPtsIndices;		// holds indices to neighboring data points (for one point at a time)
 	
 	// (C = 0)
-	var clusterIndex = 0;
+	var clusterIndex = -1;
 	// (for each unvisited point P in dataset D)
 	for(var i = 0; i < data.length; ++i)
 	{
 		pointAlreadyVisited = pointsAreVisited[i];
 		if(!pointAlreadyVisited){
-			console.log("Point " + i + " not already visited!");
+			//console.log("Point " + i + " not already visited!");
 			currentPoint = data[i];
 			// (mark P as visited)
 			pointsAreVisited[i] = 1;
 			neighborPtsIndices = regionQuery(currentPoint, eps);
 			if(neighborPtsIndices.length < minPts){
 				// (mark P as NOISE)
+				console.log("noise!");
 	    		pointsAreNoise[i] = 1;
 	    	}
 		  	else{
@@ -53,23 +50,43 @@ function dbscan(data, eps, minPts)
 		 	}
 		}
 		else{
-			console.log("Point " + i + " already visited!");
+			//console.log("Point " + i + " already visited!");
 		}
 	}
 
+	console.log(clusters);
+
+
+	// function that returns data indices for neigboring points
 	function regionQuery(_currentPoint, _eps){
-		
-		return [0,1];
+		console.log("regionQuery()");
+		var neighbors = [];
+		var euclideanDist = 0;
+		var curNeigh;
+		for(var i = 0; i < data.length; ++i){
+			curNeigh = data[i];
+			euclideanDist = Math.abs(curNeigh["inkomst"] - _currentPoint["inkomst"]);
+			if( euclideanDist == 0 && !pointIsPartOfAnyCluster(curNeigh) ){
+				//console.log("Jag hittade en granne!");
+				neighbors.push(i);
+			}
+		}
+		return neighbors;
 	}
 
 	function expandCluster(_currentPoint, _neighborPtsIndices, _clusterIndex, _eps, _minPts){
+		console.log("expandCluster()");
 		var currentNeighborPoint;
 		var currentNeighborPointIndex;
 		var newNeighborPtsIndices;
 
 		// (add P to cluster C)
-		clusters[_clusterIndex] = new Array();
+		if(!clusters[_clusterIndex]){
+			clusters[_clusterIndex] = new Array();
+		}
 		clusters[_clusterIndex].push(_currentPoint);
+		//console.log("clusters[" + _clusterIndex + "]:" + clusters[_clusterIndex]);
+
 		// (for each point P' in neighborPtsIndices)
 		for(var i = 0; i < neighborPtsIndices.length; ++i){
 			// store the data index of the current neigbor point being examined.
@@ -88,7 +105,7 @@ function dbscan(data, eps, minPts)
 				}
 			}
 			//if P' is not yet member of any cluster
-			if( pointIsPartOfAnyCluster(currentNeighborPointIndex) ){
+			if( !pointIsPartOfAnyCluster(currentNeighborPointIndex) ){
 				// add P' to cluster C
 				clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
 			}
@@ -98,9 +115,14 @@ function dbscan(data, eps, minPts)
 	function pointIsPartOfAnyCluster(_currentNeighborPointIndex){
 		var isPart = false;
 		for(var i = 0; i < clusters.length; ++i){
-			if( clusters[i].indexOf(_currentNeighborPointIndex != -1) ){
+			//console.log("Is _currentNeighborPointIndex = " + _currentNeighborPointIndex + " part of clusters[" + i + "]?");
+			if( clusters[i].indexOf(_currentNeighborPointIndex) != -1 ){
 				isPart = true;
+				//console.log("hey man, this is already part!");
 				break;
+			}
+			else{
+				//console.log("No!");
 			}
 		}
 		return isPart;
