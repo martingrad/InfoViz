@@ -47,7 +47,6 @@ function populateSelect() {
 	  el.value = opt;
 	  select.appendChild(el);
 	}
-	//configureDBSCAN();
 }
 
 function showLoadingScreen()
@@ -66,21 +65,3 @@ function hideLoadingScreen()
 	spinner.stop();
 }
 
-// Configure a DBSCAN instance.
-function configureDBSCAN(){
-	
-	var1 = "inkomst";
-    var2 = "Moderaterna";
-
-    for(var i = 0; i < dataz.length; ++i){
-        point_data.push(dataz[i][var1]);       // data for the x axis
-        point_data.push(dataz[i][var2]);       // data for the y axis
-    }
-    
-    //console.log('point_data', point_data);
- 	
- 	dbscanner = jDBSCAN().eps(0.075).minPts(1).distance('EUCLIDEAN').data(point_data);
- 	point_assignment_result = dbscanner();
-    
-    //console.log('Resulting DBSCAN output', point_assignment_result);
-}
