@@ -159,7 +159,18 @@ function map(){
 
     this.deselectCountry = function() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
-        d3.select("#map").selectAll("path").style("fill", function(d){ return colorScale(incomeMap[d.properties.name]);});
+        d3.select("#map").selectAll("path").style("fill", function(d, i) {
+                var clusterIndex;
+                for(var j = 0; j < dbscanRes.length; ++j)
+                {
+                    clusterIndex = dbscanRes[j].indexOf(dataz[i]);
+                    if(clusterIndex != -1)
+                    {
+                        return colorScale2(j);
+                    }
+                }
+                return "ff0000";
+            });
         d3.select("#map").selectAll("path").style("stroke-width", function(d){return ".1px";});     // TODO: .1px är inte riktigt samma som från början
     }
 
