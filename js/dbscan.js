@@ -10,13 +10,7 @@
 function dbscan(data, eps, minPts)
 {
 	console.log("dbscan(data, " + eps + ", " + minPts + ") results:");
-	
-	// store the data properties headers...
-	var headers = d3.keys(data[0]);
-	// ... and extract and store the ones that are relevant
-	var clusteringDims = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
-						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
-
+	console.log(clusteringDims);
 	// initializing array of zeros, with the size of the data (zero = not visited, one = visited)
 	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
 	// copying the array of zeros

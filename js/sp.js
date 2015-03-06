@@ -8,6 +8,9 @@ function sp(){
 
     //initialize color scale
     var countryColorScale = d3.scale.category20();
+
+    this.boolXAxis = false;
+    this.boolYAxis = false;
     
     //initialize tooltip
 
@@ -66,10 +69,13 @@ function sp(){
     
     /////// ------------  Välj år --------- /////
     // Kolla vilka alternativ som valts för axlarna
-    var selectedObjectOnYAxis = $("#selectScatterPlotYAxis option:selected").val();
-    var selectedObjectOnXAxis = $("#selectScatterPlotXAxis option:selected").val();
+    var selectedObjectOnYAxis = $("#selectYAxis option:selected").val();
+    var selectedObjectOnXAxis = $("#selectXAxis option:selected").val();
     var selectedYear = $("#selectYear option:selected").text();
-        
+    
+    console.log(selectedObjectOnYAxis);
+    console.log(selectedObjectOnXAxis);
+
     //Load data
     //d3.csv("data/databaosen.csv", function(error, data) {
         var chosenYear = "2002";
@@ -79,10 +85,19 @@ function sp(){
             self.data.push(dataz[i]);
             ++i;
         }
-          
+        
+        //kanske behöver den
+        self.partier = d3.keys(dataz[0]).filter(function(d){
+            return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
+        });
+
         // Here the different data are chosen for the plot  
-        chosenVariableOnXAxis = headers[2];
-        chosenVariableOnYAxis = headers[5];
+        chosenVariableOnXAxis = self.partier[2];
+        chosenVariableOnYAxis = self.partier[5];
+
+        
+        //console.log(chosenVariableOnYAxis);
+        //console.log(chosenVariableOnXAxis);
 
         for(var i = 0; i < self.data.length; ++i){
             entry1.push(self.data[i][chosenVariableOnXAxis]);       // data for the x axis
@@ -102,7 +117,7 @@ function sp(){
         xAxis= d3.svg.axis().scale(xScale).orient("bottom");
         yAxis= d3.svg.axis().scale(yScale).orient("left");
 
-        draw();
+        // draw();
 
     //});
 
@@ -192,19 +207,43 @@ function sp(){
         console.log(headers);
     }
 
+    function clearScatterPlot(){
+        svg.selectAll('x axis').remove();
+    }
+
     //method to select what should be displayed on the Y-axis
     this.selectYAxis = function()
     {
-        //console.log("Väljer vad som ska visas på y axeln");
-        //var dropDown = document.getElementById("selectScatterPlotYAxis");
-        //var selectedOption = dropDown.options[dropDown.selectedIndex].text;
-        selectedObjectOnYAxis = $("selectedObjectOnYAxis option:selected").val();
+        selectedObjectOnYAxis = $("#setYAxis option:selected").val();
+        this.boolYAxis = true;
+        if(selectedObjectOnYAxis == "Välj variabel"){
+            this.boolYAxis = false;
+            clearScatterPlot();
+        }
+            
+            
+        console.log(selectedObjectOnYAxis);
+        if(this.boolYAxis && this.boolXAxis){
+            draw();
+        }
     };
 
     //method to select what should be displayed on the Y-axis
     this.selectXAxis = function()
     {
-        selectedObjectOnXAxis = $("selectedObjectOnXAxis option:selected").val();
+        selectedObjectOnXAxis = $("#setXAxis option:selected").val();
+        this.boolXAxis = true;
+        if(selectedObjectOnXAxis == "Välj variabel"){
+            this.boolXAxis = false;
+            clearScatterPlot();
+        }
+            
+            
+
+        console.log(selectedObjectOnXAxis);
+        if(this.boolYAxis && this.boolXAxis){
+            draw();
+        }
     };
 
     // method to select which year is choosen
