@@ -84,25 +84,24 @@
             <div id="spinner-box"></div>
             <div class="container">
                 <!-- row of columns -->
-                <div class="btn-group">
-                    <select id="selectYear" onchange="sp1.selectYear(), donut.selectYear(value)">
-                        <option value="2010">2010</option>
-                        <option value="2006">2006</option>
-                        <option value="2002">2002</option>
-                    </select>
-                </div>
+                
 
                 <div class="row">
                     <div class="col-xs-6">
                         <div style="height: 45vh; border: solid; border-color:black">
                             <!-- dropdown knapp för y axeln på scatterplotten -->
+                            <div class="btn-group" style="position:center">
+                                <select id="selectYear" onchange="sp1.selectYear(), donut.selectYear(value)">
+                                    <option value="2010">2010</option>
+                                    <option value="2006">2006</option>
+                                    <option value="2002">2002</option>
+                                </select>
+                            </div>
+
                             <div class="btn-group" style="position:absolute">
                                 <select id="selectScatterPlotYAxis" onchange="donut.selectPieFromSelect()">
                                 </select>
                             </div>
-                            <!-- <div class="btn-group" style:"position:absolute" id="creatingButtons">
-
-                            </div> -->
 
                             <!-- <div id="sp" style="height: 45vh;"></div> -->
                             <div id="donut" style="width: 100%; height: 100%"></div>
@@ -142,11 +141,12 @@
                 <a href="mailto:#">first.last@example.com</a>
             </address> -->
             
+            
             <div class="container">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-xs btn-primary btn-lg" id="startModal"data-toggle="modal" data-target="#myModal">
+                <!-- <button type="button" class="btn btn-xs btn-primary btn-lg" id="startModal"data-toggle="modal" data-target="#myModal">
                     <p>Scatterplot</p>
-                </button>
+                </button> -->
             </div>
         </div>
 

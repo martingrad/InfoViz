@@ -21,6 +21,8 @@ function donut(){
       .value(function(d,i){return d;})
       .sort(null);
 
+  var welcomeMessage = "a";
+
   var arc = d3.svg.arc()
       .innerRadius(radius * 0.4)
       .outerRadius(radius - 50);
@@ -44,37 +46,37 @@ function donut(){
   }
 
   //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
-  self.region = "Ale";          //default region
-  showInformation(self.region);
+  self.region = "Välj kommun";          //default region
+  //showInformation(self.region);
+  showDefaultInformation();
 
 
 
   /* ======== Private functions ======== */
   /* =================================== */
-  function createButtons(data){
-    var html = "  ";
-    for(var i = 0; i < data.length; i++)
-    {
-      //console.log(data[i]["region"]);
-      // Här är jag!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        //html += "<option value="parti">Partier</option>"
-    }
-    // var buttonID = "button_1_"+idtmp;
-    //     html += "<div class='row-fluid'>";
-    //       html += "<div class='slideWrapper'>";
-    //         html += "<div class='btn btn-admin-delete' onclick=\"slideButton('" + buttonID +"');removeStaff('" + nametmp + "','" + idtmp +"')\" id='" + buttonID + "'>";
-    //           html += "<p>" + nametmp + "</p>";
-    //         html += "</div>"; // ! btn
-    //       html += "</div>"; // ! slideWrapper
-    //     html += "</div>"; // ! row-fluid
-    return html;
+  function showDefaultInformation(){
+    var extraText = svg.selectAll(".extraText")
+      .data(welcomeMessage)
+      .enter()
+      .append("g")
+      .attr("class","extraText");
+
+    extraText.append("text")
+      .attr("dy", ".35em")
+      .style("text-anchor", "middle")
+      .style("font", "bold 18px Arial")
+      .attr("class", "inside")
+      .text(function(d){return "Välkommen till denna underbara sida.";});
+
+    
   }
 
   function showInformation(region)
   {
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();
+    svg.selectAll(".legend").remove();
 
     self.region = region;
 
@@ -199,7 +201,12 @@ function donut(){
 
   /* ======== Public functions ======== */
   /* ================================== */
-  
+  this.deselectPie = function(){
+    svg.selectAll('.arc').remove();
+    svg.selectAll(".extraText").remove();
+    svg.selectAll(".legend").remove();
+  };
+
   this.selectYear = function(value)
   {
     var inputValue = value;
@@ -211,19 +218,30 @@ function donut(){
         self.data.push(dataz[i]);
       }
     }
-    showInformation(self.region);
+    if(self.region != "Välj kommun")
+      showInformation(self.region);
   };
 
   this.selectPie = function(value)
   {
-    showInformation(value);
+      showInformation(value);
   };
 
   this.selectPieFromSelect = function()
   {
     var selectedRegion = $("#selectScatterPlotYAxis option:selected").text();
-    showInformation(selectedRegion);
-    map.selectCountry(selectedRegion);
-    pc1.selectLine(selectedRegion);
+    if(selectedRegion != "Välj kommun"){
+      showInformation(selectedRegion);
+      map.selectCountry(selectedRegion);
+      pc1.selectLine(selectedRegion);
+    }
+    else
+    {
+      self.region = "Välj kommun";
+      map.deselectCountry();
+      pc1.deselectLine();
+      donut.deselectPie();
+      showDefaultInformation();
+    }
   }
 }
