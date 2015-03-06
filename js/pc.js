@@ -211,12 +211,10 @@ function pc(){
 
     //method for selecting the pololyne from other components    
     this.selectLine = function(value){          //skickar med value som är landet
-        console.log("selectLine!");
         d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != value) return 0.05;});
         d3.select("#pc").selectAll("path").style("stroke",  function(d){
             if(d["region"] == value)
             {
-                console.log(value);
                 return "deeppink";
             }
             else{
@@ -226,7 +224,6 @@ function pc(){
     };
 
     this.deselectLine = function(){
-        console.log("deselectLine!");
         clearSelection();
     }
     

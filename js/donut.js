@@ -67,7 +67,7 @@ function donut(){
       .style("text-anchor", "middle")
       .style("font", "bold 18px Arial")
       .attr("class", "inside")
-      .text(function(d){return "Välkommen till denna underbara sida.";});
+      .text(function(d){return "Ingen kommun är vald.";});
 
     
   }
@@ -133,9 +133,6 @@ function donut(){
     var legendSpacing = 4;
 
     // Extra text i mitten av pajen
-    console.log(width);
-    console.log(height);
-
     var extraText = svg.selectAll(".extraText")
       .data(tempData)
       .enter()
@@ -205,6 +202,9 @@ function donut(){
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();
     svg.selectAll(".legend").remove();
+
+    this.region = "Välj kommun";
+    showDefaultInformation();
   };
 
   this.selectYear = function(value)

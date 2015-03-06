@@ -13,9 +13,7 @@ var map;
 var donut;
 var spinner;
 var target;
-var dbscanner;
-var point_data = [];
-var point_assignment_result
+var dbscanRes;
 
 function initializeObjects()
 {
@@ -24,7 +22,7 @@ function initializeObjects()
 	map = new map();
 	donut = new donut();
 	populateSelect();
-    var dbscanRes = dbscan(dataz, 20, 5);
+    dbscanRes = dbscan(dataz, 20, 5);
     console.log(dbscanRes);
 }
 

@@ -17,7 +17,8 @@ function map(){
         .domain([10, 500])
         .range(["brown", "steelblue"]);
 
-    var countryColorScale = d3.scale.category20();
+    // alternative color scale
+    var colorScale2 = d3.scale.category20();
     
     // initialize tooltip
     // add the tooltip area to the webpage
@@ -83,7 +84,16 @@ function map(){
             .attr("title", function(d) { return d.properties.name; })
             //country color
             .style("fill", function(d, i) {
-                    return colorScale(incomeMap[d.properties.name]);
+                    var clusterIndex;
+                    for(var j = 0; j < dbscanRes.length; ++j)
+                    {
+                        clusterIndex = dbscanRes[j].indexOf(dataz[i]);
+                        if(clusterIndex != -1)
+                        {
+                            return colorScale2(j);
+                        }
+                    }
+                    return "ff0000";
                 })
             //tooltip
             .on("mousemove", function(d, i) {
@@ -125,6 +135,7 @@ function map(){
     // function to select region from other components
     this.selectCountry = function(value){
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "5px";});
         zoomToRegion(value);
         /*
         // Opacity gradient to help make map appear tilted into the screen
@@ -147,15 +158,13 @@ function map(){
     };
 
     this.deselectCountry = function() {
-        console.log("deselectCountry");
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d){ return colorScale(incomeMap[d.properties.name]);});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d){return ".1px";});     // TODO: .1px är inte riktigt samma som från början
     }
 
     //method for selecting features of other components
     function selFeature(value){
-        console.log("Should be spinning now!");
-        console.log("Time for an exquisite selection!");
         map.selectCountry(value.properties.name);
         sp1.selectDot(value.properties.name);
         pc1.selectLine(value.properties.name);
@@ -164,8 +173,20 @@ function map(){
 
     function clearSelection() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
-        d3.select("#map").selectAll("path").style("fill", function(d){ return colorScale(incomeMap[d.properties.name]);});
+        d3.select("#map").selectAll("path").style("fill", function(d, i) {
+                    var clusterIndex;
+                    for(var j = 0; j < dbscanRes.length; ++j)
+                    {
+                        clusterIndex = dbscanRes[j].indexOf(dataz[i]);
+                        if(clusterIndex != -1)
+                        {
+                            return colorScale2(j);
+                        }
+                    }
+                    return "ff0000";
+                });
         pc1.deselectLine();
+        donut.deselectPie();
     }
 
     active = d3.select(null);
@@ -178,12 +199,6 @@ function map(){
                 break;
             }
         }
-        console.log("zoomToRegion", region);
-
-
-        //if (active.node() === this) return reset();
-        //active.classed("active", false);
-        //active = d3.select(this).classed("active", true);
 
         var bounds = path.bounds(region),
             dx = bounds[1][0] - bounds[0][0],
