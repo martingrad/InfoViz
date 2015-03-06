@@ -26,7 +26,7 @@ function initializeObjects()
 	extractHeaders();
 	populateSelect();
 	populateSelect2();
-    dbscanRes = dbscan(dataz, 20, 5);
+    dbscanRes = dbscan(dataz, 25, 5);
     console.log(dbscanRes);
 }
 
