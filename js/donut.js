@@ -46,7 +46,7 @@ function donut(){
   }
 
   //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
-  self.region = "Ale";          //default region
+  self.region = "Välj kommun";          //default region
   //showInformation(self.region);
   showDefaultInformation();
 
@@ -218,7 +218,8 @@ function donut(){
         self.data.push(dataz[i]);
       }
     }
-    showInformation(self.region);
+    if(self.region != "Välj kommun")
+      showInformation(self.region);
   };
 
   this.selectPie = function(value)
@@ -236,6 +237,7 @@ function donut(){
     }
     else
     {
+      self.region = "Välj kommun";
       map.deselectCountry();
       pc1.deselectLine();
       donut.deselectPie();
