@@ -51,7 +51,7 @@ function map(){
     //load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
         counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
-        draw(counties, sp1.getData());       
+        draw(counties, dataz);       
     });
 
     var colorScale;
