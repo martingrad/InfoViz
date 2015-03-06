@@ -217,8 +217,11 @@ function sp(){
                 selY = "inkomst";
             if(selY == "Övriga partier")
                 selY = "övriga partier";
+            if(selY == "År")
+                selY = "år";
             self.selectedObjectOnYAxis = selY;
         }
+        console.log(self.selectedObjectOnYAxis);
             
         if(self.boolYAxis && self.boolXAxis){
             draw();
@@ -242,6 +245,8 @@ function sp(){
                 selX = "inkomst";
             if(selX == "Övriga partier")
                 selX = "övriga partier";
+            if(selX == "År")
+                selX = "år";
             self.selectedObjectOnXAxis = selX;
         }
         if(self.boolYAxis && self.boolXAxis){
