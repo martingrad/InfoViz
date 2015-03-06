@@ -208,7 +208,9 @@ function sp(){
     }
 
     function clearScatterPlot(){
-        svg.selectAll('x axis').remove();
+        
+        svg.selectAll(".axis").remove();
+        svg.selectAll('.dot').remove();
     }
 
     //method to select what should be displayed on the Y-axis
