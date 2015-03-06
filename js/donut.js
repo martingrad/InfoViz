@@ -229,7 +229,7 @@ function donut(){
 
   this.selectPieFromSelect = function()
   {
-    var selectedRegion = $("#selectScatterPlotYAxis option:selected").text();
+    var selectedRegion = $("#selectRegion option:selected").text();
     if(selectedRegion != "Välj kommun"){
       showInformation(selectedRegion);
       map.selectCountry(selectedRegion);

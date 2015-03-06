@@ -96,7 +96,7 @@
                                     <option value="2006">2006</option>
                                     <option value="2002">2002</option>
                                 </select>
-                                <select id="selectScatterPlotYAxis" onchange="donut.selectPieFromSelect()"></select>
+                                <select id="selectRegion" onchange="donut.selectPieFromSelect()"></select>
                             </div>
 
                             <!-- <div id="sp" style="height: 45vh;"></div> -->
@@ -139,7 +139,15 @@
                         <!-- </address>  -->
                     </div>
                     <div class="col-xs-6">
-                        <!-- <div id="sp" style="height: 45vh;"></div> -->
+                        <div class="btn-group" style="position:center; position:absolute">
+                            <!-- For scatterPlot Y-axis -->
+                            <select id="setYAxis" onchange="sp1.selectYAxis()"></select>
+                            <!-- For scatterPlot X-axis -->
+                            <select id="setXAxis" onchange="sp1.selectXAxis()"></select>
+                        </div>
+
+
+                        <div id="sp" style="height: 45vh;"></div>
                     </div>
                     
                 </div>
