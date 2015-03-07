@@ -194,6 +194,8 @@ function sp(){
     function clearSelection(){
         sp1.deselectDot();
         pc1.deselectLine();
+        map.deselectCountry();
+        donut.deselectPie();
     };
 
     /* ======== Public functions ======== */

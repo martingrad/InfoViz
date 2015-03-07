@@ -33,17 +33,13 @@ function donut(){
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-  self.data = [];
+  
+  
   self.headers = d3.keys(dataz[0]).filter(function(d){
     return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
   });
 
-  for(var i = 0; i < dataz.length; i++)
-  {
-    if(dataz[i]["år"] == "2010"){     //default year 2010
-      self.data.push(dataz[i]);
-    }
-  }
+  self.data = dataz2010;                //default year 2010
 
   //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
   self.region = "Välj kommun";          //default region
@@ -196,8 +192,16 @@ function donut(){
       .text(function(d,i) { return self.headers[i]; });
   }
 
+
+
   /* ======== Public functions ======== */
   /* ================================== */
+  this.selectPie = function(region)
+  {
+    showInformation(region);           // calling the draw function with the 
+  };
+
+  // Function to remove the svg, and show the default look for the donut, when no country is used.
   this.deselectPie = function(){
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();
@@ -207,32 +211,48 @@ function donut(){
     showDefaultInformation();
   };
 
+  // Function which calls the draw function, with the region as argument.
   this.selectYear = function(value)
   {
-    var inputValue = value;
-    self.data = [];
-    
-    for(var i = 0; i < dataz.length; i++)
-    {
-      if(dataz[i]["år"] == inputValue){
-        self.data.push(dataz[i]);
-      }
+    switch(value){
+      case "2002":
+        self.data = dataz2002;
+        break;
+      case "2006":
+        self.data = dataz2006;
+        break;
+      case "2010":
+        self.data = dataz2010;
+        break;
+      default:
+        self.data = dataz2002;
+        console.log("Bad value, when selecting the year!");
+        break;
     }
+    
     if(self.region != "Välj kommun"){
+      console.log("selectYear donut = " + self.region);
       showInformation(self.region);
+      map.selectCountry(self.region);
+      pc1.selectLine(self.region);
+    }
+    else{
+      self.region = "Välj kommun";
+      map.deselectCountry();
+      pc1.deselectLine();
+      donut.deselectPie();
+      showDefaultInformation(); 
     }
       
   };
 
-  this.selectPie = function(value)
-  {
-      showInformation(value);
-  };
-
+  // Anropas ifrån html-filen, därav publik
   this.selectPieFromSelect = function()
   {
     var selectedRegion = $("#selectRegion option:selected").text();
+    console.log("Här är jag " + selectedRegion);
     if(selectedRegion != "Välj kommun"){
+      self.region = selectedRegion;
       showInformation(selectedRegion);
       map.selectCountry(selectedRegion);
       pc1.selectLine(selectedRegion);

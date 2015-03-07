@@ -47,6 +47,10 @@ function pc(){
 
     var selectedObject;
 
+
+    /* ======== Private functions ======== */
+    /* =================================== */
+
     function draw(){
 
         svg.selectAll('path').remove();
@@ -211,39 +215,6 @@ function pc(){
         });
     }
 
-    //method for selecting the pololyne from other components    
-    this.selectLine = function(region)
-    {
-        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != region) return 0.05;});
-        d3.select("#pc").selectAll("path").style("stroke",  function(d){
-            if(d["region"] == region)
-            {
-                return "deeppink";
-            }
-            else{
-                return "steelblue";//countryColorScale(d["region"]);
-            }
-        });//function(d){ if(d["Country"] == region) return "#ff1111";});
-    };
-
-    this.deselectLine = function(){
-        clearSelection();
-    }
-    
-    //method for selecting features of other components
-    function selFeature(value){
-        pc1.selectLine(value.region);
-        //     sp1.selectDot(value.Country);
-        map.selectCountry(value.region);
-        donut.selectPie(value.region);
-    };
-
-    function clearSelection(){
-        d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
-        d3.select("#pc").selectAll("path").style("stroke", function(d){ return "steelblue";});
-        map.deselectCountry();
-    };
-
     function createDataRepresentatives()
     {
         var meanValues = [];
@@ -273,4 +244,42 @@ function pc(){
         }
         return meanValues;
     }
+
+    //method for selecting features of other components
+    function selFeature(value){
+        pc1.selectLine(value.region);
+        sp1.selectDot(value.region);
+        map.selectCountry(value.region);
+        donut.selectPie(value.region);
+    };
+
+    function clearSelection(){
+        pc1.deselectLine();
+        sp1.deselectDot();
+        donut.deselectPie();
+        map.deselectCountry();
+    };
+    /* ======== Public functions ======== */
+    /* ================================== */
+
+    //method for selecting the pololyne from other components    
+    this.selectLine = function(region)
+    {
+        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != region) return 0.05;});
+        d3.select("#pc").selectAll("path").style("stroke",  function(d){
+            if(d["region"] == region)
+            {
+                return "deeppink";
+            }
+            else{
+                return "steelblue";//countryColorScale(d["region"]);
+            }
+        });//function(d){ if(d["Country"] == region) return "#ff1111";});
+    };
+
+    this.deselectLine = function(){
+        d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
+        d3.select("#pc").selectAll("path").style("stroke", function(d){ return "steelblue";});
+    }
+
 }

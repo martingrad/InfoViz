@@ -59,6 +59,9 @@ function map(){
     var incomeMap = {};
     var selectedObject;
 
+    /* ======== Private functions ======== */
+    /* =================================== */
+
     function draw(countries, data)
     {
         svg.selectAll('path').remove();
@@ -125,66 +128,6 @@ function map(){
             });
         //console.log("har jag ritat om än?");
     }
-    
-    //zoom and panning method
-    function move() {
-        var t = d3.event.translate;
-        var s = d3.event.scale;    
-
-        zoom.translate(t);
-        g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
-    }
-    
-    // function to select region from other components
-    this.selectCountry = function(value){
-        //console.log("selectCountry()");
-        d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
-        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "2px";});
-        d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.name == value) return "black";});
-        zoomToRegion(value);
-    };
-
-    this.deselectCountry = function() {
-        console.log("MAP");
-        d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
-        d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                if(d.properties.cluster != -1)
-                {
-                    return globalColorScale(d.properties.cluster);
-                }
-                else
-                {
-                    return "ff0000";
-                }
-            })
-        d3.select("#map").selectAll("path").style("stroke-width", ".1px");     // TODO: .1px är inte riktigt samma som från början
-        d3.select("#map").selectAll("path").style("stroke", "white");
-    }
-
-    //method for selecting features of other components
-    function selFeature(value){
-        map.selectCountry(value.properties.name);
-        sp1.selectDot(value.properties.name);
-        pc1.selectLine(value.properties.name);
-        donut.selectPie(value.properties.name);
-    }
-
-    function clearSelection() {
-        d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
-        d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                if(d.properties.cluster != -1)
-                {
-                    return globalColorScale(d.properties.cluster);
-                }
-                else
-                {
-                    return "ff0000";
-                }
-            });
-        pc1.deselectLine();
-        donut.deselectPie();
-        sp1.deselectDot();
-    }
 
     active = d3.select(null);
 
@@ -211,8 +154,72 @@ function map(){
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
     }
 
-    this.selectYear = function()
+    //zoom and panning method
+    function move() {
+        var t = d3.event.translate;
+        var s = d3.event.scale;    
+
+        zoom.translate(t);
+        g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
+    }
+
+
+
+    //method for selecting features of other components
+    function selFeature(value){
+        map.selectCountry(value.properties.name);
+        sp1.selectDot(value.properties.name);
+        pc1.selectLine(value.properties.name);
+        donut.selectPie(value.properties.name);
+    }
+
+    function clearSelection() {
+        map.deselectCountry();
+        pc1.deselectLine();
+        donut.deselectPie();
+        sp1.deselectDot();
+    }
+
+    /* ======== Public functions ======== */
+    /* ================================== */
+    
+    // function to select region from other components
+    this.selectCountry = function(region){
+        //console.log("selectCountry()");
+        console.log("Select Country = " + region);
+        d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != region) return 0.7;});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d)
+        {
+            if(d.properties.name == region){
+                selectedObject = d;
+                return "2px";
+            }
+                
+        });
+        d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.name == region) return "black";});
+        zoomToRegion(region);
+
+    };
+
+    this.deselectCountry = function() {
+        d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
+        d3.select("#map").selectAll("path").style("fill", function(d, i) {
+            if(d.properties.cluster != -1)
+            {
+                return globalColorScale(d.properties.cluster);
+            }
+            else
+            {
+                return "ff0000";
+            }
+        });
+        d3.select("#map").selectAll("path").style("stroke-width", ".1px");     // TODO: .1px är inte riktigt samma som från början
+        d3.select("#map").selectAll("path").style("stroke", "white");
+    }    
+
+    this.selectYear = function(value)
     {
+        console.log(value);
         var newData;
         switch(chosenYear)
         {
