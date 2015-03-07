@@ -100,7 +100,13 @@ textarea {
 html,
 body {
     height: 100%;
+    background-color: white;
+
     /* The html and body elements cannot have any padding or margin. */
+}
+
+#map, #pc, #sp, #donut {
+    background-color: white;
 }
 
 /* Wrapper for page content to push down footer */
