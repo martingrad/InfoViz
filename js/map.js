@@ -172,16 +172,14 @@ function map(){
     function clearSelection() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                    var clusterIndex;
-                    for(var j = 0; j < dbscanRes.length; ++j)
+                    if(d.properties.cluster != -1)
                     {
-                        clusterIndex = dbscanRes[j].indexOf(dataz[i]);
-                        if(clusterIndex != -1)
-                        {
-                            return colorScale2(j);
-                        }
+                        return colorScale2(d.properties.cluster);
                     }
-                    return "ff0000";
+                    else
+                    {
+                        return "ff0000";
+                    }
                 });
         pc1.deselectLine();
         donut.deselectPie();
