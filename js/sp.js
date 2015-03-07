@@ -122,22 +122,21 @@ function sp(){
             .attr("class", "dot")
             // Define the x and y coordinate data values for the dots
             .attr("cx", function(d) {
-                return x(d[self.selectedObjectOnXAxis]);
-                // return x(entry1[i]);           // plot scaled position for x-axis
+                return x(d[self.selectedObjectOnXAxis]);            // plot scaled position for x-axis
             })
             .attr("cy", function(d) {
-                return y(d[self.selectedObjectOnYAxis]);           // plot scaled position for y-axis
+                return y(d[self.selectedObjectOnYAxis]);            // plot scaled position for y-axis
             })
             .attr("r", 5)
             .style("fill", function(d){ return countryColorScale(d["region"]);})
             // tooltip
-            .on("mousemove", function(d, i) {
+            .on("mousemove", function(d) {
                 tooltip.transition()
                 .duration(200)
                     .style("opacity", .9);
                 
-                tooltip.html(d["region"] + "<br/> (" + entry1[i]
-                    + ", " + entry2[i] + ")")
+                tooltip.html(d["region"] + "<br/> (" + d[self.selectedObjectOnXAxis]
+                    + ", " + d[self.selectedObjectOnYAxis] + ")")
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");  
             })
