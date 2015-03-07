@@ -107,7 +107,7 @@ function sp(){
         //     .domain([0, 100])
         //      //.domain([d3.min(entry1), d3.max(entry1)])
         //     .range([padding, width - padding]);
-        x.domain(d3.extent(entry1, function(d) { return d; })).range();
+        x.domain(d3.extent(entry1, function(d) { return d; })).range();             // kolla dessa
         y.domain(d3.extent(entry2, function(d) { return d; })).range();
 
         // // // //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
@@ -160,17 +160,18 @@ function sp(){
             // tooltip
             .on("mousemove", function(d, i) {
                 tooltip.transition()
-               .duration(200)
-               .style("opacity", .9);
-                    tooltip.html(d["region"] + "<br/> (" + entry1[i]
+                .duration(200)
+                    .style("opacity", .9);
+                
+                tooltip.html(d["region"] + "<br/> (" + entry1[i]
                     + ", " + entry2[i] + ")")
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");  
+                    .style("left", (d3.event.pageX + 5) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");  
             })
             .on("mouseout", function(d) {
-                // tooltip.transition()
-                // .duration(500)
-                // .style("opacity", 0);
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
             })
             .on("click",  function(d) {
                  selFeature(d);
