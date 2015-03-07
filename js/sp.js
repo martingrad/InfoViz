@@ -285,7 +285,7 @@ function sp(){
     this.selectYear = function()
     {
         self.selectedYear = $("#selectYear option:selected").text();
-        console.log("Väljer år " + $("#selectYear option:selected").text());
+        //console.log("Väljer år " + $("#selectYear option:selected").text());
     };
 
 }

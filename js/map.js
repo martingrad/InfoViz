@@ -66,7 +66,7 @@ function map(){
     {
         svg.selectAll('path').remove();
 
-        console.log("drawing map!");
+        //console.log("drawing map!");
         var colorMappingVariable = "inkomst";
         var colorMappingValues = [];
         
@@ -116,7 +116,7 @@ function map(){
             })
             //selection
             .on("click", function(d) {
-                console.log("click!");
+                //console.log("click!");
                 if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
                     selectedObject = d;
                     selFeature(d);
@@ -126,7 +126,7 @@ function map(){
                     clearSelection();
                 }
             });
-        console.log("har jag ritat om än?");
+        //console.log("har jag ritat om än?");
     }
     
     //zoom and panning method
@@ -140,7 +140,7 @@ function map(){
     
     // function to select region from other components
     this.selectCountry = function(value){
-        console.log("selectCountry()");
+        //console.log("selectCountry()");
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
         d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "5px";});
         zoomToRegion(value);
@@ -215,7 +215,6 @@ function map(){
     this.selectYear = function()
     {
         var newData;
-        console.log(chosenYear);
         switch(chosenYear)
         {
             case "2002":
@@ -241,7 +240,7 @@ function map(){
 
     function addClusterProperty()
     {
-        console.log("addClusterProperty");
+        //console.log("addClusterProperty");
         for(var i = 0; i < counties.length; ++i)
         {
             counties[i].properties["cluster"] = findClusterByRegion(counties[i].properties.name);

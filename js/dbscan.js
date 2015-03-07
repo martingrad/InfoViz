@@ -9,10 +9,9 @@
 
 function dbscan(data, eps, minPts)
 {
-	console.log("dbscan(data, " + eps + ", " + minPts + ") results:");
-	console.log(clusteringDims);
+	console.log("calling dbscan(dataz" + data[0]["år"] + ", " + eps + ", " + minPts + ")");
 	// initializing array of zeros, with the size of the data (zero = not visited, one = visited)
-	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf,0);
+	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf, 0);
 	// copying the array of zeros
 	var pointsAreNoise = pointsAreVisited;
 	

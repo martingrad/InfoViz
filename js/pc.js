@@ -32,6 +32,7 @@ function pc(){
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
     self.data = dataz;
+    console.log(self.data);
 
     // Extract the list of dimensions and create a scale for each.
     x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
@@ -48,6 +49,9 @@ function pc(){
     var selectedObject;
 
     function draw(){
+
+        svg.selectAll('path').remove();
+
         // Add grey background lines for context.
         background = svg.append("svg:g")
             .attr("class", "background")

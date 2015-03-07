@@ -4,12 +4,21 @@ var dataz;
 var dataz2002 = [];
 var dataz2006 = [];
 var dataz2010 = [];
+
+var clusters2002 = [];
+var clusters2006 = [];
+var clusters2010 = [];
+
+var clustersByYear = [clusters2002, clusters2006, clusters2010];
+
 var chosenYear = $("#selectYear option:selected").text();
 
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
+    extractData();
+    calculateClusters();
     initializeObjects();
-    selectYearAndCalculateClusters(chosenYear);
+    getClusterByYear(chosenYear);
     hideLoadingScreen();
 });
 
@@ -24,20 +33,16 @@ var headers;
 var clusteringDims;
 
 function initializeObjects()
-{
+{  	
+  	// initialize UI components
   	sp1 = new sp();
 	pc1 = new pc();
 	map = new map();
 	donut = new donut();
-	extractHeaders();
+	
+	// populate Select lists
 	populateSelect();
 	populateSelect2();
-
-	dataz2002 = extractDataByYear("2002");
-	dataz2006 = extractDataByYear("2006");
-	dataz2010 = extractDataByYear("2010");
-
-	console.log(dataz2010);
 }
 
 function populateSelect2() {
@@ -122,40 +127,69 @@ function extractHeaders()
 	// ... and extract and store the ones that are relevant
 	clusteringDims = [ headers[6], headers[7], headers[8], headers[9],
 					   headers[10], headers[11], headers[12], headers[13], headers[14] ];
-	console.log(clusteringDims);
 }
 
 // Function to calculate clustering based on the data for a particular year. The data for each year is
 // already stored in separate variables.
-function selectYearAndCalculateClusters(value)
+function selectYearAndCalculateClusters(year)
 {
-	chosenYear = value;
+	chosenYear = year;
 	//var newData = extractDataByYear(chosenYear);
 	var newData;
-	switch(value){
+	switch(chosenYear){
 		case "2002":
 			newData = dataz2002;
+			dbscanRes = clusters2002;
 			break;
 		case "2006":
 			newData = dataz2006;
+			dbscanRes = clusters2006;
 			break;
 		case "2010":
 			newData = dataz2010;
+			dbscanRes = clusters2010;
 			break;
 		default:
 			break;
 	}
-	dbscanRes = dbscan(newData, 15, 5);
+	//dbscanRes = dbscan(newData, 15, 5);
+    console.log("changed clusters to: ");
     console.log(dbscanRes);
+}
+
+function calculateClusters()
+{
+	clusters2002 = dbscan(dataz2002, 15, 5);
+	console.log(clusters2002);
+	clusters2006 = dbscan(dataz2006, 15, 5);
+	console.log(clusters2006);
+	clusters2010 = dbscan(dataz2010, 15, 5);
+	console.log(clusters2010);
+}
+
+function getClusterByYear(year)
+{
+	switch(year){
+		case "2002":
+			return clusters2002;
+		case "2006":
+			return clusters2006;
+		case "2010":
+			return clusters2010;
+		default:
+			console.log("getClusterByYear() Bad value!");
+			return cluster2010;
+	}
 }
 
 function findClusterByRegion(region)
 {
-	for(var i = 0; i < dbscanRes.length; ++i)
+	var clusters = (chosenYear == "2002") ? clusters2002 : (chosenYear == 2006) ? clusters2006 :  clusters2010;
+	for(var i = 0; i < clusters.length; ++i)
 	{
-		for(var j = 0; j < dbscanRes[i].length; ++j)
+		for(var j = 0; j < clusters[i].length; ++j)
 		{
-			if(dbscanRes[i][j]["region"] == region)
+			if(clusters[i][j]["region"] == region)
 			{
 				return i;
 			}
@@ -175,4 +209,15 @@ function extractDataByYear(chosenYear)
 		}
 	}
 	return tempData;
+}
+
+function extractData()
+{
+	// extract headers from the data and store them in the clobal variable 'headers'
+	extractHeaders();
+
+	// extract data for each year
+	dataz2002 = extractDataByYear("2002");
+	dataz2006 = extractDataByYear("2006");
+	dataz2010 = extractDataByYear("2010");	
 }
