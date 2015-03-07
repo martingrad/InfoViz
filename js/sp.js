@@ -169,9 +169,10 @@ function sp(){
 
     // Method for selecting features of other components
     function selFeature(value){
-        // sp1.selectDot(value.Country);
-        // pc1.selectLine(value.Country);
-        // map.selectCountry(value.Country);
+        sp1.selectDot(value["region"]);
+        pc1.selectLine(value["region"]);
+        map.selectCountry(value["region"]);
+        donut.selectPie(value["region"]);
     }
 
     /* ======== Public functions ======== */
