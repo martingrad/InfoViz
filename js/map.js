@@ -142,7 +142,8 @@ function map(){
     this.selectCountry = function(value){
         //console.log("selectCountry()");
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
-        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "5px";});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "2px";});
+        d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.name == value) return "black";});
         zoomToRegion(value);
     };
 
@@ -172,15 +173,15 @@ function map(){
     function clearSelection() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                    if(d.properties.cluster != -1)
-                    {
-                        return colorScale2(d.properties.cluster);
-                    }
-                    else
-                    {
-                        return "ff0000";
-                    }
-                });
+                if(d.properties.cluster != -1)
+                {
+                    return colorScale2(d.properties.cluster);
+                }
+                else
+                {
+                    return "ff0000";
+                }
+            });
         pc1.deselectLine();
         donut.deselectPie();
     }
