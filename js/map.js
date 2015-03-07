@@ -53,8 +53,9 @@ function map(){
         counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
 
         // TODO här borde man först ha lagt till vilket kluster varje region hör till i en ny datavariabel och skicka med den istället,
-        // för att undvika att köra dubbelloopar på mouseover... xD  
-        draw(counties, dataz);       
+        // för att undvika att köra dubbelloopar på mouseover... xD
+        addClusterProperty();
+        draw(counties, dataz);
     });
 
     var colorScale;
@@ -67,7 +68,6 @@ function map(){
 
         console.log("drawing map!");
         var colorMappingVariable = "inkomst";
-        var chosenYear = "2002";
         var colorMappingValues = [];
         
         for(var i = 0; i < data.length; ++i){
@@ -90,10 +90,9 @@ function map(){
             .attr("title", function(d) { return d.properties.name; })
             //country color
             .style("fill", function(d, i) {
-                    var clusterIndex = findClusterByRegion(d.properties.name)
-                    if(clusterIndex != -1)
+                    if(d.properties.cluster != -1)
                     {
-                        return colorScale2(clusterIndex);
+                        return colorScale2(d.properties.cluster);
                     }
                     else
                     {
@@ -106,10 +105,7 @@ function map(){
                     .duration(200)
                     .style("opacity", .9);
 
-                var clusterIndex = findClusterByRegion(d.properties.name);
-
-
-                tooltip.html(d.properties.name + ", kluster: " + clusterIndex)
+                tooltip.html(d.properties.name + ", kluster: " + d.properties.cluster)
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             })
@@ -120,6 +116,7 @@ function map(){
             })
             //selection
             .on("click", function(d) {
+                console.log("click!");
                 if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
                     selectedObject = d;
                     selFeature(d);
@@ -143,37 +140,18 @@ function map(){
     
     // function to select region from other components
     this.selectCountry = function(value){
+        console.log("selectCountry()");
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
         d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "5px";});
         zoomToRegion(value);
-        /*
-        // Opacity gradient to help make map appear tilted into the screen
-        d3.select("#map").selectAll("path").style("fill", function(d){
-            var coordinateY = d.geometry.coordinates[0][0][1]           // arbitrarily chosen coordinate point with which to determine alpha value
-            if(d.geometry.type == "MultiPolygon")                       // if the type is 'multipolygon', a point needs to be extracted in an additional step
-                coordinateY = coordinateY[1];
-            // fulhack var det här! manuell normalisering... icke bra!
-            var alpha = 1 - (coordinateY - 55) / 20;
-
-            if(d.properties.name == value){
-                //return "rgba(" + [225, 20, 125, alpha] + ")";
-                return "rgb(" + [225, 20, 125] + ")";
-            }
-            else{   //TODO apply alpha on colormapped value...
-                return colorScale(incomeMap[d.properties.name]);
-            }
-             
-        });*/
     };
 
     this.deselectCountry = function() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                var clusterIndex = findClusterByRegion(d.properties.name)
-                console.log(clusterIndex);
-                if(clusterIndex != -1)
+                if(d.properties.cluster != -1)
                 {
-                    return colorScale2(clusterIndex);
+                    return colorScale2(d.properties.cluster);
                 }
                 else
                 {
@@ -236,8 +214,37 @@ function map(){
 
     this.selectYear = function()
     {
-        draw(counties, dataz2);
-        console.log(selectedObject);
-        map.selectCountry(selectedObject.properties.name);
+        var newData;
+        console.log(chosenYear);
+        switch(chosenYear)
+        {
+            case "2002":
+                newData = dataz2002;
+                break;
+            case "2006":
+                newData = dataz2006;
+                break;
+            case "2010":
+                newData = dataz2010;
+                break;
+            default:
+                break;
+        }
+
+        addClusterProperty();
+
+        draw(counties, newData);
+        if(selectedObject){
+            map.selectCountry(selectedObject.properties.name);
+        }
+    }
+
+    function addClusterProperty()
+    {
+        console.log("addClusterProperty");
+        for(var i = 0; i < counties.length; ++i)
+        {
+            counties[i].properties["cluster"] = findClusterByRegion(counties[i].properties.name);
+        }
     }
 }
