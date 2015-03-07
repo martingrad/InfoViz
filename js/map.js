@@ -147,6 +147,7 @@ function map(){
     };
 
     this.deselectCountry = function() {
+        console.log("MAP");
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
                 if(d.properties.cluster != -1)
@@ -185,6 +186,7 @@ function map(){
                 });
         pc1.deselectLine();
         donut.deselectPie();
+        sp1.deselectDot();
     }
 
     active = d3.select(null);

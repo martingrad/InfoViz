@@ -165,6 +165,8 @@ function calculateClusters()
 	console.log(clusters2006);
 	clusters2010 = dbscan(dataz2010, 15, 5);
 	console.log(clusters2010);
+
+	selectYearAndCalculateClusters(chosenYear);
 }
 
 function getClusterByYear(year)

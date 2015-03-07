@@ -46,6 +46,12 @@ function sp(){
     self.boolXAxis = false;
     self.boolYAxis = false;  
 
+    // Initializing the variable, which represents the dataset that shall be displayed
+    self.data = dataz2010;                
+    addClusterProperty();
+
+    var selectedObject;
+
     /* ======== Private functions ======== */
     /* =================================== */
     
@@ -62,9 +68,6 @@ function sp(){
         // Clear the svg
         clearScatterPlot();
         
-        // Initializing the variable, which represents the dataset that shall be displayed
-        self.data = [];
-        
         //  Check which dataset to use. 
         //  If the user has chosen to display year one or both the axis
         //      the dataset should be the one containing all information for all years, i.e. dataz
@@ -72,17 +75,6 @@ function sp(){
         //      dataset, i.e. dataz2002, dataz2006 or dataz2010
         if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
             self.data = dataz;
-        }
-        else{
-            if(self.selectedYear == "2010"){
-                self.data = dataz2010;
-            }
-            else if(self.selectedYear == "2006"){
-                self.data = dataz2006;
-            }
-            else{ // if self.selectedYear == "2002"
-                self.data = dataz2002;
-            }
         }
 
         // set the domain for the axis
@@ -128,7 +120,25 @@ function sp(){
                 return y(d[self.selectedObjectOnYAxis]);            // plot scaled position for y-axis
             })
             .attr("r", 5)
-            .style("fill", function(d){ return countryColorScale(d["region"]);})
+            .style("fill", function(d,i){ 
+                if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
+                    // Här måste kod skrivas!!!!!
+                    // om hur den ska färglägga punkterna då det är hela datasettet. (dvs. dataz)     
+                    return countryColorScale(d["region"]);
+                }
+                else{
+                    if(d["cluster"] != -1)
+                    {
+                        return countryColorScale(d["cluster"]);
+                    }
+                    else
+                    {
+                        return "ff0000";
+                    }
+                }
+                
+                
+            })
             // tooltip
             .on("mousemove", function(d) {
                 tooltip.transition()
@@ -146,7 +156,16 @@ function sp(){
                     .style("opacity", 0);
             })
             .on("click",  function(d) {
-                 selFeature(d);
+                console.log(selectedObject);
+                if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                    selectedObject = d;
+                    selFeature(d);
+                }
+                else{                               // if it is -> deselect it
+                    selectedObject = null;
+                    clearSelection();
+                }
+                 //selFeature(d);
             });
 
         // Draw the chosen year
@@ -163,7 +182,7 @@ function sp(){
             .style("text-anchor", "end")
             .style("font", "bold 12px Arial")
             .attr("class", "inside")
-            .text(function(d) { return self.selectedYear; });
+            .text(function(d) { return "År " + self.selectedYear; });
 
     }
 
@@ -175,19 +194,27 @@ function sp(){
         donut.selectPie(value["region"]);
     }
 
+    function clearSelection(){
+        sp1.deselectDot();
+        pc1.deselectLine();
+    };
+
     /* ======== Public functions ======== */
     /* ================================== */
 
     // Method for selecting the dot from other components
     this.selectDot = function(value){           // value = land
+        console.log("TA BORT SAKER DÅ");
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
-        d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return countryColorScale(d["region"]);});
+        //d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return countryColorScale(d["region"]);});
     };
 
     // Method for deselecting a dot
     this.deselectDot = function(){
-        d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
-        d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["region"]);});
+        if(self.boolYAxis && self.boolXAxis){
+            draw();    
+        }
+        
     }
 
     // Method which to return the dataset currently used in the scatterplot
@@ -254,14 +281,34 @@ function sp(){
 
     };
 
+    function addClusterProperty()
+    {
+        for(var i = 0; i < self.data.length; ++i)
+        {
+            self.data[i]["cluster"] = findClusterByRegion(self.data[i]["region"]);
+        }
+    }
+
     // Method which is called when a change has been made on the dropdownlist containing years.
     // It is used to in the draw function, to determine which dataset shall be used in the scatterplot.
     this.selectYear = function()
     {
         self.selectedYear = $("#selectYear option:selected").text();
+        if(self.selectedYear == "2010"){
+            self.data = dataz2010;
+        }
+        else if(self.selectedYear == "2006"){
+            self.data = dataz2006;
+        }
+        else{ // if self.selectedYear == "2002"
+            self.data = dataz2002;
+        }
+
+        addClusterProperty();
         if(self.boolYAxis && self.boolXAxis){
             draw();
         }
+
     };
 }
 
