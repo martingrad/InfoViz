@@ -48,10 +48,12 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
     //  //kanske behöver den
     self.partier = d3.keys(dataz[0]).filter(function(d){
          return d != "region" && d!= "befolkning" && d!="arbetslösa";
     });
+
 
     // // Here the different data are chosen for the plot  
     self.selectedObjectOnXAxis = self.partier[2];           //default

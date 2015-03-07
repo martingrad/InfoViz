@@ -51,6 +51,9 @@ function map(){
     //load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
         counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
+
+        // TODO här borde man först ha lagt till vilket kluster varje region hör till i en ny datavariabel och skicka med den istället,
+        // för att undvika att köra dubbelloopar på mouseover... xD  
         draw(counties, dataz);       
     });
 
@@ -60,6 +63,9 @@ function map(){
 
     function draw(countries, data)
     {
+        svg.selectAll('path').remove();
+
+        console.log("drawing map!");
         var colorMappingVariable = "inkomst";
         var chosenYear = "2002";
         var colorMappingValues = [];
@@ -84,24 +90,26 @@ function map(){
             .attr("title", function(d) { return d.properties.name; })
             //country color
             .style("fill", function(d, i) {
-                    var clusterIndex;
-                    for(var j = 0; j < dbscanRes.length; ++j)
+                    var clusterIndex = findClusterByRegion(d.properties.name)
+                    if(clusterIndex != -1)
                     {
-                        clusterIndex = dbscanRes[j].indexOf(dataz[i]);
-                        if(clusterIndex != -1)
-                        {
-                            return colorScale2(j);
-                        }
+                        return colorScale2(clusterIndex);
                     }
-                    return "ff0000";
+                    else
+                    {
+                        return "ff0000";
+                    }
                 })
             //tooltip
             .on("mousemove", function(d, i) {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-    
-                tooltip.html(d.properties.name)
+
+                var clusterIndex = findClusterByRegion(d.properties.name);
+
+
+                tooltip.html(d.properties.name + ", kluster: " + clusterIndex)
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
             })
@@ -121,6 +129,7 @@ function map(){
                     clearSelection();
                 }
             });
+        console.log("har jag ritat om än?");
     }
     
     //zoom and panning method
@@ -160,17 +169,17 @@ function map(){
     this.deselectCountry = function() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                var clusterIndex;
-                for(var j = 0; j < dbscanRes.length; ++j)
+                var clusterIndex = findClusterByRegion(d.properties.name)
+                console.log(clusterIndex);
+                if(clusterIndex != -1)
                 {
-                    clusterIndex = dbscanRes[j].indexOf(dataz[i]);
-                    if(clusterIndex != -1)
-                    {
-                        return colorScale2(j);
-                    }
+                    return colorScale2(clusterIndex);
                 }
-                return "ff0000";
-            });
+                else
+                {
+                    return "ff0000";
+                }
+            })
         d3.select("#map").selectAll("path").style("stroke-width", function(d){return ".1px";});     // TODO: .1px är inte riktigt samma som från början
     }
 
@@ -223,5 +232,12 @@ function map(){
             .duration(750)
             .style("stroke-width", 1.5 / scale + "px")
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+    }
+
+    this.selectYear = function()
+    {
+        draw(counties, dataz2);
+        console.log(selectedObject);
+        map.selectCountry(selectedObject.properties.name);
     }
 }

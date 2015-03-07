@@ -1,9 +1,13 @@
 showLoadingScreen();
 
 var dataz;
+var dataz2 = [];
+var chosenYear = $("#selectYear option:selected").text();
+
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
     initializeObjects();
+    selectYearAndCalculateClusters("2010");
     hideLoadingScreen();
 });
 
@@ -26,8 +30,8 @@ function initializeObjects()
 	extractHeaders();
 	populateSelect();
 	populateSelect2();
-    dbscanRes = dbscan(dataz, 25, 5);
-    console.log(dbscanRes);
+
+	dataz2 = extractDataByYear(chosenYear);
 }
 
 function populateSelect2() {
@@ -111,8 +115,43 @@ function extractHeaders()
 	// store the data properties headers...
 	headers = d3.keys(dataz[0]);
 	// ... and extract and store the ones that are relevant
-	clusteringDims = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
-						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
+	clusteringDims = [ headers[6], headers[7], headers[8], headers[9],
+					   headers[10], headers[11], headers[12], headers[13], headers[14] ];
 	console.log(clusteringDims);
 }
 
+function selectYearAndCalculateClusters(value)
+{
+	chosenYear = value;
+	var newData = extractDataByYear(chosenYear);
+	dbscanRes = dbscan(newData, 15, 5);
+    console.log(dbscanRes);
+}
+
+function findClusterByRegion(region)
+{
+	for(var i = 0; i < dbscanRes.length; ++i)
+	{
+		for(var j = 0; j < dbscanRes[i].length; ++j)
+		{
+			if(dbscanRes[i][j]["region"] == region)
+			{
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
+function extractDataByYear(chosenYear)
+{
+	var tempData = [];
+	for(var i = 0; i < dataz.length; ++i)
+	{
+		if(dataz[i]["år"] == chosenYear)
+		{
+			tempData.push(dataz[i]);
+		}
+	}
+	return tempData;
+}
