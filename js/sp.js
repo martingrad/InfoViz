@@ -2,11 +2,11 @@ function sp(){
 
     var self = this; // for internal d3 functions
     var spDiv = $("#sp");
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 40, right: 40, bottom: 40, left: 40},
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
 
-    var padding = 10;
+    var padding = 0;
 
     //initialize color scale
     var countryColorScale = d3.scale.category20();
@@ -16,31 +16,21 @@ function sp(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-
-    self.boolXAxis = false;
-    self.boolYAxis = false;    
-
-    // Scale, axis osv.
-    // Något är galet
-
+    // Initialize x,y which will be used to scale the dataset displayed in the scatterplot.
+    //  the domain for x and y is set in draw, after the the dataset is set.
     var x = d3.scale.linear()
-        //.domain([0,100])
-        //.range([0, width]);
         .range([padding, width - padding]);
 
     var y = d3.scale.linear()
-        //.domain([0,100])
-        //.range([height, 0]);
         .range([height  - padding, padding]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .orient("bottom")
-        .ticks(5);
+        .orient("bottom");
 
     var yAxis = d3.svg.axis()
         .scale(y)
-        .orient("left"); 
+        .orient("left");
 
     var svg = d3.select("#sp").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -48,125 +38,105 @@ function sp(){
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // Initializing private variables which will be used in the draw function.
+    //      Theese variables are determined by the user, when using different dropdown lists
+    self.selectedObjectOnXAxis;
+    self.selectedObjectOnYAxis;
+    self.selectedYear = "2010";           // default value, is changed if the user uses the dropdown list for years.
+    self.boolXAxis = false;
+    self.boolYAxis = false;  
 
-    //  //kanske behöver den
-    self.partier = d3.keys(dataz[0]).filter(function(d){
-         return d != "region" && d!= "befolkning" && d!="arbetslösa";
-    });
-
-
-    // // Here the different data are chosen for the plot  
-    self.selectedObjectOnXAxis = self.partier[2];           //default
-    self.selectedObjectOnYAxis = self.partier[5];           //default
-    self.selectedYear = "2002";
-        // draw();
-
-    //});
-
-    function draw()
-    {
+    /* ======== Private functions ======== */
+    /* =================================== */
+    
+    // Function to clear the scatterplot
+    function clearScatterPlot(){
         svg.selectAll(".axis").remove();
         svg.selectAll('.dot').remove();
         svg.selectAll('.extraTextSP').remove();
-        
+    }
 
-        console.log(self.selectedObjectOnXAxis);
-        console.log(self.selectedObjectOnYAxis);
-        var xScale;
-        var yScale;
-        var entry1 = [];
-        var entry2 = [];
-
+    // Function to draw the scatterplot
+    function draw()
+    {
+        // Clear the svg
+        clearScatterPlot();
         
-
+        // Initializing the variable, which represents the dataset that shall be displayed
+        self.data = [];
         
+        //  Check which dataset to use. 
+        //  If the user has chosen to display year one or both the axis
+        //      the dataset should be the one containing all information for all years, i.e. dataz
+        //  Else, check which year has been choosen in the dropdown list, and choose the cooresponding
+        //      dataset, i.e. dataz2002, dataz2006 or dataz2010
         if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
             self.data = dataz;
         }
         else{
-            var i = 0;
-            
-            // // Ta ut data för ett år
-            self.data = [];
-            while(dataz[i]["år"] == self.selectedYear){
-                 self.data.push(dataz[i]);
-                 ++i;
+            if(self.selectedYear == "2010"){
+                self.data = dataz2010;
+            }
+            else if(self.selectedYear == "2006"){
+                self.data = dataz2006;
+            }
+            else{ // if self.selectedYear == "2002"
+                self.data = dataz2002;
             }
         }
-        
 
-            
-        
+        // set the domain for the axis
+        x.domain(d3.extent(self.data, function(d) { return +d[self.selectedObjectOnXAxis]; })).range();
+        y.domain(d3.extent(self.data, function(d) { return +d[self.selectedObjectOnYAxis]; })).range();
 
-        // // console.log(self.data[0][chosenVariableOnYAxis]);
-        for(var i = 0; i < self.data.length; ++i){
-             entry1.push(self.data[i][self.selectedObjectOnXAxis]);       // data for the x axis
-             entry2.push(self.data[i][self.selectedObjectOnYAxis]);       // data for the y axis
-         }
-
-        //Mysko att denna inte fungerar
-        // xScale = d3.scale.linear()                                      // scale entry1
-        //     .domain([0, 100])
-        //      //.domain([d3.min(entry1), d3.max(entry1)])
-        //     .range([padding, width - padding]);
-        x.domain(d3.extent(entry1, function(d) { return d; })).range();             // kolla dessa
-        y.domain(d3.extent(entry2, function(d) { return d; })).range();
-
-        // // // //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
-        // yScale = d3.scale.linear()                                      // scale entry2
-        // //     .domain([d3.min(entry2), d3.max(entry2)])
-        //      .domain([0, 100])
-        //      .range([height  - padding, padding]);
-
-
-    // Här började draw förut!!
-        
         // Add x axis and title.
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
             .append("text")
-            .text(self.selectedObjectOnXAxis)            // plot the name of the chosen dataset
+            //ny
             .attr("class", "label")
-            .attr("text-anchor", "middle")
-            .attr("x", width/2)
-            .attr("y", 30);
+            .attr("x", width)
+            .attr("y", -6)
+            .style("text-anchor", "end")
+            .text(self.selectedObjectOnXAxis);      // plot the name of the current dataset
 
         // Add y axis and title.
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
-            .text(self.selectedObjectOnYAxis)            // plot the name of the chosen dataset
-            .attr("class", "label")        
-            .attr("y", height/2)
-            .attr("x", 0)
-            .attr("text-anchor", "middle")
-            .attr("dy", ".71em");
-            
+            // ny
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(self.selectedObjectOnYAxis);      // plot the name of the current dataset
+         
         // Add the scatter dots.
         svg.selectAll(".dot")
             .data(self.data)
             .enter().append("circle")               // create circles
             .attr("class", "dot")
             // Define the x and y coordinate data values for the dots
-            .attr("cx", function(d, i) {
-                return  x(entry1[i]);           // plot scaled position for x-axis
+            .attr("cx", function(d) {
+                return x(d[self.selectedObjectOnXAxis]);            // plot scaled position for x-axis
             })
-            .attr("cy", function(d, i) {
-                return y(entry2[i]);           // plot scaled position for y-axis
+            .attr("cy", function(d) {
+                return y(d[self.selectedObjectOnYAxis]);            // plot scaled position for y-axis
             })
             .attr("r", 5)
             .style("fill", function(d){ return countryColorScale(d["region"]);})
             // tooltip
-            .on("mousemove", function(d, i) {
+            .on("mousemove", function(d) {
                 tooltip.transition()
                 .duration(200)
                     .style("opacity", .9);
                 
-                tooltip.html(d["region"] + "<br/> (" + entry1[i]
-                    + ", " + entry2[i] + ")")
+                tooltip.html(d["region"] + "<br/> (" + d[self.selectedObjectOnXAxis]
+                    + ", " + d[self.selectedObjectOnYAxis] + ")")
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");  
             })
@@ -179,54 +149,55 @@ function sp(){
                  selFeature(d);
             });
 
+        // Draw the chosen year
         var tempData = "a";
         var extraText = svg.selectAll(".extraTextSP")
             .data(tempData)
             .enter()
             .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 8 + ")")               // kan behövas flyttas
             .attr("class","extraTextSP");
 
         extraText.append("text")
+            .attr("x", width)
             .attr("dy", ".35em")
-            .style("text-anchor", "middle")
+            .style("text-anchor", "end")
             .style("font", "bold 12px Arial")
             .attr("class", "inside")
             .text(function(d) { return self.selectedYear; });
 
     }
 
-    //method for selecting the dot from other components
+    // Method for selecting features of other components
+    function selFeature(value){
+        // sp1.selectDot(value.Country);
+        // pc1.selectLine(value.Country);
+        // map.selectCountry(value.Country);
+    }
+
+    /* ======== Public functions ======== */
+    /* ================================== */
+
+    // Method for selecting the dot from other components
     this.selectDot = function(value){           // value = land
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
         d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return countryColorScale(d["region"]);});
     };
 
+    // Method for deselecting a dot
     this.deselectDot = function(){
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){ return 0.9;});
         d3.select("#sp").selectAll(".dot").style("fill", function(d){ return countryColorScale(d["region"]);});
     }
 
+    // Method which to return the dataset currently used in the scatterplot
     this.getData = function(){
         return self.data;
     };
     
-    //method for selecting features of other components
-    function selFeature(value){
-        // sp1.selectDot(value.Country);
-        // pc1.selectLine(value.Country);
-        // map.selectCountry(value.Country);
-        //console.log(valResultat);
-        //console.log(headers);
-    }
-
-    function clearScatterPlot(){
-        
-        svg.selectAll(".axis").remove();
-        svg.selectAll('.dot').remove();
-    }
-
-    //method to select what should be displayed on the Y-axis
+    // Method which is called when a change has been made on the dropdownlist.
+    // It is used to determine what shall be displayed on the X-axis.
+    // When the user has choosen a value for the x-axis, it checks wether a value has been set for the y axis.
+    // If a value exists, the draw function is called.
     this.selectYAxis = function()
     {
         var selY = $("#setYAxis option:selected").val();
@@ -246,14 +217,16 @@ function sp(){
                 selY = "år";
             self.selectedObjectOnYAxis = selY;
         }
-        console.log(self.selectedObjectOnYAxis);
             
         if(self.boolYAxis && self.boolXAxis){
             draw();
         }
     };
 
-    //method to select what should be displayed on the Y-axis
+    // Method which is called when a change has been made on the dropdownlist.
+    // It is used to determine what shall be displayed on the Y-axis.
+    // When the user has choosen a value for the y-axis, it checks wether a value has been set for the x-axis.
+    // If a value exists, the draw function is called.
     this.selectXAxis = function()
     {
         var selX = $("#setXAxis option:selected").val();
@@ -275,18 +248,19 @@ function sp(){
             self.selectedObjectOnXAxis = selX;
         }
         if(self.boolYAxis && self.boolXAxis){
-            console.log("Hej nu vill jag rita");
             draw();
         }
 
     };
 
-    // method to select which year is choosen
+    // Method which is called when a change has been made on the dropdownlist containing years.
+    // It is used to in the draw function, to determine which dataset shall be used in the scatterplot.
     this.selectYear = function()
     {
         self.selectedYear = $("#selectYear option:selected").text();
-        //console.log("Väljer år " + $("#selectYear option:selected").text());
+        if(self.boolYAxis && self.boolXAxis){
+            draw();
+        }
     };
-
 }
 
