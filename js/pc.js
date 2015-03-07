@@ -32,7 +32,6 @@ function pc(){
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
     self.data = createDataRepresentatives();
-    console.log(self.data);
 
     // Extract the list of dimensions and create a scale for each.
     x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
@@ -247,46 +246,12 @@ function pc(){
 
     function createDataRepresentatives()
     {
-        console.log("createDataRepresentatives()");
-        console.log(clustersByYear);
-
-        // for each year
-        /*for(var i = 0; i < clustersByYear.length; ++i)
-        {
-            console.log("Year " + i);
-            var clustersForOneYear = clustersByYear[i];
-            // for each cluster
-            for(var j = 0; j < clustersForOneYear.length; ++j)
-            {
-                var currentCluster = clustersForOneYear[j];
-                var tempMean = 0;
-                console.log("Cluster " + j);
-                // for each data point
-                for(var k = 0; k < currentCluster.length; ++k)
-                {
-                    console.log("Data point " + k);
-                    var currentDataPoint = currentCluster[k];
-                    var tempProperties = [];
-                    // for each property
-                    for(var l = 0; l < currentDataPoint.length; ++l)
-                    {
-                        console.log("Property " + l);
-                        var currentProperty = currentDataPoint[l];
-                        tempProperties[l] += currentProperty;
-                    }
-                }
-
-            }
-        }*/
-
-
         var meanValues = [];
         var currentPropertySum = [];
         var tempMeanValue = {};
 
         for(var k = 0; k < clustersByYear.length; ++k)
         {
-            console.log("Year " + k);
             var clustersForOneYear = clustersByYear[k];
             // calculating mean values of clusters
             for(var i = 0; i < clustersForOneYear.length; ++i)                            // for each cluster
