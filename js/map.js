@@ -16,9 +16,6 @@ function map(){
     var fill = d3.scale.log()
         .domain([10, 500])
         .range(["brown", "steelblue"]);
-
-    // alternative color scale
-    var colorScale2 = d3.scale.category20();
     
     // initialize tooltip
     // add the tooltip area to the webpage
@@ -92,7 +89,7 @@ function map(){
             .style("fill", function(d) {
                     if(d.properties.cluster != -1)
                     {
-                        return colorScale2(d.properties.cluster);
+                        return globalColorScale(d.properties.cluster);
                     }
                     else
                     {
@@ -142,7 +139,8 @@ function map(){
     this.selectCountry = function(value){
         //console.log("selectCountry()");
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != value) return 0.7;});
-        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "5px";});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.name == value) return "2px";});
+        d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.name == value) return "black";});
         zoomToRegion(value);
     };
 
@@ -152,14 +150,15 @@ function map(){
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
                 if(d.properties.cluster != -1)
                 {
-                    return colorScale2(d.properties.cluster);
+                    return globalColorScale(d.properties.cluster);
                 }
                 else
                 {
                     return "ff0000";
                 }
             })
-        d3.select("#map").selectAll("path").style("stroke-width", function(d){return ".1px";});     // TODO: .1px är inte riktigt samma som från början
+        d3.select("#map").selectAll("path").style("stroke-width", ".1px");     // TODO: .1px är inte riktigt samma som från början
+        d3.select("#map").selectAll("path").style("stroke", "white");
     }
 
     //method for selecting features of other components
@@ -173,17 +172,15 @@ function map(){
     function clearSelection() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-                    var clusterIndex;
-                    for(var j = 0; j < dbscanRes.length; ++j)
-                    {
-                        clusterIndex = dbscanRes[j].indexOf(dataz[i]);
-                        if(clusterIndex != -1)
-                        {
-                            return colorScale2(j);
-                        }
-                    }
+                if(d.properties.cluster != -1)
+                {
+                    return globalColorScale(d.properties.cluster);
+                }
+                else
+                {
                     return "ff0000";
-                });
+                }
+            });
         pc1.deselectLine();
         donut.deselectPie();
         sp1.deselectDot();

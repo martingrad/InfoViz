@@ -8,9 +8,6 @@ function sp(){
 
     var padding = 0;
 
-    //initialize color scale
-    var countryColorScale = d3.scale.category20();
-
     //initialize tooltip
     var tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
@@ -124,12 +121,12 @@ function sp(){
                 if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
                     // Här måste kod skrivas!!!!!
                     // om hur den ska färglägga punkterna då det är hela datasettet. (dvs. dataz)     
-                    return countryColorScale(d["region"]);
+                    return globalColorScale(d["region"]);
                 }
                 else{
                     if(d["cluster"] != -1)
                     {
-                        return countryColorScale(d["cluster"]);
+                        return globalColorScale(d["cluster"]);
                     }
                     else
                     {
@@ -146,7 +143,7 @@ function sp(){
                     .style("opacity", .9);
                 
                 tooltip.html(d["region"] + "<br/> (" + d[self.selectedObjectOnXAxis]
-                    + ", " + d[self.selectedObjectOnYAxis] + ")")
+                    + ", " + d[self.selectedObjectOnYAxis] + "Kluster " + d["cluster"]+")")
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");  
             })
@@ -206,7 +203,7 @@ function sp(){
     this.selectDot = function(value){           // value = land
         console.log("TA BORT SAKER DÅ");
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
-        //d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return countryColorScale(d["region"]);});
+        //d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return globalColorScale(d["region"]);});
     };
 
     // Method for deselecting a dot

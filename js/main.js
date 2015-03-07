@@ -13,6 +13,8 @@ var clustersByYear = [clusters2002, clusters2006, clusters2010];
 
 var chosenYear = $("#selectYear option:selected").text();
 
+var globalColorScale = d3.scale.category20();
+
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
     extractData();
@@ -165,6 +167,9 @@ function calculateClusters()
 	console.log(clusters2006);
 	clusters2010 = dbscan(dataz2010, 15, 5);
 	console.log(clusters2010);
+
+
+	clustersByYear = [clusters2002, clusters2006, clusters2010];
 
 	selectYearAndCalculateClusters(chosenYear);
 }

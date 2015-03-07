@@ -31,7 +31,7 @@ function pc(){
         .append("svg:g")
         .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
 
-    self.data = dataz;
+    self.data = createDataRepresentatives();
     console.log(self.data);
 
     // Extract the list of dimensions and create a scale for each.
@@ -213,17 +213,18 @@ function pc(){
     }
 
     //method for selecting the pololyne from other components    
-    this.selectLine = function(value){          //skickar med value som är landet
-        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != value) return 0.05;});
+    this.selectLine = function(region)
+    {
+        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != region) return 0.05;});
         d3.select("#pc").selectAll("path").style("stroke",  function(d){
-            if(d["region"] == value)
+            if(d["region"] == region)
             {
                 return "deeppink";
             }
             else{
                 return "steelblue";//countryColorScale(d["region"]);
             }
-        });//function(d){ if(d["Country"] == value) return "#ff1111";});
+        });//function(d){ if(d["Country"] == region) return "#ff1111";});
     };
 
     this.deselectLine = function(){
@@ -243,4 +244,68 @@ function pc(){
         d3.select("#pc").selectAll("path").style("stroke", function(d){ return "steelblue";});
         map.deselectCountry();
     };
+
+    function createDataRepresentatives()
+    {
+        console.log("createDataRepresentatives()");
+        console.log(clustersByYear);
+
+        // for each year
+        /*for(var i = 0; i < clustersByYear.length; ++i)
+        {
+            console.log("Year " + i);
+            var clustersForOneYear = clustersByYear[i];
+            // for each cluster
+            for(var j = 0; j < clustersForOneYear.length; ++j)
+            {
+                var currentCluster = clustersForOneYear[j];
+                var tempMean = 0;
+                console.log("Cluster " + j);
+                // for each data point
+                for(var k = 0; k < currentCluster.length; ++k)
+                {
+                    console.log("Data point " + k);
+                    var currentDataPoint = currentCluster[k];
+                    var tempProperties = [];
+                    // for each property
+                    for(var l = 0; l < currentDataPoint.length; ++l)
+                    {
+                        console.log("Property " + l);
+                        var currentProperty = currentDataPoint[l];
+                        tempProperties[l] += currentProperty;
+                    }
+                }
+
+            }
+        }*/
+
+
+        var meanValues = [];
+        var currentPropertySum = [];
+        var tempMeanValue = {};
+
+        for(var k = 0; k < clustersByYear.length; ++k)
+        {
+            console.log("Year " + k);
+            var clustersForOneYear = clustersByYear[k];
+            // calculating mean values of clusters
+            for(var i = 0; i < clustersForOneYear.length; ++i)                            // for each cluster
+            {
+                tempMeanValue = {};
+                currentCluster = clustersForOneYear[i];
+
+                for(var m = 0; m < headers.length; ++m)                         // for each property of the data
+                {
+                    currentPropertySum[m] = 0;
+                    for(var j = 0; j < currentCluster.length; ++j)              // for each line within the cluster
+                    {
+                        currentPropertySum[m] += Number(currentCluster[j][headers[m]]);
+                    }
+                    tempMeanValue[headers[m]] = currentPropertySum[m] / (currentCluster.length);
+                }
+                meanValues.push(tempMeanValue);
+            }
+        }
+        return meanValues;
+    }
 }
