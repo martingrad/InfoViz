@@ -25,6 +25,10 @@ var clusteringDims;
 
 function initializeObjects()
 {
+  	dataz2002 = extractDataByYear("2002");
+	dataz2006 = extractDataByYear("2006");
+	dataz2010 = extractDataByYear("2010");
+
   	sp1 = new sp();
 	pc1 = new pc();
 	map = new map();
@@ -32,10 +36,6 @@ function initializeObjects()
 	extractHeaders();
 	populateSelect();
 	populateSelect2();
-
-	dataz2002 = extractDataByYear("2002");
-	dataz2006 = extractDataByYear("2006");
-	dataz2010 = extractDataByYear("2010");
 
 	console.log(dataz2010);
 }
