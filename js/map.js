@@ -70,18 +70,18 @@ function map(){
         var colorMappingVariable = "inkomst";
         var colorMappingValues = [];
         
-        for(var i = 0; i < data.length; ++i){
-            colorMappingValues.push(data[i][colorMappingVariable]);
-            incomeMap[data[i]["region"]] = data[i][colorMappingVariable];
-        }
+        // for(var i = 0; i < data.length; ++i){
+        //     colorMappingValues.push(data[i][colorMappingVariable]);
+        //     incomeMap[data[i]["region"]] = data[i][colorMappingVariable];
+        // }
 
         var country = g.selectAll(".country").data(countries);
         var id = g.selectAll(".country").data(countries);
         
         //initialize color scale
-        colorScale = d3.scale.linear()
-          .domain([d3.min(colorMappingValues), d3.max(colorMappingValues)])
-          .range(["steelblue", "deeppink"]);
+        // colorScale = d3.scale.linear()
+        //   .domain([d3.min(colorMappingValues), d3.max(colorMappingValues)])
+        //   .range(["steelblue", "deeppink"]);
     
         country.enter().insert("path")
             .attr("class", "country")
@@ -89,7 +89,7 @@ function map(){
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
             //country color
-            .style("fill", function(d, i) {
+            .style("fill", function(d) {
                     if(d.properties.cluster != -1)
                     {
                         return colorScale2(d.properties.cluster);
@@ -100,7 +100,7 @@ function map(){
                     }
                 })
             //tooltip
-            .on("mousemove", function(d, i) {
+            .on("mousemove", function(d) {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
