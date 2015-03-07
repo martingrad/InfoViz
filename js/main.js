@@ -1,13 +1,15 @@
 showLoadingScreen();
 
 var dataz;
-var dataz2 = [];
+var dataz2002 = [];
+var dataz2006 = [];
+var dataz2010 = [];
 var chosenYear = $("#selectYear option:selected").text();
 
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
     initializeObjects();
-    selectYearAndCalculateClusters("2010");
+    selectYearAndCalculateClusters(chosenYear);
     hideLoadingScreen();
 });
 
@@ -31,7 +33,11 @@ function initializeObjects()
 	populateSelect();
 	populateSelect2();
 
-	dataz2 = extractDataByYear(chosenYear);
+	dataz2002 = extractDataByYear("2002");
+	dataz2006 = extractDataByYear("2006");
+	dataz2010 = extractDataByYear("2010");
+
+	console.log(dataz2010);
 }
 
 function populateSelect2() {
@@ -39,7 +45,7 @@ function populateSelect2() {
 	var selectOptionsForYAxis = document.getElementById("setYAxis");
 	var options = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
 						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
-	
+
 	options.push("År");
 	options.sort();
 	options.unshift("Välj variabel");
@@ -47,26 +53,25 @@ function populateSelect2() {
 	// For the ScatterPlot Y-Axis and X-axis
 	for(var i = 0; i < options.length; i++)
 	{
-	  var opt = options[i];
-	  if(options[i] == "arbetslöshet")
-	  	opt = "Arbetslöshet";
-	  if(options[i] == "inkomst")
-	  	opt = "Inkomst";
-	  if(options[i] == "övriga partier")
-	  	opt = "Övriga partier";
+	 	var opt = options[i];
+	  	if(options[i] == "arbetslöshet")
+	  		opt = "Arbetslöshet";
+	  	if(options[i] == "inkomst")
+	  		opt = "Inkomst";
+	  	if(options[i] == "övriga partier")
+	  		opt = "Övriga partier";
 	  
+	  	var elX = document.createElement("option");
+	  	var elY = document.createElement("option");
 	  
-	  var elX = document.createElement("option");
-	  var elY = document.createElement("option");
-	  
-	  elX.textContent = opt;
-	  elY.textContent = opt;
-	  
-	  elX.value = opt;
-	  elY.value = opt;
-	  
-	  selectOptionsForXAxis.appendChild(elX);
-	  selectOptionsForYAxis.appendChild(elY);
+		elX.textContent = opt;
+		elY.textContent = opt;
+
+		elX.value = opt;
+		elY.value = opt;
+
+		selectOptionsForXAxis.appendChild(elX);
+		selectOptionsForYAxis.appendChild(elY);
 	}
 }
 
@@ -120,10 +125,26 @@ function extractHeaders()
 	console.log(clusteringDims);
 }
 
+// Function to calculate clustering based on the data for a particular year. The data for each year is
+// already stored in separate variables.
 function selectYearAndCalculateClusters(value)
 {
 	chosenYear = value;
-	var newData = extractDataByYear(chosenYear);
+	//var newData = extractDataByYear(chosenYear);
+	var newData;
+	switch(value){
+		case "2002":
+			newData = dataz2002;
+			break;
+		case "2006":
+			newData = dataz2006;
+			break;
+		case "2010":
+			newData = dataz2010;
+			break;
+		default:
+			break;
+	}
 	dbscanRes = dbscan(newData, 15, 5);
     console.log(dbscanRes);
 }

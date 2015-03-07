@@ -171,7 +171,6 @@ function pc(){
             .selectAll("rect")
             .attr("x", -8)
             .attr("width", 16);
-      
     };
 
     function position(d) {
