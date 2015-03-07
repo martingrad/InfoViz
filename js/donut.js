@@ -218,8 +218,10 @@ function donut(){
         self.data.push(dataz[i]);
       }
     }
-    if(self.region != "Välj kommun")
+    if(self.region != "Välj kommun"){
       showInformation(self.region);
+    }
+      
   };
 
   this.selectPie = function(value)

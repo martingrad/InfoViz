@@ -2,11 +2,11 @@ function sp(){
 
     var self = this; // for internal d3 functions
     var spDiv = $("#sp");
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 40, right: 40, bottom: 40, left: 40},
         width = spDiv.width() - margin.right - margin.left,
         height = spDiv.height() - margin.top - margin.bottom;
 
-    var padding = 10;
+    var padding = 0;
 
     //initialize color scale
     var countryColorScale = d3.scale.category20();
@@ -32,6 +32,8 @@ function sp(){
         //.domain([0,100])
         //.range([height, 0]);
         .range([height  - padding, padding]);
+
+    padding = 10;
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -69,17 +71,17 @@ function sp(){
         svg.selectAll('.dot').remove();
         svg.selectAll('.extraTextSP').remove();
         
-
-        console.log(self.selectedObjectOnXAxis);
-        console.log(self.selectedObjectOnYAxis);
+        console.log("HEJSAN VAD FÅR JAG FÖR ÅR NU? " + self.selectedYear);
+        //console.log(self.selectedObjectOnXAxis);
+        //console.log(self.selectedObjectOnYAxis);
         var xScale;
         var yScale;
         var entry1 = [];
         var entry2 = [];
+    
+        self.data = [];
+        console.log(dataz);
 
-        
-
-        
         if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
             self.data = dataz;
         }
@@ -87,12 +89,14 @@ function sp(){
             var i = 0;
             
             // // Ta ut data för ett år
-            self.data = [];
+            
+
             while(dataz[i]["år"] == self.selectedYear){
                  self.data.push(dataz[i]);
                  ++i;
             }
         }
+        
         
 
             
@@ -109,8 +113,8 @@ function sp(){
         //     .domain([0, 100])
         //      //.domain([d3.min(entry1), d3.max(entry1)])
         //     .range([padding, width - padding]);
-        x.domain(d3.extent(entry1, function(d) { return d; })).range();             // kolla dessa
-        y.domain(d3.extent(entry2, function(d) { return d; })).range();
+        x.domain(d3.extent(entry1, function(d) { return +d; })).range();             // kolla dessa
+        y.domain(d3.extent(entry2, function(d) { return +d; })).range();
 
         // // // //TODO (Fulhack var det här!) fixa automatisk domain! min, max fungerar inte riktigt...
         // yScale = d3.scale.linear()                                      // scale entry2
@@ -127,24 +131,41 @@ function sp(){
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
             .append("text")
-            .text(self.selectedObjectOnXAxis)            // plot the name of the chosen dataset
+            //ny
             .attr("class", "label")
-            .attr("text-anchor", "middle")
-            .attr("x", width/2)
-            .attr("y", 30);
+            .attr("x", width)
+            .attr("y", -6)
+            .style("text-anchor", "end")
+            .text(self.selectedObjectOnXAxis);
+            
+            // .text(self.selectedObjectOnXAxis)            // plot the name of the chosen dataset
+            // .attr("class", "label")
+            // .attr("text-anchor", "middle")
+            // .attr("x", width/2)
+            // .attr("y", 30);
 
         // Add y axis and title.
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
-            .text(self.selectedObjectOnYAxis)            // plot the name of the chosen dataset
-            .attr("class", "label")        
-            .attr("y", height/2)
-            .attr("x", 0)
-            .attr("text-anchor", "middle")
-            .attr("dy", ".71em");
-            
+            // ny
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(self.selectedObjectOnYAxis);
+
+            // .text(self.selectedObjectOnYAxis)            // plot the name of the chosen dataset
+            // .attr("class", "label")        
+            // .attr("y", height/2)
+            // .attr("x", 0)
+            // .attr("text-anchor", "middle")
+            // .attr("dy", ".71em");
+
+
+         
         // Add the scatter dots.
         svg.selectAll(".dot")
             .data(self.data)
@@ -152,7 +173,7 @@ function sp(){
             .attr("class", "dot")
             // Define the x and y coordinate data values for the dots
             .attr("cx", function(d, i) {
-                return  x(entry1[i]);           // plot scaled position for x-axis
+                return x(entry1[i]);           // plot scaled position for x-axis
             })
             .attr("cy", function(d, i) {
                 return y(entry2[i]);           // plot scaled position for y-axis
@@ -184,12 +205,14 @@ function sp(){
             .data(tempData)
             .enter()
             .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + height / 8 + ")")               // kan behövas flyttas
+            //.attr("transform", "translate(0," + height + ")")
+            // .attr("transform", "translate(" + width / 4 + "," + height / 8 + ")")               // kan behövas flyttas
             .attr("class","extraTextSP");
 
         extraText.append("text")
+            .attr("x", width)
             .attr("dy", ".35em")
-            .style("text-anchor", "middle")
+            .style("text-anchor", "end")
             .style("font", "bold 12px Arial")
             .attr("class", "inside")
             .text(function(d) { return self.selectedYear; });
@@ -284,8 +307,14 @@ function sp(){
     // method to select which year is choosen
     this.selectYear = function()
     {
+
         self.selectedYear = $("#selectYear option:selected").text();
-        console.log("Väljer år " + $("#selectYear option:selected").text());
+        if(self.boolYAxis && self.boolXAxis){
+            console.log("Year = " + self.selectedYear + " var X = " + self.selectedObjectOnXAxis + " var Y = " + self.selectedObjectOnYAxis + ".") ;
+            draw();
+        }
+        
+        // console.log("Väljer år " + $("#selectYear option:selected").text());
     };
 
 }
