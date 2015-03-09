@@ -240,6 +240,13 @@ function map(){
             map.selectCountry(selectedObject.properties.name);
         }
     }
+    
+    this.selectCluster = function(clusterIndex)
+    {
+        d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.cluster != clusterIndex) return 0.7;});
+        d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.cluster == clusterIndex) return "black";});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.cluster == clusterIndex) return "2px";});
+    }
 
     function addClusterProperty()
     {

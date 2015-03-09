@@ -85,7 +85,19 @@ function pc(){
                     .duration(200)
                     .style("opacity", .9);
     
-                tooltip.html("Kluster " + d["cluster"] + ", år " + d["år"] + "<br>Kommuner: " + d["regions"])                           // plotta i tooltip namnet på regionerna
+                tooltip.html("<p style='font-size:1.2em; font-weight:bold'>Kluster " + d["cluster"] + ", år " + d["år"] + "</p>" +
+                             "Ink: " + d["inkomst"].toPrecision(3) + " tkr" + 
+                             ", Arb-lösh: " + d["arbetslöshet"].toPrecision(3) + " %" + "<br>" +
+                             "M: " + d["Moderaterna"].toPrecision(3) +" %" + "<br>" +
+                             "C: " + d["Centerpartiet"].toPrecision(3) +" %" + "<br>" +
+                             "FP: " + d["Folkpartiet"].toPrecision(3) +" %" + "<br>" +
+                             "KD: " + d["Kristdemokraterna"].toPrecision(3) +" %" + "<br>" +
+                             "MP: " + d["Miljöpartiet"].toPrecision(3) +" %" + "<br>" +
+                             "S: " + d["Socialdemokraterna"].toPrecision(3) +" %" + "<br>" +
+                             "V: " + d["Vänsterpartiet"].toPrecision(3) +" %" + "<br>" +
+                             "SD: " + d["Sverigedemokraterna"].toPrecision(3) +" %" + "<br>" +
+                             "Övriga partier: " + d["övriga partier"].toPrecision(3) + " %" + "<br>" +
+                             "Kommuner: " + d["regions"])                           // plotta i tooltip namnet på regionerna
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px"); 
             })
@@ -259,10 +271,11 @@ function pc(){
 
     //method for selecting features of other components
     function selFeature(value){
-        pc1.selectLine(value.region);
-        sp1.selectDot(value.region);
-        map.selectCountry(value.region);
-        donut.selectPie(value.region);
+        pc1.selectLine(value.cluster);
+        //sp1.selectDot(value.region);
+        //map.selectCountry(value.region);
+        map.selectCluster(value.cluster);
+        //donut.selectPie(value.region);
     };
 
     function clearSelection(){

@@ -250,7 +250,6 @@ function donut(){
   this.selectPieFromSelect = function()
   {
     var selectedRegion = $("#selectRegion option:selected").text();
-    console.log("Här är jag " + selectedRegion);
     if(selectedRegion != "Välj kommun"){
       self.region = selectedRegion;
       showInformation(selectedRegion);
