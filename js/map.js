@@ -3,7 +3,7 @@ function map(){
     var counties;
 
     var zoom = d3.behavior.zoom()
-        .scaleExtent([0.3, 10])
+        .scaleExtent([0.8, 40])
         .on("zoom", move);
 
     var mapDiv = $("#map");
@@ -11,11 +11,6 @@ function map(){
     var margin = {top: 0, right: 0, bottom: 0, left: 0},
         width  = mapDiv.width(),
         height = mapDiv.height();
-
-    // initialize color scale
-    var fill = d3.scale.log()
-        .domain([10, 500])
-        .range(["brown", "steelblue"]);
     
     // initialize tooltip
     // add the tooltip area to the webpage
@@ -23,11 +18,11 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var projection = d3.geo.satellite()             //obs kontrollera att du är ansluten till internet, då geo.satellite är kopplad till en webadress
+    var projection = d3.geo.satellite()             //obs kontrollera att du är ansluten till internet, då geo.satellite är kopplad till en webbadress
         .distance(1.1)
-        .scale(8000)
+        .scale(3000)
         .rotate([165.00, -125.0, 180.0])
-        .center([150, 20])
+        .center([150, 70])
         .tilt(15)
         //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)             // dafuq is dis? 
         .precision(.1);
@@ -66,30 +61,19 @@ function map(){
     {
         svg.selectAll('path').remove();
 
-        //console.log("drawing map!");
         var colorMappingVariable = "inkomst";
         var colorMappingValues = [];
-        
-        // for(var i = 0; i < data.length; ++i){
-        //     colorMappingValues.push(data[i][colorMappingVariable]);
-        //     incomeMap[data[i]["region"]] = data[i][colorMappingVariable];
-        // }
 
         var country = g.selectAll(".country").data(countries);
         var id = g.selectAll(".country").data(countries);
-        
-        //initialize color scale
-        // colorScale = d3.scale.linear()
-        //   .domain([d3.min(colorMappingValues), d3.max(colorMappingValues)])
-        //   .range(["steelblue", "deeppink"]);
     
         country.enter().insert("path")
             .attr("class", "country")
             .attr("d", path)
             .attr("id", function(d) { return d.id; })
             .attr("title", function(d) { return d.properties.name; })
-            //country color
-            .style("fill", function(d) {
+            .style("fill", function(d)
+                {
                     if(d.properties.cluster != -1)
                     {
                         return globalColorScale(d.properties.cluster);
@@ -100,32 +84,36 @@ function map(){
                     }
                 })
             //tooltip
-            .on("mousemove", function(d) {
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
+            .on("mousemove", function(d)
+                {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
 
-                tooltip.html(d.properties.name + ", kluster: " + d.properties.cluster)
-                    .style("left", (d3.event.pageX + 5) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
-            })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            })
+                    tooltip.html(d.properties.name + ", kluster: " + d.properties.cluster)
+                        .style("left", (d3.event.pageX + 5) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");
+                })
+            .on("mouseout", function(d)
+                {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                })
             //selection
-            .on("click", function(d) {
-                //console.log("click!");
-                if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
-                    selectedObject = d;
-                    selFeature(d);
+            .on("click", function(d)
+                {
+                    //console.log("click!");
+                    if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                        selectedObject = d;
+                        selFeature(d);
+                    }
+                    else{                               // if it is -> deselect it
+                        selectedObject = null;
+                        clearSelection();
+                    }
                 }
-                else{                               // if it is -> deselect it
-                    selectedObject = null;
-                    clearSelection();
-                }
-            });
+        );
     }
 
     active = d3.select(null);
@@ -139,17 +127,30 @@ function map(){
             }
         }
 
-        var bounds = path.bounds(region),
-            dx = bounds[1][0] - bounds[0][0],
-            dy = bounds[1][1] - bounds[0][1],
-            x = (bounds[0][0] + bounds[1][0]) / 2,
-            y = (bounds[0][1] + bounds[1][1]) / 2,
-            scale = .1 / Math.max(dx / width, dy / height),
+        var bounds, dx, dy, x, y, scale;
+        var translate;
+
+        // if a region was selected -> zoom in
+        if(region)
+        {
+            bounds = path.bounds(region);
+            dx = bounds[1][0] - bounds[0][0];
+            dy = bounds[1][1] - bounds[0][1];
+            x = (bounds[0][0] + bounds[1][0]) / 2;
+            y = (bounds[0][1] + bounds[1][1]) / 2;
+            scale = .1 / Math.max(dx / width, dy / height);
             translate = [width / 2 - scale * x, height / 2 - scale * y];
+        }
+        // if a region was not selected -> zoom back out
+        else
+        {
+            scale = 1;
+            translate = [0, 0];
+        }
 
         g.transition()
             .duration(750)
-            .style("stroke-width", 1.5 / scale + "px")
+            //.style("stroke-width", 1.0 / scale + "px")
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
     }
 
@@ -161,8 +162,6 @@ function map(){
         zoom.translate(t);
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
     }
-
-
 
     //method for selecting features of other components
     function selFeature(value){
@@ -189,7 +188,7 @@ function map(){
         {
             if(d.properties.name == region){
                 selectedObject = d;
-                return "2px";
+                return ".05em";
             }
         });
         d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.name == region) return "black";});
@@ -209,8 +208,9 @@ function map(){
                 return "ff0000";
             }
         });
-        d3.select("#map").selectAll("path").style("stroke-width", ".1px");     // TODO: .1px är inte riktigt samma som från början
+        d3.select("#map").selectAll("path").style("stroke-width", ".01em");     // TODO: .1px är inte riktigt samma som från början
         d3.select("#map").selectAll("path").style("stroke", "white");
+        zoomToRegion("asd");
     }    
 
     this.selectYear = function(value)
@@ -244,7 +244,7 @@ function map(){
     {
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.cluster != clusterIndex) return 0.7;});
         d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.cluster == clusterIndex) return "black";});
-        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.cluster == clusterIndex) return "2px";});
+        d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.cluster == clusterIndex) return "0.1em";});
     }
 
     function addClusterProperty()
