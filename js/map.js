@@ -126,7 +126,6 @@ function map(){
                     clearSelection();
                 }
             });
-        //console.log("har jag ritat om än?");
     }
 
     active = d3.select(null);
