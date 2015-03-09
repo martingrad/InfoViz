@@ -84,7 +84,7 @@ function pc(){
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-    
+                    
                 tooltip.html("<p style='font-size:1.2em; font-weight:bold'>Kluster " + d["cluster"] + ", år " + d["år"] + "</p>" +
                              "Ink: " + d["inkomst"].toPrecision(3) + " tkr" + 
                              ", Arb-lösh: " + d["arbetslöshet"].toPrecision(3) + " %" + "<br>" +
