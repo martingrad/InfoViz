@@ -234,7 +234,7 @@ function donut(){
       console.log("selectYear donut = " + self.region);
       showInformation(self.region);
       map.selectCountry(self.region);
-      pc1.selectLine(self.region);
+      //pc1.selectLine(self.region);
     }
     else{
       self.region = "Välj kommun";
@@ -255,7 +255,7 @@ function donut(){
       self.region = selectedRegion;
       showInformation(selectedRegion);
       map.selectCountry(selectedRegion);
-      pc1.selectLine(selectedRegion);
+      //pc1.selectLine(selectedRegion);
     }
     else
     {

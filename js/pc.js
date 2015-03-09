@@ -252,7 +252,6 @@ function pc(){
                 regions = regions.substring(0, regions.length - 2);
                 tempMeanValue["regions"] = regions;
                 meanValues.push(tempMeanValue);
-                console.log(regions);
             }
         }
         return meanValues;
@@ -272,27 +271,27 @@ function pc(){
         donut.deselectPie();
         map.deselectCountry();
     };
+    
     /* ======== Public functions ======== */
     /* ================================== */
 
-    //method for selecting the pololyne from other components    
-    this.selectLine = function(region)
+    // function for selecting the pololyne from other components    
+    this.selectLine = function(cluster)
     {
-        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["cluster"] != region) return 0.05;});
-        d3.select("#pc").selectAll("path").style("stroke",  function(d){
-            if(d["region"] == region)
+        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["cluster"] != cluster) return 0.05;});
+        /*d3.select("#pc").selectAll("path").style("stroke",  function(d){
+            if(d["cluster"] == cluster)
             {
                 return "deeppink";
             }
             else{
                 return globalColorScale(d["cluster"]);
             }
-        });//function(d){ if(d["Country"] == region) return "#ff1111";});
+        });*/
     };
 
     this.deselectLine = function(){
         d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
         d3.select("#pc").selectAll("path").style("stroke", function(d){ return globalColorScale(d["cluster"]);});
     }
-
 }

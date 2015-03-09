@@ -192,11 +192,10 @@ function map(){
                 selectedObject = d;
                 return "2px";
             }
-                
         });
         d3.select("#map").selectAll("path").style("stroke", function(d){if(d.properties.name == region) return "black";});
         zoomToRegion(region);
-
+        pc1.selectLine(selectedObject.properties["cluster"]);
     };
 
     this.deselectCountry = function() {
