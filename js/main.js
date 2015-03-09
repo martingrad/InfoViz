@@ -1,4 +1,5 @@
 showLoadingScreen();
+hideElements();
 
 var dataz;
 var dataz2002 = [];
@@ -15,6 +16,7 @@ var chosenYear = $("#selectYear option:selected").text();
 
 var globalColorScale = d3.scale.category20();
 
+
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
     extractData();
@@ -22,6 +24,7 @@ d3.csv("data/databaosen.csv", function(error, data) {
     initializeObjects();
     getClusterByYear(chosenYear);
     hideLoadingScreen();
+    showElements();
 });
 
 var sp1;
@@ -224,4 +227,26 @@ function extractData()
 	dataz2002 = extractDataByYear("2002");
 	dataz2006 = extractDataByYear("2006");
 	dataz2010 = extractDataByYear("2010");	
+}
+
+function hideElements()
+{
+	$("#wrap").addClass("invisible");
+	/*
+	$("#donutWrapper").addClass("invisible");
+	$("#map").addClass("invisible");
+	$("#pc").addClass("invisible");
+	$("#sp").addClass("invisible");
+	*/
+}
+
+function showElements()
+{
+	$("#wrap").removeClass("invisible");
+	/*
+	$("#donutWrapper").removeClass("invisible");
+	$("#map").removeClass("invisible");
+	$("#pc").removeClass("invisible");
+	$("#sp").removeClass("invisible");
+	*/
 }

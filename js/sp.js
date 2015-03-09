@@ -120,7 +120,7 @@ function sp(){
             .style("fill", function(d,i){ 
                 if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
                     // Här måste kod skrivas!!!!!
-                    // om hur den ska färglägga punkterna då det är hela datasettet. (dvs. dataz)     
+                    // om hur den ska färglägga punkterna då det är hela datasetet. (dvs. dataz)     
                     return globalColorScale(d["region"]);
                 }
                 else{
@@ -143,7 +143,7 @@ function sp(){
                     .style("opacity", .9);
                 
                 tooltip.html(d["region"] + "<br/> (" + d[self.selectedObjectOnXAxis]
-                    + ", " + d[self.selectedObjectOnYAxis] + "Kluster " + d["cluster"]+")")
+                    + ", " + d[self.selectedObjectOnYAxis] + "), kluster " + d["cluster"])
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");  
             })
@@ -202,9 +202,11 @@ function sp(){
     /* ================================== */
 
     // Method for selecting the dot from other components
-    this.selectDot = function(value){           // value = land
-        console.log("TA BORT SAKER DÅ");
+    this.selectDot = function(value)
+    {           // value = land
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
+        d3.select("#sp").selectAll(".dot").style("stroke", function(d){if(d["region"] == value) return "black";});
+        d3.select("#sp").selectAll(".dot").style("stroke-width", function(d){if(d["region"] == value) return "2px";});
         //d3.select("#sp").selectAll(".dot").style("fill", function(d){ if(d["region"] == value) return "#ff1111"; else return globalColorScale(d["region"]);});
     };
 

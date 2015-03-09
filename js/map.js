@@ -169,7 +169,7 @@ function map(){
     function selFeature(value){
         map.selectCountry(value.properties.name);
         sp1.selectDot(value.properties.name);
-        pc1.selectLine(value.properties.name);
+        pc1.selectLine(value.properties.cluster);
         donut.selectPie(value.properties.name);
     }
 
@@ -185,8 +185,6 @@ function map(){
     
     // function to select region from other components
     this.selectCountry = function(region){
-        //console.log("selectCountry()");
-        console.log("Select Country = " + region);
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != region) return 0.7;});
         d3.select("#map").selectAll("path").style("stroke-width", function(d)
         {

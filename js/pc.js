@@ -35,7 +35,7 @@ function pc(){
 
     // Extract the list of dimensions and create a scale for each.
     x.domain(dimensions = d3.keys(self.data[0]).filter(function(d) {
-        return d != "region" && d!= "befolkning" && d!="arbetslösa" && (y[d] = d3.scale.linear()
+        return d != "region" && d!= "befolkning" && d!="arbetslösa" && d != "regions" && d != "cluster" && (y[d] = d3.scale.linear()
             .domain(d3.extent(self.data, function(p) {
                 return +p[d];     
             }))
@@ -78,14 +78,14 @@ function pc(){
             .attr("d", path)
             .style("opacity", 0.5)
             .style("stroke", function(d,i){
-                return "steelblue";                                 // color for the lines in the parallell coordinates
+                return globalColorScale(d["cluster"]);
             })
             .on("mousemove", function(d,i){
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
     
-                tooltip.html(d["region"])                           // plotta i tooltip namnet på regionerna
+                tooltip.html("Kluster " + d["cluster"] + ", år " + d["år"] + "<br>Kommuner: " + d["regions"])                           // plotta i tooltip namnet på regionerna
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px"); 
             })
@@ -165,9 +165,9 @@ function pc(){
                     return "Övriga partier (%)";
                 return d + " (%)";
             })
-            .style("cursor", "pointer");                 // hand, funkar för mac, Martin kolla ifall funkar på windows.
-            //.style("cursor" ,"-webkit-grabbing")           // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan)
-            //.style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows.
+            .style("cursor", "pointer");                    // hand, funkar för mac, Martin kolla ifall funkar på windows. - Fungerar fint! =)
+            //.style("cursor" ,"-webkit-grabbing")          // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan) - Ja, det får jag! =)
+            //.style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows. - Fungerar inte för mig.
 
         // Add and store a brush for each axis.
         g.append("svg:g")
@@ -215,31 +215,44 @@ function pc(){
         });
     }
 
+    // Function to calculate mean value objects to simplify the rendering
+    // TODO: Fundera på vad som bör göras med "region". Som det är nu blir den av förklarliga skäl "NaN"... =)
     function createDataRepresentatives()
     {
         var meanValues = [];
         var currentPropertySum = [];
         var tempMeanValue = {};
+        var regions = "";
 
         for(var k = 0; k < clustersByYear.length; ++k)
         {
             var clustersForOneYear = clustersByYear[k];
-            // calculating mean values of clusters
-            for(var i = 0; i < clustersForOneYear.length; ++i)                            // for each cluster
+            // for each cluster
+            for(var i = 0; i < clustersForOneYear.length; ++i)
             {
+                regions = "";
                 tempMeanValue = {};
                 currentCluster = clustersForOneYear[i];
-
-                for(var m = 0; m < headers.length; ++m)                         // for each property of the data
+                // for each property of the data
+                for(var m = 0; m < headers.length; ++m)
                 {
                     currentPropertySum[m] = 0;
-                    for(var j = 0; j < currentCluster.length; ++j)              // for each line within the cluster
+                    // for each line within the cluster
+                    for(var j = 0; j < currentCluster.length; ++j)
                     {
+                        if(headers[m] == "region")
+                        {
+                            regions += ( currentCluster[j][headers[m]] + ", " );
+                        }
                         currentPropertySum[m] += Number(currentCluster[j][headers[m]]);
                     }
                     tempMeanValue[headers[m]] = currentPropertySum[m] / (currentCluster.length);
                 }
+                tempMeanValue["cluster"] = i;
+                regions = regions.substring(0, regions.length - 2);
+                tempMeanValue["regions"] = regions;
                 meanValues.push(tempMeanValue);
+                console.log(regions);
             }
         }
         return meanValues;
@@ -265,21 +278,21 @@ function pc(){
     //method for selecting the pololyne from other components    
     this.selectLine = function(region)
     {
-        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["region"] != region) return 0.05;});
+        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["cluster"] != region) return 0.05;});
         d3.select("#pc").selectAll("path").style("stroke",  function(d){
             if(d["region"] == region)
             {
                 return "deeppink";
             }
             else{
-                return "steelblue";//countryColorScale(d["region"]);
+                return globalColorScale(d["cluster"]);
             }
         });//function(d){ if(d["Country"] == region) return "#ff1111";});
     };
 
     this.deselectLine = function(){
         d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
-        d3.select("#pc").selectAll("path").style("stroke", function(d){ return "steelblue";});
+        d3.select("#pc").selectAll("path").style("stroke", function(d){ return globalColorScale(d["cluster"]);});
     }
 
 }

@@ -37,7 +37,7 @@ text {
 
 .tooltip {
   position: absolute;
-  width: auto;
+  max-width: 30%;
   height: auto;
   pointer-events: none;
 }
