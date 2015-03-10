@@ -46,6 +46,7 @@ function sp(){
     // Initializing the variable, which represents the dataset that shall be displayed
     self.data = dataz2010;                
     addClusterProperty();
+    addMajorityProperty(dataz);
 
     var selectedObject;
 
@@ -64,6 +65,7 @@ function sp(){
     {
         // Clear the svg
         clearScatterPlot();
+
         
         //  Check which dataset to use. 
         //  If the user has chosen to display year one or both the axis
@@ -118,12 +120,15 @@ function sp(){
             })
             .attr("r", 5)
             .style("fill", function(d,i){ 
-                if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
-                    // Här måste kod skrivas!!!!!
-                    // om hur den ska färglägga punkterna då det är hela datasetet. (dvs. dataz)     
-                    return globalColorScale(d["region"]);
-                }
-                else{
+                
+
+                // if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
+                //     // Här måste kod skrivas!!!!!
+                //     // om hur den ska färglägga punkterna då det är hela datasetet. (dvs. dataz)     
+                //     return globalColorScale(d["region"]);
+                // }
+                if(colorMode == "clusters")
+                {
                     if(d["cluster"] != -1)
                     {
                         return globalColorScale(d["cluster"]);
@@ -133,7 +138,10 @@ function sp(){
                         return "ff0000";
                     }
                 }
-                
+                else if(colorMode == "majority")
+                {
+                    return colorByMajority(d["majority"]);
+                } 
                 
             })
             // tooltip
@@ -161,6 +169,18 @@ function sp(){
                 else{                               // if it is -> deselect it
                     selectedObject = null;
                     clearSelection();
+                }
+
+                $("#selectRegion").val(d["region"]);
+                    //console.log("click!");
+                    if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                        selectedObject = d;
+                        selFeature(d);
+                    }
+                    else{                               // if it is -> deselect it
+                        $("#selectRegion").val("Sverige");
+                        selectedObject = null;
+                        clearSelection();
                 }
                  //selFeature(d);
             });
@@ -290,6 +310,42 @@ function sp(){
         }
     }
 
+    function addMajorityProperty()
+    {
+        console.log("addMajorityProperty");
+        for(var i = 0; i < self.data.length; ++i)
+        {
+            self.data[i]["majority"] = findMajorityByRegion(self.data[i]["region"]);
+        }
+    }
+
+    function colorByMajority(region)
+    {
+        switch(region)
+        {
+            case "Moderaterna":
+                return "#1B49DD";
+            case "Centerpartiet":
+                return "#009933";
+            case "Folkpartiet":
+                return "#6BB7EC";
+            case "Kristdemokraterna":
+                return "#231977";
+            case "Miljöpartiet":
+                return "#83CF39";
+            case "Socialdemokraterna":
+                return "#EE2020";
+            case "Vänsterpartiet":
+                return "#AF0000";
+            case "Sverigedemokraterna":
+                return "#DDDD00"
+            case "övriga partier":
+                return "gray"
+            default:
+                return "black";
+        }
+    }
+
     // Method which is called when a change has been made on the dropdownlist containing years.
     // It is used to in the draw function, to determine which dataset shall be used in the scatterplot.
     this.selectYear = function()
@@ -306,6 +362,7 @@ function sp(){
         }
 
         addClusterProperty();
+        addMajorityProperty(dataz);
         if(self.boolYAxis && self.boolXAxis){
             draw();
         }
