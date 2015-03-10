@@ -236,6 +236,7 @@ function pc(){
         var tempMeanValue = {};
         var regions = "";
 
+        // for each year
         for(var k = 0; k < clustersByYear.length; ++k)
         {
             var clustersForOneYear = clustersByYear[k];

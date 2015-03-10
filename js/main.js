@@ -10,6 +10,10 @@ var clusters2002 = [];
 var clusters2006 = [];
 var clusters2010 = [];
 
+var sweden2002 = {};
+var sweden2006 = {};
+var sweden2010 = {};
+
 var clustersByYear = [clusters2002, clusters2006, clusters2010];
 
 var chosenYear = $("#selectYear option:selected").text();
@@ -98,7 +102,7 @@ function populateSelect() {
     }
 
     options.sort();
-    options.unshift("Välj kommun");			// unshift pushes adds the argument in the beginning of the array
+    options.unshift("Sverige");			// unshift pushes adds the argument in the beginning of the array
 
 	for (var i = 0; i < options.length; i++) {
 	  var opt = options[i];
@@ -220,13 +224,15 @@ function extractDataByYear(chosenYear)
 
 function extractData()
 {
-	// extract headers from the data and store them in the clobal variable 'headers'
+	// extract headers from the data and store them in the global variable 'headers'
 	extractHeaders();
 
 	// extract data for each year
 	dataz2002 = extractDataByYear("2002");
 	dataz2006 = extractDataByYear("2006");
-	dataz2010 = extractDataByYear("2010");	
+	dataz2010 = extractDataByYear("2010");
+
+	calculateCountryAverages();
 }
 
 function hideElements()
@@ -249,4 +255,54 @@ function showElements()
 	$("#pc").removeClass("invisible");
 	$("#sp").removeClass("invisible");
 	*/
+}
+
+// Function for fulhack
+// TODO: gör en bra funktion istället...
+function calculateCountryAverages()
+{
+	// 2002
+	// for each property
+	for(var i = 0; i < headers.length; ++i)
+	{
+		sweden2002[headers[i]] = 0;
+		//for each data item
+		for(var j = 0; j < dataz2002.length; ++j)
+		{
+			sweden2002[headers[i]] += Number(dataz2002[j][headers[i]]);
+		}
+		sweden2002[headers[i]] = (sweden2002[headers[i]] / dataz2002.length).toPrecision(3);
+		sweden2002["region"] = "Sverige";
+		sweden2002["år"] = "2002";
+	}
+
+	// 2006
+	// for each property
+	for(var i = 0; i < headers.length; ++i)
+	{
+		sweden2006[headers[i]] = 0;
+		//for each data item
+		for(var j = 0; j < dataz2006.length; ++j)
+		{
+			sweden2006[headers[i]] += Number(dataz2006[j][headers[i]]);
+		}
+		sweden2006[headers[i]] = (sweden2006[headers[i]] / dataz2006.length).toPrecision(3);
+		sweden2006["region"] = "Sverige";
+		sweden2006["år"] = "2006";
+	}
+
+	// 2010
+	// for each property
+	for(var i = 0; i < headers.length; ++i)
+	{
+		sweden2010[headers[i]] = 0;
+		//for each data item
+		for(var j = 0; j < dataz2010.length; ++j)
+		{
+			sweden2010[headers[i]] += Number(dataz2010[j][headers[i]]);
+		}
+		sweden2010[headers[i]] = (sweden2010[headers[i]] / dataz2010.length).toPrecision(3);
+		sweden2010["region"] = "Sverige";
+		sweden2010["år"] = "2010";
+	}
 }

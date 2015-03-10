@@ -32,17 +32,16 @@ function donut(){
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-  
   
   self.headers = d3.keys(dataz[0]).filter(function(d){
     return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
   });
 
   self.data = dataz2010;                //default year 2010
+  self.sweden = sweden2010;
 
   //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
-  self.region = "Välj kommun";          //default region
+  self.region = "Sverige";          //default region
   //showInformation(self.region);
   showDefaultInformation();
 
@@ -52,7 +51,7 @@ function donut(){
   /* =================================== */
 
   function showDefaultInformation(){
-    var extraText = svg.selectAll(".extraText")
+    /*var extraText = svg.selectAll(".extraText")
       .data(welcomeMessage)
       .enter()
       .append("g")
@@ -63,31 +62,43 @@ function donut(){
       .style("text-anchor", "middle")
       .style("font", "bold 18px Arial")
       .attr("class", "inside")
-      .text(function(d){return "Ingen kommun är vald.";});
-
-    
+      .text(function(d){return "Ingen kommun är vald.";});*/
+      showInformation("Hela Sverige");
   }
 
   function showInformation(region)
   {
-    svg.selectAll('.arc').remove();
-    svg.selectAll(".extraText").remove();
-    svg.selectAll(".legend").remove();
-
-    self.region = region;
-
     var tempData = [];
     var parties = [];
-    
-    for(var i = 0; i < self.data.length; i++){
-      if(self.data[i]["region"] == region){
-        tempData.push(self.data[i]);
-        for(var j = 0; j<self.headers.length; j++)
-        {
-          parties.push(self.data[i][self.headers[j]]);
+
+    if(region == "Hela Sverige")
+    {
+      for(var i = 0; i < self.headers.length; ++i)
+      {
+        parties.push(self.sweden[self.headers[i]]);
+        tempData.push(self.sweden);
+      }
+    }
+    else
+    {
+      self.region = region;  
+      for(var i = 0; i < self.data.length; i++){
+        if(self.data[i]["region"] == region){
+          tempData.push(self.data[i]);
+          for(var j = 0; j<self.headers.length; j++)
+          {
+            parties.push(self.data[i][self.headers[j]]);
+          }
         }
       }
     }
+
+    console.log("parties");
+    console.log(parties);
+
+    svg.selectAll('.arc').remove();
+    svg.selectAll(".extraText").remove();
+    svg.selectAll(".legend").remove();
 
     var g = svg.selectAll(".arc")
       .data(pie(parties))
@@ -193,7 +204,6 @@ function donut(){
   }
 
 
-
   /* ======== Public functions ======== */
   /* ================================== */
   this.selectPie = function(region)
@@ -207,37 +217,41 @@ function donut(){
     svg.selectAll(".extraText").remove();
     svg.selectAll(".legend").remove();
 
-    this.region = "Välj kommun";
+    this.region = "Sverige";
     showDefaultInformation();
   };
 
-  // Function which calls the draw function, with the region as argument.
-  this.selectYear = function(value)
+  // Function which calls the draw function, with the year as argument.
+  this.selectYear = function(year)
   {
-    switch(value){
+    switch(year){
       case "2002":
         self.data = dataz2002;
+        self.sweden = sweden2002;
         break;
       case "2006":
         self.data = dataz2006;
+        self.sweden = sweden2006;
         break;
       case "2010":
         self.data = dataz2010;
+        self.sweden = sweden2010;
         break;
       default:
         self.data = dataz2002;
-        console.log("Bad value, when selecting the year!");
+        self.sweden = sweden2002;
+        console.log("donut.selectYear() bad value!");
         break;
     }
     
-    if(self.region != "Välj kommun"){
+    if(self.region != "Sverige"){
       console.log("selectYear donut = " + self.region);
       showInformation(self.region);
       map.selectCountry(self.region);
       //pc1.selectLine(self.region);
     }
     else{
-      self.region = "Välj kommun";
+      self.region = "Sverige";
       map.deselectCountry();
       pc1.deselectLine();
       donut.deselectPie();
@@ -250,7 +264,7 @@ function donut(){
   this.selectPieFromSelect = function()
   {
     var selectedRegion = $("#selectRegion option:selected").text();
-    if(selectedRegion != "Välj kommun"){
+    if(selectedRegion != "Sverige"){
       self.region = selectedRegion;
       showInformation(selectedRegion);
       map.selectCountry(selectedRegion);
@@ -258,7 +272,7 @@ function donut(){
     }
     else
     {
-      self.region = "Välj kommun";
+      self.region = "Sverige";
       map.deselectCountry();
       pc1.deselectLine();
       donut.deselectPie();
