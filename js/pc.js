@@ -88,15 +88,15 @@ function pc(){
                 tooltip.html("<p style='font-size:1.2em; font-weight:bold'>Kluster " + d["cluster"] + ", år " + d["år"] + "</p>" +
                              "Ink: " + d["inkomst"].toPrecision(3) + " tkr" + 
                              ", Arb-lösh: " + d["arbetslöshet"].toPrecision(3) + " %" + "<br>" +
-                             "M: " + d["Moderaterna"].toPrecision(3) +" %" + "<br>" +
-                             "C: " + d["Centerpartiet"].toPrecision(3) +" %" + "<br>" +
-                             "FP: " + d["Folkpartiet"].toPrecision(3) +" %" + "<br>" +
-                             "KD: " + d["Kristdemokraterna"].toPrecision(3) +" %" + "<br>" +
-                             "MP: " + d["Miljöpartiet"].toPrecision(3) +" %" + "<br>" +
-                             "S: " + d["Socialdemokraterna"].toPrecision(3) +" %" + "<br>" +
-                             "V: " + d["Vänsterpartiet"].toPrecision(3) +" %" + "<br>" +
-                             "SD: " + d["Sverigedemokraterna"].toPrecision(3) +" %" + "<br>" +
-                             "Övriga partier: " + d["övriga partier"].toPrecision(3) + " %" + "<br>" +
+                             "M: " + (100 * d["Moderaterna"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "C: " + (100 * d["Centerpartiet"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "FP: " + (100 * d["Folkpartiet"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "KD: " + (100 * d["Kristdemokraterna"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "MP: " + (100 * d["Miljöpartiet"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "S: " + (100 * d["Socialdemokraterna"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "V: " + (100 * d["Vänsterpartiet"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "SD: " + (100 * d["Sverigedemokraterna"]).toPrecision(3) +" % (av max)" + "<br>" +
+                             "Övriga partier: " + (100 * d["övriga partier"]).toPrecision(3) + " % (av max)" + "<br>" +
                              "Kommuner: " + d["regions"])                           // plotta i tooltip namnet på regionerna
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 28) + "px"); 
