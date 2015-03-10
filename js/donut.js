@@ -75,9 +75,11 @@ function donut(){
     {
       for(var i = 0; i < self.headers.length; ++i)
       {
+        
         parties.push(self.sweden[self.headers[i]]);
-        tempData.push(self.sweden);
+        
       }
+      tempData.push(self.sweden);
     }
     else
     {
@@ -92,6 +94,7 @@ function donut(){
         }
       }
     }
+    
 
     console.log("parties");
     console.log(parties);
