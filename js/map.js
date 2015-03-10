@@ -110,12 +110,14 @@ function map(){
             //selection
             .on("click", function(d)
                 {
+                    $("#selectRegion").val(d.properties.name);
                     //console.log("click!");
                     if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
                         selectedObject = d;
                         selFeature(d);
                     }
                     else{                               // if it is -> deselect it
+                        $("#selectRegion").val("Sverige");
                         selectedObject = null;
                         clearSelection();
                     }
