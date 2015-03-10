@@ -27,6 +27,7 @@ $('#colorModeForm input').on('change', function() {
 	console.log("change!");
 	colorMode = $('input[name=radioName]:checked', '#colorModeForm').val();
 	map.selectYear(chosenYear);
+	sp1.selectYear();
 });
 
 var globalColorScale = d3.scale.category20();
