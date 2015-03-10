@@ -107,6 +107,7 @@ body {
 
 #map, #pc, #sp, #donut {
     background-color: white;
+    margin-top: 10px;
 }
 
 /* Wrapper for page content to push down footer */

@@ -87,7 +87,7 @@
 
                 <div class="row">
                     <div class="col-xs-6" >
-                        <div id="donutWrapper" style="height: 45vh; border: solid; border-color:black; border-width: 2px">
+                        <div id="donutWrapper" style="height: 45vh; ">
                             <!-- dropdown knapp för y axeln på scatterplotten -->
                             <div class="btn-group" style="position:center; position:absolute">
                                 <select id="selectYear" onchange="selectYearAndCalculateClusters(value), sp1.selectYear(value), donut.selectYear(value), map.selectYear(value)">
@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="col-xs-6">
-                        <div id="map" style="height: 45vh; border-style: solid; border-color: black; border-width: 2px; z-index: -1;"></div>
+                        <div id="map" style="height: 45vh; z-index: -1;"></div>
                         <!-- <div class="grad1" style="position: absolute; top: 0px; left 0px; z-index: 1;"></div> -->
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                 <div class="row">
                     <br><br><br>
                     <div class="col-xs-12">
-                        <div id="pc" style="height: 30vh; border-style: solid; border-color: black; border-width: 2px;"></div>
+                        <div id="pc" style="height: 30vh;"></div>
                     </div>
                 </div>
 
@@ -137,7 +137,7 @@
                     </div>
                     <div class="col-xs-6">
                         <h3>Välj ut parametrar av intresse för att skapa ett sambandsdiagram</h3>
-                        <div id="sp" style="height: 55vh; border-style: solid; border-color: black; border-width: 2px;">
+                        <div id="sp" style="height: 55vh;">
                             <div class="btn-group" style="position:center; position:absolute">
                                 <!-- For scatterPlot X-axis -->
                                 x-axeln:
