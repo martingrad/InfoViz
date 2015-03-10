@@ -46,7 +46,7 @@ function sp(){
     // Initializing the variable, which represents the dataset that shall be displayed
     self.data = dataz2010;                
     addClusterProperty();
-    addMajorityProperty(dataz);
+    addMajorityProperty(self.data);
 
     var selectedObject;
 
@@ -161,15 +161,15 @@ function sp(){
                     .style("opacity", 0);
             })
             .on("click",  function(d) {
-                console.log(selectedObject);
-                if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
-                    selectedObject = d;
-                    selFeature(d);
-                }
-                else{                               // if it is -> deselect it
-                    selectedObject = null;
-                    clearSelection();
-                }
+                // console.log(selectedObject);
+                // if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                //     selectedObject = d;
+                //     selFeature(d);
+                // }
+                // else{                               // if it is -> deselect it
+                //     selectedObject = null;
+                //     clearSelection();
+                // }
 
                 $("#selectRegion").val(d["region"]);
                     //console.log("click!");
@@ -362,7 +362,7 @@ function sp(){
         }
 
         addClusterProperty();
-        addMajorityProperty(dataz);
+        addMajorityProperty(self.data);
         if(self.boolYAxis && self.boolXAxis){
             draw();
         }
