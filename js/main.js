@@ -180,9 +180,9 @@ function selectYearAndCalculateClusters(year)
 
 function calculateClusters()
 {
-	clusters2002 = dbscan(dataz2002, 0.6, 2);
-	clusters2006 = dbscan(dataz2006, 0.6, 2);
-	clusters2010 = dbscan(dataz2010, 0.6, 2);
+	clusters2002 = dbscan(dataz2002, 0.5, 3);
+	clusters2006 = dbscan(dataz2006, 0.5, 3);
+	clusters2010 = dbscan(dataz2010, 0.5, 3);
 
 	clustersByYear = [clusters2002, clusters2006, clusters2010];
 
@@ -376,10 +376,10 @@ function normalizeData(_data)
 	{
 		maxValue = 0;
 		maxValueIndex = 0;
-		console.log("clustering dim: " + clusteringDims[i]);
+		//console.log("clustering dim: " + clusteringDims[i]);
 		for(var j = 0; j < _data.length; ++j)
 		{
-			console.log("data item value: " + _data[j][clusteringDims[i]]);
+			//console.log("data item value: " + _data[j][clusteringDims[i]]);
 			if(Number(_data[j][clusteringDims[i]]) > maxValue)
 			{
 				maxValue = Number(_data[j][clusteringDims[i]]);
@@ -387,14 +387,14 @@ function normalizeData(_data)
 			}
 		}
 		maxValues.push(maxValue);
-		console.log("found max value: " + maxValue + " at: " + _data[maxValueIndex]["region"] + " " + maxValueIndex);
+		//console.log("found max value: " + maxValue + " at: " + _data[maxValueIndex]["region"] + " " + maxValueIndex);
 		for(var j = 0; j < _data.length; ++j)
 		{
 			tempData[j][clusteringDims[i]] = Number(_data[j][clusteringDims[i]]) / Number(maxValues[i]);
-			console.log("new normalized data: " + tempData[j][clusteringDims[i]]);
+			//console.log("new normalized data: " + tempData[j][clusteringDims[i]]);
 		}
 	}
 
-	console.log(tempData);
+	//console.log(tempData);
 	return tempData;
 }
