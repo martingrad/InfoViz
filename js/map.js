@@ -43,15 +43,12 @@ function map(){
     //load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
         counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
-
-        // TODO här borde man först ha lagt till vilket kluster varje region hör till i en ny datavariabel och skicka med den istället,
-        // för att undvika att köra dubbelloopar på mouseover... xD
         addClusterProperty();
         draw(counties, dataz);
     });
 
     var colorScale;
-    var incomeMap = {};
+    var majorityMap = {};
     var selectedObject;
 
     /* ======== Private functions ======== */
@@ -59,6 +56,9 @@ function map(){
 
     function draw(countries, data)
     {
+        console.log("drawing!");
+        addMajorityProperty(dataz);
+
         svg.selectAll('path').remove();
 
         var colorMappingVariable = "inkomst";
@@ -74,13 +74,20 @@ function map(){
             .attr("title", function(d) { return d.properties.name; })
             .style("fill", function(d)
                 {
-                    if(d.properties.cluster != -1)
+                    if(colorMode == "clusters")
                     {
-                        return globalColorScale(d.properties.cluster);
+                        if(d.properties.cluster != -1)
+                        {
+                            return globalColorScale(d.properties.cluster);
+                        }
+                        else
+                        {
+                            return "ff0000";
+                        }
                     }
-                    else
+                    else if(colorMode == "majority")
                     {
-                        return "ff0000";
+                        return colorByMajority(d.properties.majority);
                     }
                 })
             //tooltip
@@ -199,13 +206,20 @@ function map(){
     this.deselectCountry = function() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
-            if(d.properties.cluster != -1)
+            if(colorMode == "clusters")
             {
-                return globalColorScale(d.properties.cluster);
+                if(d.properties.cluster != -1)
+                {
+                    return globalColorScale(d.properties.cluster);
+                }
+                else
+                {
+                    return "ff0000";
+                }
             }
-            else
+            else if(colorMode == "majority")
             {
-                return "ff0000";
+                return colorByMajority(d.properties.majority);
             }
         });
         d3.select("#map").selectAll("path").style("stroke-width", ".01em");     // TODO: .1px är inte riktigt samma som från början
@@ -253,6 +267,42 @@ function map(){
         for(var i = 0; i < counties.length; ++i)
         {
             counties[i].properties["cluster"] = findClusterByRegion(counties[i].properties.name);
+        }
+    }
+
+    function addMajorityProperty()
+    {
+        console.log("addMajorityProperty");
+        for(var i = 0; i < counties.length; ++i)
+        {
+            counties[i].properties["majority"] = findMajorityByRegion(counties[i].properties.name);
+        }
+    }
+
+    function colorByMajority(region)
+    {
+        switch(region)
+        {
+            case "Moderaterna":
+                return "#1B49DD";
+            case "Centerpartiet":
+                return "#009933";
+            case "Folkpartiet":
+                return "#6BB7EC";
+            case "Kristdemokraterna":
+                return "#231977";
+            case "Miljöpartiet":
+                return "#83CF39";
+            case "Socialdemokraterna":
+                return "#EE2020";
+            case "Vänsterpartiet":
+                return "#AF0000";
+            case "Sverigedemokraterna":
+                return "#DDDD00"
+            case "övriga partier":
+                return "gray"
+            default:
+                return "black";
         }
     }
 }

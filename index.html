@@ -83,12 +83,9 @@
             <!-- Begin page content -->
             <div class="container">
                 <!-- row of columns -->
-                
-
                 <div class="row">
                     <div class="col-xs-6" >
                         <div id="donutWrapper" style="height: 45vh; ">
-                            <!-- dropdown knapp för y axeln på scatterplotten -->
                             <div class="btn-group" style="position:center; position:absolute">
                                 <select id="selectYear" onchange="selectYearAndCalculateClusters(value), sp1.selectYear(value), donut.selectYear(value), map.selectYear(value)">
                                     <option value="2010">2010</option>
@@ -98,21 +95,25 @@
                                 <select id="selectRegion" onchange="donut.selectPieFromSelect()"></select>
                             </div>
                             <div id="donut" style="width: 100%; height: 100%; "></div>
-                            <!-- dropdown knapp för x axeln på scatterplotten -->
                         </div>
-
-                        <!-- <button type="button" style="float: right;" class="btn btn-default btn-xs buttonScatterPlotForXAxis" onclick="sp1.selectXAxis()">Välj saker som ska visas</button> --> 
                     </div>
 
                     <div class="col-xs-6">
-                        <div id="map" style="height: 45vh; z-index: -1;"></div>
-                        <!-- <div class="grad1" style="position: absolute; top: 0px; left 0px; z-index: 1;"></div> -->
+                        <div id="map" style="height: 45vh; z-index: -1;">
+                            <div class="btn-group" style="position:center; position:absolute">
+                                <form id="colorModeForm">
+                                    <input type="radio" name="radioName" value="majority" checked="checked"/> Störst parti <br />
+                                    <input type="radio" name="radioName" value="clusters" /> Kluster <br />
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <br><br><br>
+                    <br>
                     <div class="col-xs-12">
+                        <h2>Klustrerade kommuner</h2>
                         <div id="pc" style="height: 30vh;"></div>
                     </div>
                 </div>

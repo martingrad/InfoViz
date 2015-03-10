@@ -1,6 +1,11 @@
 showLoadingScreen();
 hideElements();
 
+//TODO: fixa radioknappar!
+var colorMode = "majority";
+
+
+
 var dataz;
 var dataz2002 = [];
 var dataz2006 = [];
@@ -17,6 +22,12 @@ var sweden2010 = {};
 var clustersByYear = [clusters2002, clusters2006, clusters2010];
 
 var chosenYear = $("#selectYear option:selected").text();
+
+$('#colorModeForm input').on('change', function() {
+	console.log("change!");
+	colorMode = $('input[name=radioName]:checked', '#colorModeForm').val();
+	map.selectYear(chosenYear);
+});
 
 var globalColorScale = d3.scale.category20();
 
@@ -48,6 +59,7 @@ function initializeObjects()
 	pc1 = new pc();
 	map = new map();
 	donut = new donut();
+	//donut2 = new donut();
 	
 	// populate Select lists
 	populateSelect();
@@ -102,7 +114,7 @@ function populateSelect() {
     }
 
     options.sort();
-    options.unshift("Sverige");			// unshift pushes adds the argument in the beginning of the array
+    options.unshift("Sverige");			// unshift pushes the argument in the beginning of the array
 
 	for (var i = 0; i < options.length; i++) {
 	  var opt = options[i];
@@ -207,6 +219,53 @@ function findClusterByRegion(region)
 		}
 	}
 	return -1;
+}
+
+function findMajorityByRegion(region)
+{
+	var tempData;
+	// use the correct data set
+	switch(chosenYear)
+	{
+		case "2002":
+			tempData = dataz2002;
+			break;
+		case "2006":
+			tempData = dataz2006;
+			break;
+		case "2010":
+			tempData = dataz2010;
+			break;
+		default:
+			break;
+	}
+
+	// find the correct data item
+	var tempItem;
+	// for each data item
+	for(var i = 0; i < tempData.length; ++i)
+	{
+		if(tempData[i]["region"] == region)
+		{
+			tempItem = tempData[i];
+			break;
+		}
+	}
+
+	// find max value of party percentage and store the index
+	var maxValue = 0;
+	var maxIndex = 0;
+	// for each party
+	for(var i = 0; i < clusteringDims.length; ++i)
+	{
+		if(Number(tempItem[clusteringDims[i]]) >= maxValue)
+		{
+			maxValue = Number(tempItem[clusteringDims[i]]);
+			maxIndex = i;
+		}
+	}
+
+	return clusteringDims[maxIndex];
 }
 
 function extractDataByYear(chosenYear)
