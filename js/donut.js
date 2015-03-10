@@ -271,6 +271,7 @@ function donut(){
       self.region = selectedRegion;
       showInformation(selectedRegion);
       map.selectCountry(selectedRegion);
+      sp1.selectDot(selectedRegion);
       //pc1.selectLine(selectedRegion);
     }
     else
@@ -279,6 +280,7 @@ function donut(){
       map.deselectCountry();
       pc1.deselectLine();
       donut.deselectPie();
+      sp1.deselectDot();
       showDefaultInformation();
     }
   }
