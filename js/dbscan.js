@@ -9,9 +9,16 @@
 
 function dbscan(data, eps, minPts)
 {
-	console.log("calling dbscan(dataz" + data[0]["år"] + ", " + eps + ", " + minPts + ")");
+	var newData = data.slice();
+	for(var i = 0; i < data.length; ++i)
+	{
+		newData[i] = jQuery.extend(true, {}, data[i]);
+	}
+	var normData = normalizeData(newData);
+
+	console.log("calling dbscan(dataz" + normData[0]["år"] + ", " + eps + ", " + minPts + ")");
 	// initializing array of zeros, with the size of the data (zero = not visited, one = visited)
-	var pointsAreVisited = Array.apply(null, new Array(data.length)).map(Number.prototype.valueOf, 0);
+	var pointsAreVisited = Array.apply(null, new Array(normData.length)).map(Number.prototype.valueOf, 0);
 	// copying the array of zeros
 	var pointsAreNoise = pointsAreVisited;
 	
@@ -24,14 +31,14 @@ function dbscan(data, eps, minPts)
 	
 	var clusterIndex = -1;
 	// (for each unvisited point P in dataset D)
-	for(var i = 0; i < data.length; ++i)
+	for(var i = 0; i < normData.length; ++i)
 	{
 		// check if point is already visited
 		pointAlreadyVisited = pointsAreVisited[i];
 		// if it is not already visited...
 		if(!pointAlreadyVisited){
 			// store current point...
-			currentPoint = data[i];
+			currentPoint = normData[i];
 			// ... and mark it as visited
 			pointsAreVisited[i] = 1;
 			// find neighbors to the current point
@@ -61,10 +68,10 @@ function dbscan(data, eps, minPts)
 		var euclideanDistance = 66666666;
 		var currentNeighbor;
 		// for each data point
-		for(var i = 0; i < data.length; ++i)
+		for(var i = 0; i < normData.length; ++i)
 		{
 			// store current neighbor
-			currentNeighbor = data[i];
+			currentNeighbor = normData[i];
 			// if the current neighbor is not the point itself
 			if(currentNeighbor != _currentPoint)
 			{
@@ -113,7 +120,7 @@ function dbscan(data, eps, minPts)
 			// store the data index of the current neigbor point being examined.
 			currentNeighborPointIndex = _neighborPtsIndices[i];
 			// gett the data point using the index
-			currentNeighborPoint = data[currentNeighborPointIndex];
+			currentNeighborPoint = normData[currentNeighborPointIndex];
 			// if this point has not already been visited...
 			if(!pointsAreVisited[currentNeighborPointIndex]){
 				// mark currentNeighbor as visited
@@ -127,7 +134,7 @@ function dbscan(data, eps, minPts)
 			//if the current neighbor point is not already a member of any cluster...
 			if( !pointIsPartOfAnyCluster(currentNeighborPoint) ){
 				// ... add it to the current cluster
-				clusters[_clusterIndex].push(data[currentNeighborPointIndex]);
+				clusters[_clusterIndex].push(normData[currentNeighborPointIndex]);
 			}
 		}
 	}
@@ -149,7 +156,7 @@ function dbscan(data, eps, minPts)
 		}
 		return isPart;
 	}
-
+	console.log(clusters);
 	// dbscan return (end of class)
 	return clusters;
 }
