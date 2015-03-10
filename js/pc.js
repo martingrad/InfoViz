@@ -76,7 +76,7 @@ function pc(){
             .data(self.data)
             .enter().append("path")
             .attr("d", path)
-            .style("opacity", 0.5)
+            .style("opacity", 0.75)
             .style("stroke", function(d,i){
                 return globalColorScale(d["cluster"]);
             })
@@ -305,7 +305,7 @@ function pc(){
     };
 
     this.deselectLine = function(){
-        d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.5;});
+        d3.select("#pc").selectAll("path").style("opacity",function(d){ return 0.75;});
         d3.select("#pc").selectAll("path").style("stroke", function(d){ return globalColorScale(d["cluster"]);});
     }
 }
