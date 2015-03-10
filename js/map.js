@@ -20,9 +20,9 @@ function map(){
 
     var projection = d3.geo.satellite()             //obs kontrollera att du är ansluten till internet, då geo.satellite är kopplad till en webbadress
         .distance(1.1)
-        .scale(3000)
+        .scale(2800)
         .rotate([165.00, -125.0, 180.0])
-        .center([150, 70])
+        .center([110, 40])
         .tilt(15)
         //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)             // dafuq is dis? 
         .precision(.1);
