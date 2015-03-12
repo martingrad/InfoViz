@@ -292,7 +292,12 @@ function pc(){
     // function for selecting the pololyne from other components    
     this.selectLine = function(cluster)
     {
-        d3.select("#pc").selectAll("path").style("opacity", function(d){if(d["cluster"] != cluster) return 0.05;});
+        d3.select("#pc").selectAll("path").style("opacity", function(d)
+            {
+                if(d["cluster"] != cluster || d["år"] != chosenYear)
+                    return 0.05;
+            }
+        );
         /*d3.select("#pc").selectAll("path").style("stroke",  function(d){
             if(d["cluster"] == cluster)
             {
