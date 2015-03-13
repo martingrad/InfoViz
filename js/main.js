@@ -60,7 +60,6 @@ function initializeObjects()
 	pc1 = new pc();
 	map = new map();
 	donut = new donut();
-	//donut2 = new donut();
 	
 	// populate Select lists
 	populateSelect();
@@ -73,7 +72,6 @@ function populateSelect2() {
 	var options = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
 						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
 
-	//options.push("År");
 	options.sort();
 	options.unshift("Välj variabel");
 
