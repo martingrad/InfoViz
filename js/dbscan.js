@@ -119,7 +119,7 @@ function dbscan(data, eps, minPts)
 		for(var i = 0; i < _neighborPtsIndices.length; ++i){
 			// store the data index of the current neigbor point being examined.
 			currentNeighborPointIndex = _neighborPtsIndices[i];
-			// gett the data point using the index
+			// get the data point using the index
 			currentNeighborPoint = normData[currentNeighborPointIndex];
 			// if this point has not already been visited...
 			if(!pointsAreVisited[currentNeighborPointIndex]){

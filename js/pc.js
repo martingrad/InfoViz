@@ -272,7 +272,7 @@ function pc(){
 
     //method for selecting features of other components
     function selFeature(value){
-        pc1.selectLine(value.cluster);
+        pc1.selectLineYear(value.cluster, value["år"]);
         //sp1.selectDot(value.region);
         //map.selectCountry(value.region);
         map.selectCluster(value.cluster);
@@ -295,18 +295,24 @@ function pc(){
         d3.select("#pc").selectAll("path").style("opacity", function(d)
             {
                 if(d["cluster"] != cluster || d["år"] != chosenYear)
+                {
                     return 0.05;
+                }
             }
         );
-        /*d3.select("#pc").selectAll("path").style("stroke",  function(d){
-            if(d["cluster"] == cluster)
+    };
+
+    this.selectLineYear = function(cluster, year)
+    {
+        console.log(year);
+        d3.select("#pc").selectAll("path").style("opacity", function(d)
             {
-                return "deeppink";
+                if(d["cluster"] != cluster || d["år"] != year)
+                {
+                    return 0.05;                    
+                }
             }
-            else{
-                return globalColorScale(d["cluster"]);
-            }
-        });*/
+        );
     };
 
     this.deselectLine = function(){
