@@ -1,9 +1,8 @@
 function donut(){
 
-  var self = this; // for internal d3 functions
+  var self = this;
 
   var donutDiv = $("#donut");
-  //var testDiv = $("creatingButtons");
 
   var width  = donutDiv.width(),
       height = donutDiv.height(),
@@ -37,12 +36,10 @@ function donut(){
     return d != "region" && d!= "befolkning" && d!="arbetslösa" && d!="år" && d!="arbetslöshet" && d!="inkomst";
   });
 
-  self.data = dataz2010;                //default year 2010
+  self.data = dataz2010;                // default year 2010
   self.sweden = sweden2010;
 
-  //document.getElementById('creatingButtons').innerHTML = createButtons(self.data);
-  self.region = "Sverige";          //default region
-  //showInformation(self.region);
+  self.region = "Sverige";              // default region
   showDefaultInformation();
 
 
@@ -94,10 +91,6 @@ function donut(){
         }
       }
     }
-    
-
-    console.log("parties");
-    console.log(parties);
 
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();

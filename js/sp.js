@@ -1,6 +1,6 @@
 function sp(){
 
-    var self = this; // for internal d3 functions
+    var self = this;
     var spDiv = $("#sp");
     var margin = {top: 40, right: 40, bottom: 40, left: 40},
         width = spDiv.width() - margin.right - margin.left,
@@ -8,13 +8,13 @@ function sp(){
 
     var padding = 0;
 
-    //initialize tooltip
+    // initialize tooltip
     var tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
     // Initialize x,y which will be used to scale the dataset displayed in the scatterplot.
-    //  the domain for x and y is set in draw, after the the dataset is set.
+    // the domain for x and y is set in draw, after the the dataset is set.
     var x = d3.scale.linear()
         .range([padding, width - padding]);
 
@@ -36,7 +36,7 @@ function sp(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Initializing private variables which will be used in the draw function.
-    //      Theese variables are determined by the user, when using different dropdown lists
+    // These variables are determined by the user, when using different dropdown lists
     self.selectedObjectOnXAxis;
     self.selectedObjectOnYAxis;
     self.selectedYear = "2010";           // default value, is changed if the user uses the dropdown list for years.
@@ -119,14 +119,8 @@ function sp(){
                 return y(d[self.selectedObjectOnYAxis]);            // plot scaled position for y-axis
             })
             .attr("r", 5)
-            .style("fill", function(d,i){ 
-                
-
-                // if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
-                //     // Här måste kod skrivas!!!!!
-                //     // om hur den ska färglägga punkterna då det är hela datasetet. (dvs. dataz)     
-                //     return globalColorScale(d["region"]);
-                // }
+            .style("fill", function(d,i)
+            { 
                 if(colorMode == "clusters")
                 {
                     if(d["cluster"] != -1)
@@ -142,48 +136,41 @@ function sp(){
                 {
                     return colorByMajority(d["majority"]);
                 } 
-                
             })
             // tooltip
-            .on("mousemove", function(d) {
-                tooltip.transition()
-                .duration(200)
-                    .style("opacity", .9);
-                
-                tooltip.html(d["region"] + "<br/> (" + d[self.selectedObjectOnXAxis]
-                    + ", " + d[self.selectedObjectOnYAxis] + "), kluster " + d["cluster"])
-                    .style("left", (d3.event.pageX + 5) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");  
-            })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            })
-            .on("click",  function(d) {
-                // console.log(selectedObject);
-                // if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
-                //     selectedObject = d;
-                //     selFeature(d);
-                // }
-                // else{                               // if it is -> deselect it
-                //     selectedObject = null;
-                //     clearSelection();
-                // }
+            .on("mousemove", function(d)
+                {
+                    tooltip.transition()
+                    .duration(200)
+                        .style("opacity", .9);
+                    
+                    tooltip.html(d["region"] + "<br/> (" + d[self.selectedObjectOnXAxis]
+                        + ", " + d[self.selectedObjectOnYAxis] + "), kluster " + d["cluster"])
+                        .style("left", (d3.event.pageX + 5) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");  
+                })
+            .on("mouseout", function(d)
+                {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                })
+            .on("click",  function(d)
+                {
 
-                $("#selectRegion").val(d["region"]);
-                    //console.log("click!");
-                    if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
-                        selectedObject = d;
-                        selFeature(d);
-                    }
-                    else{                               // if it is -> deselect it
-                        $("#selectRegion").val("Sverige");
-                        selectedObject = null;
-                        clearSelection();
-                }
-                 //selFeature(d);
-            });
+                    $("#selectRegion").val(d["region"]);
+                        //console.log("click!");
+                        if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                            selectedObject = d;
+                            selFeature(d);
+                        }
+                        else{                               // if it is -> deselect it
+                            $("#selectRegion").val("Sverige");
+                            selectedObject = null;
+                            clearSelection();
+                        }
+                     //selFeature(d);
+                });
 
         // Draw the chosen year
         var tempData = "a";
@@ -200,7 +187,6 @@ function sp(){
             .style("font", "bold 12px Arial")
             .attr("class", "inside")
             .text(function(d) { return "År " + self.selectedYear; });
-
     }
 
     // Method for selecting features of other components
@@ -312,7 +298,6 @@ function sp(){
 
     function addMajorityProperty()
     {
-        console.log("addMajorityProperty");
         for(var i = 0; i < self.data.length; ++i)
         {
             self.data[i]["majority"] = findMajorityByRegion(self.data[i]["region"]);

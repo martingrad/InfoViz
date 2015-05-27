@@ -24,7 +24,6 @@ var clustersByYear = [clusters2002, clusters2006, clusters2010];
 var chosenYear = $("#selectYear option:selected").text();
 
 $('#colorModeForm input').on('change', function() {
-	console.log("change!");
 	colorMode = $('input[name=radioName]:checked', '#colorModeForm').val();
 	map.selectYear(chosenYear);
 	sp1.selectYear();
@@ -126,8 +125,6 @@ function populateSelect() {
 
 function showLoadingScreen()
 {
-	console.log("nu kör vi!");
-
 	// var opts = {...} should be defined and called in 'new Spinner(opts)...', but it doesn't seem to be working...
 	// Instead, the default values in spin.js have been changed...
 	target = document.getElementById('spinner-box');
@@ -136,7 +133,6 @@ function showLoadingScreen()
 
 function hideLoadingScreen()
 {
-	console.log("nu slutar vi!");
 	spinner.stop();
 }
 
@@ -172,9 +168,6 @@ function selectYearAndCalculateClusters(year)
 		default:
 			break;
 	}
-	//dbscanRes = dbscan(newData, 15, 5);
-    console.log("changed clusters to: ");
-    console.log(dbscanRes);
 }
 
 function calculateClusters()
@@ -295,23 +288,11 @@ function extractData()
 function hideElements()
 {
 	$("#wrap").addClass("invisible");
-	/*
-	$("#donutWrapper").addClass("invisible");
-	$("#map").addClass("invisible");
-	$("#pc").addClass("invisible");
-	$("#sp").addClass("invisible");
-	*/
 }
 
 function showElements()
 {
 	$("#wrap").removeClass("invisible");
-	/*
-	$("#donutWrapper").removeClass("invisible");
-	$("#map").removeClass("invisible");
-	$("#pc").removeClass("invisible");
-	$("#sp").removeClass("invisible");
-	*/
 }
 
 // Function for fulhack

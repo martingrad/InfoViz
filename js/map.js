@@ -18,7 +18,7 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var projection = d3.geo.satellite()             //obs kontrollera att du är ansluten till internet, då geo.satellite är kopplad till en webbadress
+    var projection = d3.geo.satellite()             //obs kontrollera aanslutning till internet, då geo.satellite är kopplad till en webbadress
         .distance(1.1)
         .scale(2800)
         .rotate([165.00, -125.0, 180.0])
@@ -56,7 +56,6 @@ function map(){
 
     function draw(countries, data)
     {
-        console.log("drawing!");
         addMajorityProperty(dataz);
 
         svg.selectAll('path').remove();
@@ -231,7 +230,6 @@ function map(){
 
     this.selectYear = function(value)
     {
-        console.log(value);
         var newData;
         switch(chosenYear)
         {
@@ -265,7 +263,6 @@ function map(){
 
     function addClusterProperty()
     {
-        //console.log("addClusterProperty");
         for(var i = 0; i < counties.length; ++i)
         {
             counties[i].properties["cluster"] = findClusterByRegion(counties[i].properties.name);
@@ -274,7 +271,6 @@ function map(){
 
     function addMajorityProperty()
     {
-        console.log("addMajorityProperty");
         for(var i = 0; i < counties.length; ++i)
         {
             counties[i].properties["majority"] = findMajorityByRegion(counties[i].properties.name);

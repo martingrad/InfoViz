@@ -16,7 +16,6 @@ function dbscan(data, eps, minPts)
 	}
 	var normData = normalizeData(newData);
 
-	console.log("calling dbscan(dataz" + normData[0]["år"] + ", " + eps + ", " + minPts + ")");
 	// initializing array of zeros, with the size of the data (zero = not visited, one = visited)
 	var pointsAreVisited = Array.apply(null, new Array(normData.length)).map(Number.prototype.valueOf, 0);
 	// copying the array of zeros
@@ -47,7 +46,6 @@ function dbscan(data, eps, minPts)
 			if(neighborPtsIndices.length < minPts){
 				// mark current point as noise
 	    		pointsAreNoise[i] = 1;
-				console.log("noise!");
 	    	}
 	    	// if the number of neighbors is sufficient
 		  	else
@@ -156,7 +154,6 @@ function dbscan(data, eps, minPts)
 		}
 		return isPart;
 	}
-	console.log(clusters);
 	// dbscan return (end of class)
 	return clusters;
 }

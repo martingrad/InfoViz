@@ -84,7 +84,7 @@ function pc(){
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                    
+                // TODO: fixa fulhacket nedan...
                 tooltip.html("<p style='font-size:1.2em; font-weight:bold'>Kluster " + d["cluster"] + ", år " + d["år"] + "</p>" +
                              "Ink: " + d["inkomst"].toPrecision(3) + " tkr" + 
                              ", Arb-lösh: " + d["arbetslöshet"].toPrecision(3) + " %" + "<br>" +
@@ -177,9 +177,7 @@ function pc(){
                     return "Övriga partier (%)";
                 return d + " (%)";
             })
-            .style("cursor", "pointer");                    // hand, funkar för mac, Martin kolla ifall funkar på windows. - Fungerar fint! =)
-            //.style("cursor" ,"-webkit-grabbing")          // funkar för mac, Martin se ifall du får en knuten hand av denna!!! (btw ska ej ligga här i slutändan) - Ja, det får jag! =)
-            //.style("cursor", "url(https://mail.google.com/mail/images/2/closedhand.cur) 8 8, move;");       // knuten hand, denna verkar funka för mac också, kolla ifall den funkar på windows. - Fungerar inte för mig.
+            .style("cursor", "pointer");
 
         // Add and store a brush for each axis.
         g.append("svg:g")
