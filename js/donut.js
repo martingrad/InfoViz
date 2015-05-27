@@ -1,3 +1,7 @@
+/*
+* Donut chart based on bl.ocks.org/mbostock/3887193
+*/
+
 function donut(){
 
   var self = this;
@@ -48,21 +52,10 @@ function donut(){
   /* =================================== */
 
   function showDefaultInformation(){
-    /*var extraText = svg.selectAll(".extraText")
-      .data(welcomeMessage)
-      .enter()
-      .append("g")
-      .attr("class","extraText");
-
-    extraText.append("text")
-      .attr("dy", ".35em")
-      .style("text-anchor", "middle")
-      .style("font", "bold 18px Arial")
-      .attr("class", "inside")
-      .text(function(d){return "Ingen kommun är vald.";});*/
       showInformation("Hela Sverige");
   }
 
+  // Function that updates the donut chart with a selected region
   function showInformation(region)
   {
     var tempData = [];
@@ -71,10 +64,8 @@ function donut(){
     if(region == "Hela Sverige")
     {
       for(var i = 0; i < self.headers.length; ++i)
-      {
-        
-        parties.push(self.sweden[self.headers[i]]);
-        
+      {      
+        parties.push(self.sweden[self.headers[i]]);       
       }
       tempData.push(self.sweden);
     }
@@ -101,7 +92,7 @@ function donut(){
       .enter().append("g")
       .attr("class","arc");
 
-    g.append("path")                          // cirkelskivorna
+    g.append("path") // circular region
       .attr("fill", function(d, i) { 
         return color(i); 
       })
@@ -112,7 +103,7 @@ function donut(){
           .duration(200)
           .style("opacity", .9);
 
-        tooltip.html(self.headers[i] + " " + d.value + "%")                           // plotta i tooltip namnet på regionerna
+        tooltip.html(self.headers[i] + " " + d.value + "%") // region name in tooltip
           .style("left", (d3.event.pageX + 5) + "px")
           .style("top", (d3.event.pageY - 28) + "px"); 
       })
@@ -123,14 +114,14 @@ function donut(){
           .style("opacity", 0);
       });
 
-    g.append("text")                        // text i pajbiten
+    g.append("text") // text in this circular region
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
       .attr("dy", ".35em")
       .style("text-anchor", "middle")
       .text(function(d,i) { 
         return d.value + "%";
       })
-      .style("fill",function(d){return "#ffffff"});       // vit text i en paj-bit
+      .style("fill",function(d){return "#ffffff"}); // vit text i en paj-bit
 
     var legendRectSize = 18;
     var legendSpacing = 4;
@@ -199,15 +190,15 @@ function donut(){
       .text(function(d,i) { return self.headers[i]; });
   }
 
-
   /* ======== Public functions ======== */
   /* ================================== */
+  
   this.selectPie = function(region)
   {
-    showInformation(region);           // calling the draw function with the 
+    showInformation(region); // calling the draw function with the selected region
   };
 
-  // Function to remove the svg, and show the default look for the donut, when no country is used.
+  // Function to deselect regions by removing the svg and showing the default information in the donut chart
   this.deselectPie = function(){
     svg.selectAll('.arc').remove();
     svg.selectAll(".extraText").remove();
@@ -217,9 +208,10 @@ function donut(){
     showDefaultInformation();
   };
 
-  // Function which calls the draw function, with the year as argument.
+  // Function that updates all graphics when a user selects a year.
   this.selectYear = function(year)
   {
+    // Change datasets depending on the selected year.
     switch(year){
       case "2002":
         self.data = dataz2002;
@@ -256,7 +248,7 @@ function donut(){
       
   };
 
-  // Anropas ifrån html-filen, därav publik
+  // Function to select a region using drop-down list
   this.selectPieFromSelect = function()
   {
     var selectedRegion = $("#selectRegion option:selected").text();

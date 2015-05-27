@@ -1,10 +1,6 @@
-/**
+/*
 * DBSCAN (Density-based spatial clustering of applications with noise)
-* @param data
-* @param eps
-* @param minPts
-* @return {Object}
-*            ^ TODO: is that so...?
+* Martin Gråd
 */
 
 function dbscan(data, eps, minPts)

@@ -1,3 +1,8 @@
+/*
+* Map based on Lab 1 in TNM048 at Linköping University
+* Map data from gadm.org/country
+*/
+
 function map(){
 
     var counties;
@@ -18,13 +23,13 @@ function map(){
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var projection = d3.geo.satellite()             //obs kontrollera aanslutning till internet, då geo.satellite är kopplad till en webbadress
+    var projection = d3.geo.satellite()
         .distance(1.1)
         .scale(2800)
         .rotate([165.00, -125.0, 180.0])
         .center([110, 40])
         .tilt(15)
-        //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)             // dafuq is dis? 
+        //.clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)             // dafuq is dis?
         .precision(.1);
 
     var path = d3.geo.path()
@@ -40,7 +45,7 @@ function map(){
 
     g = svg.append("g");
 
-    //load data and draw the map
+    // load data and draw the map
     d3.json("data/map/swe-topo.json",function(error, sweden) {
         counties = topojson.feature(sweden, sweden.objects.swe_mun).features;
         addClusterProperty();
@@ -54,12 +59,15 @@ function map(){
     /* ======== Private functions ======== */
     /* =================================== */
 
+    // Function to draw the map graphics
     function draw(countries, data)
     {
         addMajorityProperty(dataz);
 
+        // clear the map
         svg.selectAll('path').remove();
 
+        // default color mapping variable
         var colorMappingVariable = "inkomst";
         var colorMappingValues = [];
 
@@ -73,23 +81,27 @@ function map(){
             .attr("title", function(d) { return d.properties.name; })
             .style("fill", function(d)
                 {
+                    // Cluster affinity coloring
                     if(colorMode == "clusters")
                     {
+                        // If the region belongs to a cluster
                         if(d.properties.cluster != -1)
                         {
                             return globalColorScale(d.properties.cluster);
                         }
+                        // If the region does not belong to any clusters
                         else
                         {
                             return "ff0000";
                         }
                     }
+                    // Majority voting results coloring
                     else if(colorMode == "majority")
                     {
                         return colorByMajority(d.properties.majority);
                     }
                 })
-            //tooltip
+            // tooltip
             .on("mousemove", function(d)
                 {
                     tooltip.transition()
@@ -106,16 +118,17 @@ function map(){
                         .duration(500)
                         .style("opacity", 0);
                 })
-            //selection
+            // selection
             .on("click", function(d)
                 {
                     $("#selectRegion").val(d.properties.name);
-                    //console.log("click!");
-                    if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                    // if the clicked object is not the same as the one clicked previously -> select it
+                    if(d != selectedObject) {
                         selectedObject = d;
                         selFeature(d);
                     }
-                    else{                               // if it is -> deselect it
+                    // if it is -> deselect it
+                    else {
                         $("#selectRegion").val("Sverige");
                         selectedObject = null;
                         clearSelection();
@@ -126,8 +139,10 @@ function map(){
 
     active = d3.select(null);
 
+    // Function to animate a zoom-in to a selected region in the map
     function zoomToRegion(d) {
         var region;
+        // find the selected region
         for(var i = 0; i < counties.length; ++i){
             if(counties[i].properties.name == d){
                 region = counties[i];
@@ -135,6 +150,7 @@ function map(){
             }
         }
 
+        // Transition variables
         var bounds, dx, dy, x, y, scale;
         var translate;
 
@@ -162,7 +178,7 @@ function map(){
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
     }
 
-    //zoom and panning method
+    // Function for zooming and panning
     function move() {
         var t = d3.event.translate;
         var s = d3.event.scale;    
@@ -171,7 +187,7 @@ function map(){
         g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
     }
 
-    //method for selecting features of other components
+    // Function for selecting features of other components
     function selFeature(value){
         map.selectCountry(value.properties.name);
         sp1.selectDot(value.properties.name);
@@ -179,6 +195,7 @@ function map(){
         donut.selectPie(value.properties.name);
     }
 
+    // Function that clears the selections in all grapchics components on the page
     function clearSelection() {
         map.deselectCountry();
         pc1.deselectLine();
@@ -189,7 +206,7 @@ function map(){
     /* ======== Public functions ======== */
     /* ================================== */
     
-    // function to select region from other components
+    // Function to select region from other components
     this.selectCountry = function(region){
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.name != region) return 0.7;});
         d3.select("#map").selectAll("path").style("stroke-width", function(d)
@@ -204,6 +221,7 @@ function map(){
         pc1.selectLine(selectedObject.properties["cluster"]);
     };
 
+    // Function that deselects a region
     this.deselectCountry = function() {
         d3.select("#map").selectAll("path").style("opacity", function(d){ return 1.0;});
         d3.select("#map").selectAll("path").style("fill", function(d, i) {
@@ -228,6 +246,7 @@ function map(){
         zoomToRegion("asd");
     }    
 
+    // Function that updates the map when a user selects a year
     this.selectYear = function(value)
     {
         var newData;
@@ -254,6 +273,7 @@ function map(){
         }
     }
     
+    // Function that updates the map when a user selects a cluster
     this.selectCluster = function(clusterIndex)
     {
         d3.select("#map").selectAll("path").style("opacity", function(d){if(d.properties.cluster != clusterIndex) return 0.7;});
@@ -261,6 +281,7 @@ function map(){
         d3.select("#map").selectAll("path").style("stroke-width", function(d){if(d.properties.cluster == clusterIndex) return "0.1em";});
     }
 
+    // Function that adds cluster affinity to the region objects
     function addClusterProperty()
     {
         for(var i = 0; i < counties.length; ++i)
@@ -269,6 +290,7 @@ function map(){
         }
     }
 
+    // Function that adds majority party to the region objects
     function addMajorityProperty()
     {
         for(var i = 0; i < counties.length; ++i)
@@ -277,6 +299,7 @@ function map(){
         }
     }
 
+    // Function that sets the color by majority party
     function colorByMajority(region)
     {
         switch(region)

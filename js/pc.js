@@ -1,3 +1,7 @@
+/*
+* Parallel coordiantes with reorderable axes based on bl.ocks.org/jasondavies/13411281
+*/
+
 function pc(){
 
     var self = this; // for internal d3 functions
@@ -8,17 +12,17 @@ function pc(){
         width = pcDiv.width() - margin[1] - margin[3],
         height = pcDiv.height() - margin[0] - margin[2];
     
-    //initialize color scale
+    // Initialize color scale
     var countryColorScale = d3.scale.category20();
     
-    //initialize tooltip
+    // Initialize tooltip
     var tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var x = d3.scale.ordinal().rangePoints([0, width], 1),                  // range between 0 and width, with padding 1
+    var x = d3.scale.ordinal().rangePoints([0, width], 1), // range between 0 and width, with padding 1
         y = {}
-        dragging = {};                  //ny
+        dragging = {};
 
     var line = d3.svg.line(),
         axis = d3.svg.axis().orient("left").tickFormat(d3.format("d")),
@@ -51,6 +55,7 @@ function pc(){
     /* ======== Private functions ======== */
     /* =================================== */
 
+    // Function to draw the parallel coordiantes graphics
     function draw(){
 
         svg.selectAll('path').remove();
@@ -268,7 +273,7 @@ function pc(){
         return meanValues;
     }
 
-    //method for selecting features of other components
+    // Function for selecting features of other components
     function selFeature(value){
         pc1.selectLineYear(value.cluster, value["år"]);
         //sp1.selectDot(value.region);
@@ -277,6 +282,7 @@ function pc(){
         //donut.selectPie(value.region);
     };
 
+    // Function that clears the selection in all components
     function clearSelection(){
         pc1.deselectLine();
         sp1.deselectDot();
@@ -287,7 +293,7 @@ function pc(){
     /* ======== Public functions ======== */
     /* ================================== */
 
-    // function for selecting the pololyne from other components    
+    // function for selecting the polyline from other components    
     this.selectLine = function(cluster)
     {
         d3.select("#pc").selectAll("path").style("opacity", function(d)

@@ -1,11 +1,10 @@
 showLoadingScreen();
 hideElements();
 
-//TODO: fixa radioknappar!
+// set the graphics coloring to depend on majority voting results
 var colorMode = "majority";
 
-
-
+// All dataset and sub-dataset variables
 var dataz;
 var dataz2002 = [];
 var dataz2006 = [];
@@ -19,10 +18,13 @@ var sweden2002 = {};
 var sweden2006 = {};
 var sweden2010 = {};
 
+// Array of all clustered data
 var clustersByYear = [clusters2002, clusters2006, clusters2010];
 
+// Get the year from the drop-down list
 var chosenYear = $("#selectYear option:selected").text();
 
+// onChange function on color mode form that fetches the new value an updates the map and scatter plot.
 $('#colorModeForm input').on('change', function() {
 	colorMode = $('input[name=radioName]:checked', '#colorModeForm').val();
 	map.selectYear(chosenYear);
@@ -31,7 +33,7 @@ $('#colorModeForm input').on('change', function() {
 
 var globalColorScale = d3.scale.category20();
 
-
+// Traverse the database
 d3.csv("data/databaosen.csv", function(error, data) {
     dataz = data;
     extractData();
@@ -42,15 +44,20 @@ d3.csv("data/databaosen.csv", function(error, data) {
     showElements();
 });
 
+// Graphics variables
 var sp1;
 var pc1;
 var map;
 var donut;
+
+// Loading screen variables
 var spinner;
 var target;
+
+// Clustering variables
 var dbscanRes;
-var headers;
 var clusteringDims;
+var headers;
 
 function initializeObjects()
 {  	
@@ -69,14 +76,15 @@ function populateSelect2() {
 	var selectOptionsForXAxis = document.getElementById("setXAxis");
 	var selectOptionsForYAxis = document.getElementById("setYAxis");
 	var options = [ headers[2],  headers[5], headers[6], headers[7], headers[8], headers[9],
-						   headers[10], headers[11], headers[12], headers[13], headers[14] ];
+				    headers[10], headers[11], headers[12], headers[13], headers[14] ];
 
 	options.sort();
 	options.unshift("Välj variabel");
 
-	// For the ScatterPlot Y-Axis and X-axis
+	// For the scatter plot y-axis and x-axis
 	for(var i = 0; i < options.length; i++)
 	{
+		// Set capital letters
 	 	var opt = options[i];
 	  	if(options[i] == "arbetslöshet")
 	  		opt = "Arbetslöshet";
@@ -106,13 +114,16 @@ function populateSelect() {
 	var var1 = "region";
 	var options = [];
 	var i = 0;
+	// Extract the regions oncy once, e.g. for the year 2002
     while(dataz[i]["år"] == "2002"){
         options.push(dataz[i][var1]);
         ++i;
     }
 
+    // Sort the regions alphabetically
     options.sort();
-    options.unshift("Sverige");			// unshift pushes the argument in the beginning of the array
+    // Add "Sverige" at the top of the sorted drop-down list
+    options.unshift("Sverige"); // unshift pushes the argument in the beginning of the array
 
 	for (var i = 0; i < options.length; i++) {
 	  var opt = options[i];
@@ -123,22 +134,25 @@ function populateSelect() {
 	}
 }
 
+// Function that shows a loading screen spinner while loading all the data
 function showLoadingScreen()
 {
-	// var opts = {...} should be defined and called in 'new Spinner(opts)...', but it doesn't seem to be working...
+	// TODO: var opts = {...} should be defined and called in 'new Spinner(opts)...', but it doesn't seem to be working...
 	// Instead, the default values in spin.js have been changed...
 	target = document.getElementById('spinner-box');
 	spinner = new Spinner().spin(target);
 }
 
+// Function that stops the loading screen spinner
 function hideLoadingScreen()
 {
 	spinner.stop();
 }
 
+// Function that extracts and stores the relevant data propertiy names
 function extractHeaders()
 {
-	// store the data properties headers...
+	// store the data propertiy headers...
 	headers = d3.keys(dataz[0]);
 	// ... and extract and store the ones that are relevant
 	clusteringDims = [ headers[6], headers[7], headers[8], headers[9],
@@ -150,7 +164,7 @@ function extractHeaders()
 function selectYearAndCalculateClusters(year)
 {
 	chosenYear = year;
-	//var newData = extractDataByYear(chosenYear);
+	// var newData = extractDataByYear(chosenYear);
 	var newData;
 	switch(chosenYear){
 		case "2002":
@@ -170,6 +184,7 @@ function selectYearAndCalculateClusters(year)
 	}
 }
 
+// Function that calculates data clusters for each year using the DBSCAN algorithm
 function calculateClusters()
 {
 	clusters2002 = dbscan(dataz2002, 0.5, 3);
@@ -181,6 +196,7 @@ function calculateClusters()
 	selectYearAndCalculateClusters(chosenYear);
 }
 
+// Function that returns the cluster corresponding to the selected year.
 function getClusterByYear(year)
 {
 	switch(year){
@@ -196,6 +212,7 @@ function getClusterByYear(year)
 	}
 }
 
+// Function that returns the cluster corresponding to the supplied region.
 function findClusterByRegion(region)
 {
 	var clusters = (chosenYear == "2002") ? clusters2002 : (chosenYear == 2006) ? clusters2006 :  clusters2010;
@@ -295,8 +312,6 @@ function showElements()
 	$("#wrap").removeClass("invisible");
 }
 
-// Function for fulhack
-// TODO: gör en bra funktion istället...
 function calculateCountryAverages()
 {
 	// 2002
@@ -304,7 +319,7 @@ function calculateCountryAverages()
 	for(var i = 0; i < headers.length; ++i)
 	{
 		sweden2002[headers[i]] = 0;
-		//for each data item
+		// for each data item
 		for(var j = 0; j < dataz2002.length; ++j)
 		{
 			sweden2002[headers[i]] += Number(dataz2002[j][headers[i]]);
@@ -319,7 +334,7 @@ function calculateCountryAverages()
 	for(var i = 0; i < headers.length; ++i)
 	{
 		sweden2006[headers[i]] = 0;
-		//for each data item
+		// for each data item
 		for(var j = 0; j < dataz2006.length; ++j)
 		{
 			sweden2006[headers[i]] += Number(dataz2006[j][headers[i]]);
@@ -334,7 +349,7 @@ function calculateCountryAverages()
 	for(var i = 0; i < headers.length; ++i)
 	{
 		sweden2010[headers[i]] = 0;
-		//for each data item
+		// for each data item
 		for(var j = 0; j < dataz2010.length; ++j)
 		{
 			sweden2010[headers[i]] += Number(dataz2010[j][headers[i]]);
@@ -345,36 +360,36 @@ function calculateCountryAverages()
 	}
 }
 
+// Function to normalize the data on each axis/dimension
 function normalizeData(_data)
 {
 	var tempData = _data.slice();
 	var maxValue = 0;
-	var maxValues = [];
+	var maxValues = [];		// Array to store the max values of each axis/dimension
 	var maxValueIndex = 0;
 
+	// for each axis/dimension
 	for(var i = 0; i < clusteringDims.length; ++i)
 	{
 		maxValue = 0;
 		maxValueIndex = 0;
-		//console.log("clustering dim: " + clusteringDims[i]);
+		// for each data item
 		for(var j = 0; j < _data.length; ++j)
 		{
-			//console.log("data item value: " + _data[j][clusteringDims[i]]);
+			// find the max value
 			if(Number(_data[j][clusteringDims[i]]) > maxValue)
 			{
 				maxValue = Number(_data[j][clusteringDims[i]]);
 				maxValueIndex = j;
 			}
 		}
+		// Add the max value to the array of max values
 		maxValues.push(maxValue);
-		//console.log("found max value: " + maxValue + " at: " + _data[maxValueIndex]["region"] + " " + maxValueIndex);
 		for(var j = 0; j < _data.length; ++j)
 		{
+			// Normalize the data of the current axis/dimension
 			tempData[j][clusteringDims[i]] = Number(_data[j][clusteringDims[i]]) / Number(maxValues[i]);
-			//console.log("new normalized data: " + tempData[j][clusteringDims[i]]);
 		}
 	}
-
-	//console.log(tempData);
 	return tempData;
 }

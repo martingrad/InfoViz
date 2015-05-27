@@ -1,3 +1,7 @@
+/*
+* Scatter plot based on Lab 1 in TNM048 at Linköping University
+*/
+
 function sp(){
 
     var self = this;
@@ -14,7 +18,7 @@ function sp(){
         .style("opacity", 0);
 
     // Initialize x,y which will be used to scale the dataset displayed in the scatterplot.
-    // the domain for x and y is set in draw, after the the dataset is set.
+    // the domain for x and y is set in draw, after the dataset is set.
     var x = d3.scale.linear()
         .range([padding, width - padding]);
 
@@ -36,14 +40,14 @@ function sp(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Initializing private variables which will be used in the draw function.
-    // These variables are determined by the user, when using different dropdown lists
+    // These variables are determined by the user, using dropdown lists.
     self.selectedObjectOnXAxis;
     self.selectedObjectOnYAxis;
-    self.selectedYear = "2010";           // default value, is changed if the user uses the dropdown list for years.
+    self.selectedYear = "2010";           // Default value. Changed if the user uses the dropdown year drop-down list.
     self.boolXAxis = false;
     self.boolYAxis = false;  
 
-    // Initializing the variable, which represents the dataset that shall be displayed
+    // Initializing the variable that represents the dataset that will be displayed.
     self.data = dataz2010;                
     addClusterProperty();
     addMajorityProperty(self.data);
@@ -68,15 +72,15 @@ function sp(){
 
         
         //  Check which dataset to use. 
-        //  If the user has chosen to display year one or both the axis
-        //      the dataset should be the one containing all information for all years, i.e. dataz
-        //  Else, check which year has been choosen in the dropdown list, and choose the cooresponding
-        //      dataset, i.e. dataz2002, dataz2006 or dataz2010
+        //  If the user has chosen to display year one or both the axes
+        //      the dataset should be the one containing all information for all years, i.e. "dataz"
+        //  Else, check which year has been chosen in the dropdown list, and choose the cooresponding
+        //      dataset, i.e. "dataz2002", "dataz2006" or "dataz2010".
         if(self.selectedObjectOnYAxis == "år" || self.selectedObjectOnXAxis == "år"){
             self.data = dataz;
         }
 
-        // set the domain for the axis
+        // set the domain for the axes
         x.domain(d3.extent(self.data, function(d) { return +d[self.selectedObjectOnXAxis]; })).range();
         y.domain(d3.extent(self.data, function(d) { return +d[self.selectedObjectOnYAxis]; })).range();
 
@@ -160,11 +164,11 @@ function sp(){
 
                     $("#selectRegion").val(d["region"]);
                         //console.log("click!");
-                        if(d != selectedObject){            // if the clicked object is not the same as the one clicked previously -> select it
+                        if(d != selectedObject){ // if the clicked object is not the same as the one clicked previously -> select it
                             selectedObject = d;
                             selFeature(d);
                         }
-                        else{                               // if it is -> deselect it
+                        else{                    // if it is -> deselect it
                             $("#selectRegion").val("Sverige");
                             selectedObject = null;
                             clearSelection();
@@ -189,7 +193,7 @@ function sp(){
             .text(function(d) { return "År " + self.selectedYear; });
     }
 
-    // Method for selecting features of other components
+    // Function for selecting features of other components
     function selFeature(value){
         sp1.selectDot(value["region"]);
         pc1.selectLine(value["region"]);
@@ -197,6 +201,7 @@ function sp(){
         donut.selectPie(value["region"]);
     }
 
+    // Function for clearing selections of all components
     function clearSelection(){
         sp1.deselectDot();
         pc1.deselectLine();
@@ -209,7 +214,7 @@ function sp(){
 
     // Method for selecting the dot from other components
     this.selectDot = function(value)
-    {           // value = land
+    {
         d3.select("#sp").selectAll(".dot").style("opacity", function(d){if(d["region"] != value) return 0.1;});
         d3.select("#sp").selectAll(".dot").style("stroke", function(d){if(d["region"] == value) return "black";});
         d3.select("#sp").selectAll(".dot").style("stroke-width", function(d){if(d["region"] == value) return "2px";});
@@ -221,17 +226,16 @@ function sp(){
         if(self.boolYAxis && self.boolXAxis){
             draw();    
         }
-        
     }
 
-    // Method which to return the dataset currently used in the scatterplot
+    // Function that returns the dataset currently used in the scatterplot
     this.getData = function(){
         return self.data;
     };
     
     // Method which is called when a change has been made on the dropdownlist.
-    // It is used to determine what shall be displayed on the X-axis.
-    // When the user has choosen a value for the x-axis, it checks wether a value has been set for the y axis.
+    // It is used to determine what shall be displayed on the x-axis.
+    // When the user has chosen a value for the x-axis, it checks whether a value has been set for the y-axis.
     // If a value exists, the draw function is called.
     this.selectYAxis = function()
     {
@@ -259,8 +263,8 @@ function sp(){
     };
 
     // Method which is called when a change has been made on the dropdownlist.
-    // It is used to determine what shall be displayed on the Y-axis.
-    // When the user has choosen a value for the y-axis, it checks wether a value has been set for the x-axis.
+    // It is used to determine what shall be displayed on the y-axis.
+    // When the user has chosen a value for the y-axis, it checks wether a value has been set for the x-axis.
     // If a value exists, the draw function is called.
     this.selectXAxis = function()
     {
@@ -288,6 +292,7 @@ function sp(){
 
     };
 
+    // Function that adds cluster affinity to the scatter plot objects
     function addClusterProperty()
     {
         for(var i = 0; i < self.data.length; ++i)
@@ -296,6 +301,7 @@ function sp(){
         }
     }
 
+    // Function that adds majority party to the scatter plot objects
     function addMajorityProperty()
     {
         for(var i = 0; i < self.data.length; ++i)
@@ -304,6 +310,7 @@ function sp(){
         }
     }
 
+    // Function that sets the color by majority party
     function colorByMajority(region)
     {
         switch(region)
