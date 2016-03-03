@@ -8,4 +8,4 @@ Data mining using DBSCAN.
 alt="Video InfoViz" width="640" height="390" border="5" /></a>
 
 ## Demo page
-<a href="http://martingrad.github.io/pages/InfoViz/index.html" target="_blank"></a>
+<a href="http://martingrad.github.io/pages/InfoViz/index.html" target="_blank">Demo page</a>
